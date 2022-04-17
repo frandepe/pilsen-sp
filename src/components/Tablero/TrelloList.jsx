@@ -1,21 +1,19 @@
-import React from 'react';
-import { Paper, Typography, CssBaseline } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import ListTitle from './ListTitle';
-import TrelloCard from './TrelloCard';
-import AddCardOrList from './AddCardOrList';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import React from "react";
+import { Paper, CssBaseline } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import ListTitle from "./ListTitle";
+import TrelloCard from "./TrelloCard";
+import AddCardOrList from "./AddCardOrList";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    minWidth: '300px',
-    backgroundColor: '#EBECF0',
+    minWidth: "300px",
+    backgroundColor: "#EBECF0",
     marginLeft: theme.spacing(1),
-    
   },
   cardContainer: {
     marginTop: theme.spacing(4),
-
   },
 }));
 

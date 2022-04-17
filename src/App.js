@@ -1,14 +1,16 @@
-import { makeStyles, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import backgraund_image from "./image/Monterey.jpg";
 import mockData from "./utils/mockdata";
 import { useState } from "react";
 import ContextAPI from "./utils/contextAPI";
 import uuid from "react-uuid";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Tablero from "./components/Tablero/Tablero";
-import Profile from "./components/SideMenu/Profile";
+// import Profile from "./components/SideMenu/Profile";
 import Login from "./components/Login/Login";
 import Register from "./components/Login/Register";
+// import Header from "./components/LayoutPublic/Header/Header";
+import "./App.css";
 
 function App() {
   const classes = useStyle();
@@ -80,7 +82,7 @@ function App() {
     >
       <Router>
         <div className={classes.root}>
-          <div className={classes.sideMenu}>
+          {/* <div className={classes.sideMenu}>
             <Profile />
             <Link className={classes.link} to="/home">
               <Button className={classes.btn}>Inicio</Button>
@@ -94,15 +96,14 @@ function App() {
             <Link className={classes.link} to="/register">
               <Button className={classes.btn}>Register</Button>
             </Link>
-          </div>
-          <div className={classes.container}>
-            <Routes>
-              <Route exact path="/" />
-              <Route path="tablero" element={<Tablero />} />
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-            </Routes>
-          </div>
+          </div> */}
+
+          <Switch>
+            <Route exact path="/" />
+            <Route path="/tablero" component={Tablero} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+          </Switch>
         </div>
       </Router>
     </ContextAPI.Provider>
@@ -113,6 +114,7 @@ const useStyle = makeStyles((theme) => ({
   root: {
     display: "flex",
     // flexDirection:"column",
+
     minHeight: "100vh",
     overflowX: "auto",
     background: "#4c9aff",
@@ -127,25 +129,25 @@ const useStyle = makeStyles((theme) => ({
     alingItem: "center",
     margin: "auto",
   },
-  sideMenu: {
-    width: "15%",
-    display: "flex",
-    flexDirection: "column",
-    background: "rgba(255, 255, 255, 0.2)",
-    padding: theme.spacing(1),
-    margin: theme.spacing(1),
-    borderRadius: "5px",
-    transitionDuration: "500ms",
-  },
-  btn: {
-    width: "110px",
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
-    background: "rgba(255, 255, 255, 0.2)",
-  },
-  link: {
-    textDecoration: "none",
-  },
+  // sideMenu: {
+  //   width: "15%",
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   background: "rgba(255, 255, 255, 0.2)",
+  //   padding: theme.spacing(1),
+  //   margin: theme.spacing(1),
+  //   borderRadius: "5px",
+  //   transitionDuration: "500ms",
+  // },
+  // btn: {
+  //   width: "110px",
+  //   margin: theme.spacing(1),
+  //   padding: theme.spacing(1),
+  //   background: "rgba(255, 255, 255, 0.2)",
+  // },
+  // link: {
+  //   textDecoration: "none",
+  // },
 }));
 
 export default App;
