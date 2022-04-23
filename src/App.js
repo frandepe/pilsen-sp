@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import backgraund_image from "./image/Monterey.jpg";
+// import backgraund_image from "./image/Monterey.jpg";
 import mockData from "./utils/mockdata";
 import { useState } from "react";
 import ContextAPI from "./utils/contextAPI";
@@ -9,7 +9,6 @@ import Tablero from "./components/Tablero/Tablero";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
 import Register from "./components/Login/Register";
-
 import "./App.css";
 
 function App() {
@@ -83,7 +82,7 @@ function App() {
       <Router>
         <div className={classes.root}>
           <Switch>
-            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/" component={Dashboard} />
             <Route path="/tablero" component={Tablero} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
@@ -95,41 +94,21 @@ function App() {
 }
 
 const useStyle = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-
-    minHeight: "100vh",
-    overflowX: "auto",
-    background: "#4c9aff",
-    backgroundImage: `url(${backgraund_image})`,
-    backgroundPosition: "center",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-  },
-  container: {
-    display: "flex",
-    justifiContent: "center",
-    alingItem: "center",
-    margin: "auto",
-  },
-  // sideMenu: {
-  //   width: "15%",
+  // root: {
   //   display: "flex",
-  //   flexDirection: "column",
-  //   background: "rgba(255, 255, 255, 0.2)",
-  //   padding: theme.spacing(1),
-  //   margin: theme.spacing(1),
-  //   borderRadius: "5px",
-  //   transitionDuration: "500ms",
+  //   minHeight: "100vh",
+  //   overflowX: "auto",
+  //   background: "#4c9aff",
+  //   backgroundImage: `url(${backgraund_image})`,
+  //   backgroundPosition: "center",
+  //   backgroundSize: "cover",
+  //   backgroundRepeat: "no-repeat",
   // },
-  // btn: {
-  //   width: "110px",
-  //   margin: theme.spacing(1),
-  //   padding: theme.spacing(1),
-  //   background: "rgba(255, 255, 255, 0.2)",
-  // },
-  // link: {
-  //   textDecoration: "none",
+  // container: {
+  //   display: "flex",
+  //   justifiContent: "center",
+  //   alingItem: "center",
+  //   margin: "auto",
   // },
 }));
 
