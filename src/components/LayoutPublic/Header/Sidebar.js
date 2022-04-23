@@ -6,7 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaTasks } from "react-icons/fa";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import Profile from "../../SideMenu/Profile";
+import Profile from "./Profile";
 
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
