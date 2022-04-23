@@ -16,7 +16,7 @@ import Header from "../LayoutPublic/Header/Header";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import "../shared.css";
-// import axios from 'axios';
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -91,9 +91,29 @@ export default function SignIn() {
           password: "",
         }}
         validationSchema={formSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={async (values, { resetForm }) => {
           resetForm();
           try {
+            // recordarme que el name cambio a username
+            try {
+              const response = await axios.post(
+                "http://26.204.148.246:9090/api/Auth/Register",
+
+                values
+                // { "Access-Control-Allow-Origin": "*" }
+                // {
+                //   headers: {
+                //     "Access-Control-Allow-Methods": " POST, GET, OPTIONS",
+                //     "Content-Type": "application/json",
+                //   },
+                // }
+              );
+              console.log("Nodata", response);
+
+              return response;
+            } catch (err) {
+              console.log("Error catch:", err);
+            }
             console.log(values);
           } catch (err) {
             console.log(err);
