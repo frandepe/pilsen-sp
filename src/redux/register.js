@@ -1,4 +1,5 @@
-import axios from "axios";
+import { privatePostRequest } from "../services/privateApiServices";
+import showAlert from "../shared/showAlert";
 
 const defaultValue = {
   registerInfo: {},
@@ -26,20 +27,26 @@ export const registerAction =
   ({ UserName, email, password }) =>
   async (dispatch) => {
     try {
-      const response = await axios.post(
-        "http://26.204.148.246:9090/api/auth/register",
-        {
-          UserName,
-          email,
-          password,
-        }
-      );
+      const response = await privatePostRequest("auth/register", {
+        UserName,
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        showAlert({ type: "success", title: "Registro exitoso" });
+      }
 
       dispatch({
         type: REGISTER,
-        payload: response.data,
+        payload: response,
       });
     } catch (error) {
+      showAlert({
+        type: "error",
+        title: "El usuario ya existe",
+        message: "Intentalo nuevamente",
+      });
       dispatch({
         type: ERROR,
       });
