@@ -16,7 +16,9 @@ import Header from "../LayoutPublic/Header/Header";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import "../shared.css";
-// import axios from 'axios';
+// import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../../redux/login";
 
 function Copyright() {
   return (
@@ -54,9 +56,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const APIurl= 'http://localhost:3001/api/auth/login';
-
 export default function SignIn() {
+  const dispatch = useDispatch();
+  const { infoUser, error } = useSelector((store) => store.user);
+  console.log("infoUser!:", infoUser);
+  console.log("Token!:", infoUser?.token);
+  console.log("Error!:", error);
   const classes = useStyles();
 
   const formSchema = yup.object().shape({
@@ -82,12 +87,12 @@ export default function SignIn() {
           password: "",
         }}
         validationSchema={formSchema}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={async ({ email, password }, { resetForm }) => {
           resetForm();
           try {
-            console.log(values);
+            dispatch(loginAction({ email, password }));
           } catch (err) {
-            console.log(err);
+            console.log("Error catch:", err);
           }
         }}
       >
@@ -102,7 +107,7 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                   Inicia sesión
                 </Typography>
-                <form onSubmit={handleSubmit} className={classes.form} Validate>
+                <form onSubmit={handleSubmit} className={classes.form}>
                   <TextField
                     variant="outlined"
                     margin="normal"
