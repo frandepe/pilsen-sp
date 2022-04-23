@@ -68,13 +68,13 @@
 }
 
 .sidebar_data--items a:hover {
-  background-color: #414197;
+  background-color: var(--hoverPrimary);
 }
 
 .sidebar_sidebar--title {
   list-style: none;
   color: white;
-  background-color: #414197;
+  background-color: var(--hoverPrimary);
   padding: 0 16px;
   border-radius: 4px;
   font-size: 1.5em;
@@ -94,4 +94,11 @@
   background-color: var(--primary);
   height: 80px;
   width: 100vw;
+}
+
+/*** Submenu ABM ***/
+
+.sidebar_submenu {
+  background: var(--primary);
+  color: white;
 }
