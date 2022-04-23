@@ -6,10 +6,10 @@ import ContextAPI from "./utils/contextAPI";
 import uuid from "react-uuid";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Tablero from "./components/Tablero/Tablero";
-// import Profile from "./components/SideMenu/Profile";
+import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
 import Register from "./components/Login/Register";
-// import Header from "./components/LayoutPublic/Header/Header";
+
 import "./App.css";
 
 function App() {
@@ -82,24 +82,8 @@ function App() {
     >
       <Router>
         <div className={classes.root}>
-          {/* <div className={classes.sideMenu}>
-            <Profile />
-            <Link className={classes.link} to="/home">
-              <Button className={classes.btn}>Inicio</Button>
-            </Link>
-            <Link className={classes.link} to="/tablero">
-              <Button className={classes.btn}>Tablero</Button>
-            </Link>
-            <Link className={classes.link} to="/login">
-              <Button className={classes.btn}>Login</Button>
-            </Link>
-            <Link className={classes.link} to="/register">
-              <Button className={classes.btn}>Register</Button>
-            </Link>
-          </div> */}
-
           <Switch>
-            <Route exact path="/" />
+            <Route exact path="/dashboard" component={Dashboard} />
             <Route path="/tablero" component={Tablero} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
@@ -113,7 +97,6 @@ function App() {
 const useStyle = makeStyles((theme) => ({
   root: {
     display: "flex",
-    // flexDirection:"column",
 
     minHeight: "100vh",
     overflowX: "auto",
