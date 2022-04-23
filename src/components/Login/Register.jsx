@@ -16,7 +16,8 @@ import Header from "../LayoutPublic/Header/Header";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import "../shared.css";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { registerAction } from "../../redux/register";
 
 function Copyright() {
   return (
@@ -54,13 +55,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const APIurl = "http://localhost:3001/api/auth/register";
-
 export default function SignIn() {
+  const dispatch = useDispatch();
+  const { infoRegister, error } = useSelector((store) => store.register);
+  console.log("infoRegister:", infoRegister);
+  console.log("Error!:", error);
   const classes = useStyles();
 
   const formSchema = yup.object().shape({
-    name: yup
+    UserName: yup
       .string()
       .required("Por favor, ingrese su nombre")
       .matches(/^[A-Za-z ]*$/, "Por favor, ingrese un nombre válido"),
@@ -86,7 +89,7 @@ export default function SignIn() {
     <div>
       <Formik
         initialValues={{
-          name: "",
+          UserName: "",
           email: "",
           password: "",
         }}
@@ -94,23 +97,8 @@ export default function SignIn() {
         onSubmit={async (values, { resetForm }) => {
           resetForm();
           try {
-            // recordarme que el name cambio a username
             try {
-              const response = await axios.post(
-                "http://26.204.148.246:9090/api/Auth/Register",
-
-                values
-                // { "Access-Control-Allow-Origin": "*" }
-                // {
-                //   headers: {
-                //     "Access-Control-Allow-Methods": " POST, GET, OPTIONS",
-                //     "Content-Type": "application/json",
-                //   },
-                // }
-              );
-              console.log("Nodata", response);
-
-              return response;
+              dispatch(registerAction(values));
             } catch (err) {
               console.log("Error catch:", err);
             }
@@ -137,17 +125,17 @@ export default function SignIn() {
                     margin="normal"
                     required
                     fullWidth
-                    id="name"
+                    id="UserName"
                     label="Nombre"
-                    name="name"
+                    name="UserName"
                     autoComplete="nombre"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.name}
+                    value={values.UserName}
                     autoFocus
                   />
                   <ErrorMessage
-                    name="name"
+                    name="UserName"
                     component="p"
                     className="input-error"
                   />
