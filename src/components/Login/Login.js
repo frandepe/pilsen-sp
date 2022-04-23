@@ -25,7 +25,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="https://pilsendigital.com">
         Pilsen Digital
       </Link>{" "}
       {new Date().getFullYear()}
@@ -80,6 +80,13 @@ export default function SignIn() {
       .required("Por favor, ingrese su contraseña")
       .max(50, "La contraseña es demasiado larga"),
   });
+
+  // useEffect(() => {
+  //   if (infoUser !== undefined) {
+  //     showAlert({ type: "success", title: "Login exitoso" });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch]);
 
   return (
     <div>

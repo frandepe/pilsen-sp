@@ -1,4 +1,5 @@
-import axios from "axios";
+import { privatePostRequest } from "../services/privateApiServices";
+import showAlert from "../shared/showAlert";
 
 const defaultValue = {
   userInfo: {},
@@ -27,13 +28,14 @@ export const loginAction =
   ({ email, password }) =>
   async (dispatch) => {
     try {
-      const response = await axios.post(
-        "http://26.204.148.246:9090/api/Auth/Login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await privatePostRequest("auth/login", {
+        email,
+        password,
+      });
+
+      if (response.login) {
+        showAlert({ type: "success", title: "Login exitoso" });
+      }
 
       dispatch({
         type: LOGIN,
@@ -41,6 +43,12 @@ export const loginAction =
         // token: localStorage.setItem("token", response.data.token),
       });
     } catch (error) {
+      showAlert({
+        type: "error",
+        title: "Ha habido un error",
+        message: "Email o contraseña incorrecta",
+      });
+
       dispatch({
         type: ERROR,
       });
