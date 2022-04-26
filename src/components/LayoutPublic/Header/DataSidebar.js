@@ -31,7 +31,7 @@ export const DataSubMenu = [
   {
     icon: <MdAddTask />,
     title: "Tipos de Articulos",
-    link: "/",
+    link: "/tipo-de-articulos",
   },
   {
     icon: <MdAddTask />,

@@ -10,6 +10,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
 import Register from "./components/Login/Register";
 import "./App.css";
+import TipoDeArticulosGet from "./components/ABM/TipoDeArticulos/TipoDeArticulosGet";
+import TipoDeArticulos from "./components/ABM/TipoDeArticulos/TipoDeArticulos";
 
 function App() {
   const classes = useStyle();
@@ -86,6 +88,8 @@ function App() {
             <Route path="/tablero" component={Tablero} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/tipo-de-articulos" component={TipoDeArticulosGet} />
+            <Route path="/tipo-de-articulos-form" component={TipoDeArticulos} />
           </Switch>
         </div>
       </Router>

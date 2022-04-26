@@ -1,3 +1,16 @@
 .input-error {
   color: var(--colorError);
 }
+
+/*** ABM ***/
+
+.abm_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+.formabm_container {
+  text-align: center;
+  width: 50%;
+}
