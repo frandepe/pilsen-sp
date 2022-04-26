@@ -81,13 +81,6 @@ export default function SignIn() {
       .max(50, "La contraseña es demasiado larga"),
   });
 
-  // useEffect(() => {
-  //   if (infoUser !== undefined) {
-  //     showAlert({ type: "success", title: "Login exitoso" });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch]);
-
   return (
     <div>
       <Header>

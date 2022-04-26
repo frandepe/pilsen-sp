@@ -1,5 +1,5 @@
 .sidebar_sidebar {
-  background-color: var(--primary);
+  background-color: var(--tertiary);
   height: 80px;
   display: flex;
   justify-content: space-between;
@@ -15,7 +15,7 @@
 }
 
 .sidebar_nav-menu {
-  background-color: var(--primary);
+  background-color: var(--tertiary);
   width: 250px;
   height: 100vh;
   display: flex;
@@ -46,7 +46,7 @@
 }
 
 .sidebar_sidebar-toggle {
-  background-color: var(--primary);
+  background-color: var(--tertiary);
   width: 100%;
   height: 80px;
   display: flex;
@@ -68,13 +68,13 @@
 }
 
 .sidebar_data--items a:hover {
-  background-color: var(--hoverPrimary);
+  background-color: var(--hoverTertiary);
 }
 
 .sidebar_sidebar--title {
   list-style: none;
   color: white;
-  background-color: var(--hoverPrimary);
+  background-color: var(--hoverTertiary);
   padding: 0 16px;
   border-radius: 4px;
   font-size: 1.5em;
@@ -91,7 +91,7 @@
 /*** Headersidebar ***/
 
 .sidebar_header {
-  background-color: var(--primary);
+  background-color: var(--tertiary);
   height: 80px;
   width: 100vw;
 }
@@ -99,7 +99,7 @@
 /*** Submenu ABM ***/
 
 .sidebar_submenu {
-  background: var(--primary);
+  background: var(--tertiary);
   color: white;
 }
 
