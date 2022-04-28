@@ -77,6 +77,13 @@ function App() {
       },
     });
   };
+  // En package.json -> "homepage": "http://26.204.148.246/PallasFront/",
+  // const rutaPallas = "/PallasFront";
+  // basename="/PallasFront"
+  // http://26.204.148.246/PallasFront/
+  // cuando cambio de pantalla me va a http://26.204.148.246/login sin el PallasFront
+
+  // Ir a Red -> \\26.204.148.246\PallasFront
   return (
     <ContextAPI.Provider
       value={{ updateListTitle, addCard, addList, updateTitleCard }}
@@ -85,11 +92,37 @@ function App() {
         <div className={classes.root}>
           <Switch>
             <Route exact path="/" component={Dashboard} />
-            <Route path="/tablero" component={Tablero} />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/tipo-de-articulos" component={TipoDeArticulosGet} />
-            <Route path="/tipo-de-articulos-form" component={TipoDeArticulos} />
+            <Route exact path="/tablero" component={Tablero} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route
+              exact
+              path="/tipo-de-articulos"
+              component={TipoDeArticulosGet}
+            />
+            <Route
+              exact
+              path="/tipo-de-articulos-form"
+              component={TipoDeArticulos}
+            />
+            {/* <Route exact path={rutaPallas + "/"} component={Dashboard} />
+            <Route exact path={rutaPallas + "/tablero"} component={Tablero} />
+            <Route
+              exact
+              path={rutaPallas + "/PallasFront/login"}
+              component={Login}
+            />
+            <Route exact path={rutaPallas + "/register"} component={Register} />
+            <Route
+              exact
+              path={rutaPallas + "/tipo-de-articulos"}
+              component={TipoDeArticulosGet}
+            />
+            <Route
+              exact
+              path={rutaPallas + "/tipo-de-articulos-form"}
+              component={TipoDeArticulos}
+            /> */}
           </Switch>
         </div>
       </Router>

@@ -101,3 +101,5 @@ export default function TipoDeArticulos({ patchData }) {
     </div>
   );
 }
+
+// http://26.204.148.246/PallasFront
