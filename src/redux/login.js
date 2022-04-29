@@ -40,7 +40,7 @@ export const loginAction =
       dispatch({
         type: LOGIN,
         payload: response,
-        // token: localStorage.setItem("token", response.data.token),
+        token: localStorage.setItem("token", response.token),
       });
     } catch (error) {
       showAlert({
