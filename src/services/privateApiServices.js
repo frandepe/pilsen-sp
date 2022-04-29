@@ -2,8 +2,9 @@ import axios from "axios";
 
 const BASE_URL = "http://26.204.148.246:9090/api";
 
-const headers = {
-  Autorizacion: tokenFromLocalStorage(),
+const tokenn = window.localStorage.getItem("token");
+const config = {
+  headers: { Authorization: `Bearer ${tokenn}` },
 };
 
 /**
@@ -15,11 +16,7 @@ const headers = {
 
 export const privatePostRequest = async (route, postData) => {
   try {
-    const { data } = await axios.post(
-      `${BASE_URL}/${route}`,
-      postData,
-      headers
-    );
+    const { data } = await axios.post(`${BASE_URL}/${route}`, postData, config);
     return data;
   } catch (error) {
     console.log(error);
@@ -35,7 +32,7 @@ export const privatePostRequest = async (route, postData) => {
 
 export const privatePutRequest = async ({ route, putData }) => {
   try {
-    const res = await axios.put(`${BASE_URL}/${route}`, putData, headers);
+    const res = await axios.put(`${BASE_URL}/${route}`, putData, config);
     return res;
   } catch (err) {
     console.log(err);
@@ -51,7 +48,7 @@ export const privatePutRequest = async ({ route, putData }) => {
 
 export const privateDeleteRequest = async ({ route }) => {
   try {
-    const res = await axios.delete(`${BASE_URL}/${route}`, headers);
+    const res = await axios.delete(`${BASE_URL}/${route}`, config);
     console.log(res);
     return res;
   } catch (err) {
@@ -60,61 +57,27 @@ export const privateDeleteRequest = async ({ route }) => {
 };
 
 /**
- * Function to generate a POST request
- * @param {string} route  Endpoint's route. Example: "/testimonials"
- * @param {Object} patchData Object with the post data
- * @returns {Promise}
- */
-
-export async function privatePatchRequest(route, patchData) {
-  const headers = { ...tokenFromLocalStorage() };
-  try {
-    const { data } = await axios.patch(
-      `${BASE_URL}/${route}`,
-      patchData,
-      headers
-    );
-    return data;
-  } catch (error) {
-    return error;
-  }
-}
-
-/**
  * Function to generate a GET request
  * @param {string} sector  Endpoint's sector. Example: "/maquinas". Si el valor de "sector" es auth va a realizar una peticion distinta relacionada a la utentificacion
  * @param {number} id  El id seria un dato en especifico que se quiera devolver. Puede ir null
  * @returns {Promise}
  */
 
-export const getDataMethodPrivate = async (sector, id = null) => {
-  if (sector !== "auth") {
-    try {
-      const result = await axios.get(
-        id ? `${BASE_URL}/${sector}/${id}` : `${BASE_URL}/${sector}`,
-        headers
-      );
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    try {
-      const result = await axios.get(`${BASE_URL}/auth/register`, headers);
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error(error);
-    }
+export const getDataMethodPrivate = async (route) => {
+  try {
+    const result = await axios.get(`${BASE_URL}/${route}`, config);
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
   }
 };
 
-function tokenFromLocalStorage() {
-  const token = window.localStorage.getItem("token");
-  if (!token || token === "undefined") {
-    console.log("No token in local storage");
-    return null;
-  }
-  return `Bearer ${token}`;
-}
+// function tokenFromLocalStorage() {
+//   const token = window.localStorage.getItem("token");
+//   if (!token || token === "undefined") {
+//     console.log("No token in local storage");
+//     return null;
+//   }
+//   return `Bearer ${token}`;
+// }

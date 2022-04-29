@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import axios from "axios";
+import showAlert from "../../../shared/showAlert";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,12 +24,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
-
-export default function TipoDeArticulos({ patchData }) {
+const TipoDeArticulos = (patchData) => {
   const classes = useStyles();
-  // const [categories, setCategories] = useState([]);
+  const [statusForm, setStatusForm] = useState(false);
   const token =
-    "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImMyODIzNzEyLWVhY2ItNDlhMy1hYjMwLTVlMjhjODI2NWRkYiIsInN1YiI6Ik1hcmlhbm8yMjIiLCJlbWFpbCI6Ik1hcmlhbm8yMjIiLCJuYmYiOjE2NTA5MDUyNzYsImV4cCI6MTY1MDkyNjg3NiwiaWF0IjoxNjUwOTA1Mjc2fQ.9auOOHCMbQRxoDvH6q1sJPs6vPqmbUyDf0UATthv-E8Ir7ZpDdGCYF6htNfatIg02V3IpzQpe9YzUB2Z6Y22wg";
+    "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImZjYTAwMDc0LTU0Y2EtNGU4Yi05YzMyLTM0MGE3MTZlODcxMyIsInN1YiI6InNpc3RlbWFzQHBpbHNlbmRpZ2l0YWwuY29tIiwiZW1haWwiOiJzaXN0ZW1hc0BwaWxzZW5kaWdpdGFsLmNvbSIsIm5iZiI6MTY1MTE5ODg2OSwiZXhwIjoxNjUxMjIwNDY5LCJpYXQiOjE2NTExOTg4Njl9.ErzsTgIW2jLd6CKmc2B5D1R_nFfqmi0yMOyTd-RNwQ8oVCPj7gJ9nIjToJDBiMK1tXRqhmz7ClwOZJrxPVDrbA";
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -39,7 +39,9 @@ export default function TipoDeArticulos({ patchData }) {
       .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
   });
-  console.log(patchData);
+  console.log("PatchData:", patchData);
+
+  // Si paso el id en el onSubmit rompe 400
   return (
     <div>
       <Header>
@@ -49,36 +51,44 @@ export default function TipoDeArticulos({ patchData }) {
         <div className="abm_container">
           <Formik
             initialValues={{
-              id: patchData?.id || null,
-              nombre: patchData?.nombre || "",
+              id: patchData?.location?.state?.id,
+              nombre: patchData?.location?.state?.nombre || "",
             }}
             validationSchema={formSchema}
-            onSubmit={async ({ nombre, id }, { resetForm }) => {
-              resetForm();
+            onSubmit={async ({ ...newsFormData }) => {
+              setStatusForm(true);
               try {
                 const response = await axios.post(
                   "http://26.204.148.246:9090/api/tiposarticulo/save",
                   {
-                    id,
-                    nombre,
+                    ...newsFormData,
                   },
                   config
                 );
-
                 console.log(response);
+                if (!response.data.status === 200)
+                  throw new Error("Algo falló");
+                showAlert({
+                  type: "success",
+                  title: "Actualizado correctamente",
+                });
               } catch (err) {
                 console.log("Error catch:", err);
+              } finally {
+                setStatusForm(false);
               }
             }}
           >
             {({ values, handleSubmit, handleChange, handleBlur }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
+                <label htmlFor="titulo">Titulo</label>
                 <TextField
+                  data-testid="titulo"
                   required
                   fullWidth
                   margin="normal"
                   name="nombre"
-                  id="outlined-basic"
+                  id="titulo"
                   label="Nombre del Tipo de Articulo"
                   variant="outlined"
                   onChange={handleChange}
@@ -90,7 +100,11 @@ export default function TipoDeArticulos({ patchData }) {
                   component="p"
                   className="input-error"
                 />
-                <Button type="submit" className={classes.btn}>
+                <Button
+                  type="submit"
+                  className={classes.btn}
+                  disabled={statusForm}
+                >
                   Actualizar
                 </Button>
               </form>
@@ -100,4 +114,6 @@ export default function TipoDeArticulos({ patchData }) {
       </Header>
     </div>
   );
-}
+};
+
+export default TipoDeArticulos;
