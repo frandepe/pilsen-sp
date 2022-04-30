@@ -46,10 +46,13 @@ export const privatePutRequest = async ({ route, putData }) => {
  * @returns {Promise}
  */
 
-export const privateDeleteRequest = async ({ route }) => {
+export const privateDeleteRequest = async (route, deleteData) => {
   try {
-    const res = await axios.delete(`${BASE_URL}/${route}`, config);
-    console.log(res);
+    const { res } = await axios.post(
+      `${BASE_URL}/${route}`,
+      deleteData,
+      config
+    );
     return res;
   } catch (err) {
     console.log(err);

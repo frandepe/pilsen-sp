@@ -36,7 +36,7 @@ export const DataSubMenu = [
   {
     icon: <MdAddTask />,
     title: "Tipos de Medidas",
-    link: "/",
+    link: "/tipos-de-medidas",
   },
   {
     icon: <MdAddTask />,

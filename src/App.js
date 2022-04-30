@@ -12,6 +12,8 @@ import Register from "./components/Login/Register";
 import "./App.css";
 import TipoDeArticulosGet from "./components/ABM/TipoDeArticulos/TipoDeArticulosGet";
 import TipoDeArticulos from "./components/ABM/TipoDeArticulos/TipoDeArticulos";
+import TiposDeMedidasList from "./components/ABM/TipoDeMedidas/TiposDeMedidasList";
+import TiposDeMedidasForm from "./components/ABM/TipoDeMedidas/TiposDeMedidasForm";
 
 function App() {
   const classes = useStyle();
@@ -104,6 +106,16 @@ function App() {
               exact
               path="/tipo-de-articulos-form"
               component={TipoDeArticulos}
+            />
+            <Route
+              exact
+              path="/tipos-de-medidas"
+              component={TiposDeMedidasList}
+            />
+            <Route
+              exact
+              path="/tipos-de-medidas-form"
+              component={TiposDeMedidasForm}
             />
             {/* <Route exact path={rutaPallas + "/"} component={Dashboard} />
             <Route exact path={rutaPallas + "/tablero"} component={Tablero} />
