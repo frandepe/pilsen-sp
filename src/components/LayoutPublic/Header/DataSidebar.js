@@ -41,7 +41,7 @@ export const DataSubMenu = [
   {
     icon: <MdAddTask />,
     title: "Maquinas",
-    link: "/",
+    link: "/maquinas",
   },
   {
     icon: <MdAddTask />,
