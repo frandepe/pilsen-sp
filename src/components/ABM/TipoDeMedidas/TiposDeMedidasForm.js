@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
-const TipoDeArticulos = (patchData) => {
+const TiposDeMedidasForm = (patchData) => {
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -41,7 +41,7 @@ const TipoDeArticulos = (patchData) => {
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
-          Tipo de Articulo
+          Tipos de Medidas
         </Typography>
         <div className="abm_container">
           <Formik
@@ -53,12 +53,9 @@ const TipoDeArticulos = (patchData) => {
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
               try {
-                const response = await privatePostRequest(
-                  "tiposarticulo/save",
-                  {
-                    ...formData,
-                  }
-                );
+                const response = await privatePostRequest("tiposmedidas/save", {
+                  ...formData,
+                });
                 console.log(response);
                 if (!response?.data?.status === 200)
                   throw new Error("Algo falló");
@@ -85,7 +82,7 @@ const TipoDeArticulos = (patchData) => {
                   margin="normal"
                   name="nombre"
                   id="titulo"
-                  label="Nombre del Tipo de Articulo"
+                  label="Nombre del Tipo de Medida"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -112,4 +109,4 @@ const TipoDeArticulos = (patchData) => {
   );
 };
 
-export default TipoDeArticulos;
+export default TiposDeMedidasForm;

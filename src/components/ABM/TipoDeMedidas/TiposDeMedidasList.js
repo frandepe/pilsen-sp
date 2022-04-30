@@ -4,20 +4,19 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
 import Header from "../../LayoutPublic/Header/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { tipoDeArticulosAction } from "../../../redux/actionsABM/reducerTipoDeArticulos";
+import { tiposDeMedidasAction } from "../../../redux/actionsABM/reducerTiposDeMedidas";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
-// falta estilos
 
-const TipoDeArticulosGet = () => {
+const TiposDeMedidasList = () => {
   const dispatch = useDispatch();
   const [deletedNew, setDeletedNew] = useState(false);
-  const { tipoDeArticulosInfo } = useSelector((store) => store.tipoDeArticulos);
-  console.log(tipoDeArticulosInfo);
+  const { tiposDeMedidasInfo } = useSelector((store) => store.tiposDeMedidas);
+  console.log(tiposDeMedidasInfo);
 
   async function handleRemove(id, nombre) {
     try {
-      await privateDeleteRequest("tiposarticulo/delete", {
+      await privateDeleteRequest("tiposmedidas/delete", {
         id,
         nombre,
       });
@@ -32,7 +31,7 @@ const TipoDeArticulosGet = () => {
   }
 
   useEffect(() => {
-    dispatch(tipoDeArticulosAction(tipoDeArticulosInfo));
+    dispatch(tiposDeMedidasAction(tiposDeMedidasInfo));
     if (deletedNew) {
       setDeletedNew(false);
     }
@@ -42,8 +41,8 @@ const TipoDeArticulosGet = () => {
   return (
     <div>
       <Header>
-        <h2>Lista de los Tipos de articulos</h2>
-        {tipoDeArticulosInfo?.result?.map((element) => {
+        <h2>Lista de los Tipos de medidas</h2>
+        {tiposDeMedidasInfo?.result?.map((element) => {
           return (
             <tr key={element.id}>
               <td className="title">{element.nombre}</td>
@@ -52,7 +51,7 @@ const TipoDeArticulosGet = () => {
                 <Link
                   className="options__edit"
                   to={{
-                    pathname: "/tipo-de-articulos-form",
+                    pathname: "/tipos-de-medidas-form",
                     state: element,
                   }}
                 >
@@ -70,7 +69,7 @@ const TipoDeArticulosGet = () => {
         <button>
           <Link
             to={{
-              pathname: "/tipo-de-articulos-form",
+              pathname: "/tipos-de-medidas-form",
             }}
           >
             Agregar tipo de articulo
@@ -81,4 +80,4 @@ const TipoDeArticulosGet = () => {
   );
 };
 
-export default TipoDeArticulosGet;
+export default TiposDeMedidasList;
