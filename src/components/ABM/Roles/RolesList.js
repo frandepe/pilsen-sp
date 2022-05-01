@@ -4,25 +4,23 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
 import Header from "../../LayoutPublic/Header/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { maquinasAction } from "../../../redux/actionsABM/reducerMaquinas";
+import { rolesAction } from "../../../redux/actionsABM/reducerRoles";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
 
-const MaquinasList = () => {
+const RolesList = () => {
   const dispatch = useDispatch();
   const [deleted, setDeleted] = useState(false);
-  const { maquinasInfo } = useSelector((store) => store.maquinas);
-  console.log(maquinasInfo);
+  const { rolesInfo } = useSelector((store) => store.roles);
+  console.log(rolesInfo);
 
-  async function handleRemove(id, nombre, uso, desperdicio) {
+  async function handleRemove(id, name) {
     try {
-      await privateDeleteRequest("maquinas/delete", {
+      await privateDeleteRequest("roles/delete", {
         id,
-        nombre,
-        uso,
-        desperdicio,
+        name,
       });
-      showAlert({ type: "success", title: "Eliminado correctamente" });
+      showAlert({ type: "success", title: "Rol eliminado correctamente" });
       setDeleted(true);
     } catch (error) {
       showAlert({
@@ -33,7 +31,7 @@ const MaquinasList = () => {
   }
 
   useEffect(() => {
-    dispatch(maquinasAction(maquinasInfo));
+    dispatch(rolesAction(rolesInfo));
     if (deleted) {
       setDeleted(false);
     }
@@ -44,48 +42,33 @@ const MaquinasList = () => {
     <div>
       <Header>
         <header className="list_header">
-          <h1>Máquinas</h1>
-          <Link
-            to="/máquinas-form"
-            className="list_primary-button"
-            role="button"
-          >
-            Agregar máquina
+          <h1>Roles</h1>
+          <Link to="/roles-form" className="list_primary-button" role="button">
+            Agregar Rol
           </Link>
         </header>
-        <table className="list_container-table">
+        <table className="list_container-table list_grid_two">
           <tr>
             <th>Nombre:</th>
-            <th>Uso:</th>
-            <th>Desperdicio:</th>
           </tr>
 
-          {maquinasInfo?.result?.map((element) => {
+          {rolesInfo?.result?.map((element) => {
             return (
               <tr key={element.id}>
-                <td className="list_title">{element.nombre}</td>
-                <td className="list_title">{element.uso}</td>
-                <td className="list_title">{element.desperdicio}</td>
+                <td className="list_title">{element.name}</td>
 
                 <td className="list_options">
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/maquinas-form",
+                      pathname: "/roles-form",
                       state: element,
                     }}
                   >
                     <MdModeEdit />
                   </Link>
                   <button
-                    onClick={() =>
-                      handleRemove(
-                        element.id,
-                        element.nombre,
-                        element.uso,
-                        element.desperdicio
-                      )
-                    }
+                    onClick={() => handleRemove(element.id, element.name)}
                   >
                     <IoMdTrash />
                   </button>
@@ -93,11 +76,10 @@ const MaquinasList = () => {
               </tr>
             );
           })}
-         
         </table>
       </Header>
     </div>
   );
 };
 
-export default MaquinasList;
+export default RolesList;

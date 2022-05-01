@@ -4,25 +4,26 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
 import Header from "../../LayoutPublic/Header/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { maquinasAction } from "../../../redux/actionsABM/reducerMaquinas";
+import { depositosAction } from "../../../redux/actionsABM/reducerDepositos";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
 
-const MaquinasList = () => {
+const DepositosList = () => {
   const dispatch = useDispatch();
   const [deleted, setDeleted] = useState(false);
-  const { maquinasInfo } = useSelector((store) => store.maquinas);
-  console.log(maquinasInfo);
+  const { depositosInfo } = useSelector((store) => store.depositos);
+  console.log(depositosInfo);
 
-  async function handleRemove(id, nombre, uso, desperdicio) {
+  async function handleRemove(id, nombre, direccion, oculto, activo) {
     try {
-      await privateDeleteRequest("maquinas/delete", {
+      await privateDeleteRequest("depositos/delete", {
         id,
         nombre,
-        uso,
-        desperdicio,
+        direccion,
+        oculto,
+        activo,
       });
-      showAlert({ type: "success", title: "Eliminado correctamente" });
+      showAlert({ type: "success", title: "Deposito eliminado correctamente" });
       setDeleted(true);
     } catch (error) {
       showAlert({
@@ -33,7 +34,7 @@ const MaquinasList = () => {
   }
 
   useEffect(() => {
-    dispatch(maquinasAction(maquinasInfo));
+    dispatch(depositosAction(depositosInfo));
     if (deleted) {
       setDeleted(false);
     }
@@ -44,34 +45,31 @@ const MaquinasList = () => {
     <div>
       <Header>
         <header className="list_header">
-          <h1>Máquinas</h1>
+          <h1>Depósitos</h1>
           <Link
-            to="/máquinas-form"
+            to="/depositos-form"
             className="list_primary-button"
             role="button"
           >
-            Agregar máquina
+            Agregar depósito
           </Link>
         </header>
         <table className="list_container-table">
           <tr>
             <th>Nombre:</th>
-            <th>Uso:</th>
-            <th>Desperdicio:</th>
+            <th>Dirección:</th>
           </tr>
-
-          {maquinasInfo?.result?.map((element) => {
+          {depositosInfo?.result?.map((element) => {
             return (
               <tr key={element.id}>
                 <td className="list_title">{element.nombre}</td>
-                <td className="list_title">{element.uso}</td>
-                <td className="list_title">{element.desperdicio}</td>
+                <td className="list_title">{element.direccion}</td>
 
                 <td className="list_options">
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/maquinas-form",
+                      pathname: "/depositos-form",
                       state: element,
                     }}
                   >
@@ -82,8 +80,9 @@ const MaquinasList = () => {
                       handleRemove(
                         element.id,
                         element.nombre,
-                        element.uso,
-                        element.desperdicio
+                        element.direccion,
+                        element.oculto,
+                        element.activo
                       )
                     }
                   >
@@ -93,11 +92,10 @@ const MaquinasList = () => {
               </tr>
             );
           })}
-         
         </table>
       </Header>
     </div>
   );
 };
 
-export default MaquinasList;
+export default DepositosList;

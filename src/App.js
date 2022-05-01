@@ -16,6 +16,12 @@ import TiposDeMedidasList from "./components/ABM/TipoDeMedidas/TiposDeMedidasLis
 import TiposDeMedidasForm from "./components/ABM/TipoDeMedidas/TiposDeMedidasForm";
 import MaquinasList from "./components/ABM/Maquinas/MaquinasList";
 import MaquinasForm from "./components/ABM/Maquinas/MaquinasForm";
+import UsuariosList from "./components/ABM/Usuarios/UsuariosList";
+import UsuariosForm from "./components/ABM/Usuarios/UsuariosForm";
+import RolesList from "./components/ABM/Roles/RolesList";
+import RolesForm from "./components/ABM/Roles/RolesForm";
+import DepositosList from "./components/ABM/Depositos/DepositosList";
+import DepositosForm from "./components/ABM/Depositos/DepositosForm";
 
 function App() {
   const classes = useStyle();
@@ -121,6 +127,12 @@ function App() {
             />
             <Route exact path="/maquinas" component={MaquinasList} />
             <Route exact path="/maquinas-form" component={MaquinasForm} />
+            <Route exact path="/usuarios" component={UsuariosList} />
+            <Route exact path="/usuarios-form" component={UsuariosForm} />
+            <Route exact path="/roles" component={RolesList} />
+            <Route exact path="/roles-form" component={RolesForm} />
+            <Route exact path="/depositos" component={DepositosList} />
+            <Route exact path="/depositos-form" component={DepositosForm} />
             {/* <Route exact path={rutaPallas + "/"} component={Dashboard} />
             <Route exact path={rutaPallas + "/tablero"} component={Tablero} />
             <Route
