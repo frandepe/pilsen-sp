@@ -24,27 +24,15 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
-const MaquinasForm = (patchData) => {
+const RolesForm = (patchData) => {
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
   const formSchema = yup.object().shape({
-    nombre: yup
+    name: yup
       .string()
       .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
-    uso: yup
-      .string()
-      .required("El campo es requerido")
-      .max(100, "No puede ingresar más de 100 caracteres"),
-    desperdicio: yup
-      .number()
-      .required("El campo es requerido")
-      .test(
-        "maxDigitsAfterDecimal",
-        "El número no puede contener más de dos decimales",
-        (number) => Number.isInteger(number * 10 ** 2)
-      ),
   });
   console.log("PatchData:", patchData);
 
@@ -52,21 +40,19 @@ const MaquinasForm = (patchData) => {
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
-          Tipos de Medidas
+          Roles
         </Typography>
         <div className="abm_container">
           <Formik
             initialValues={{
               id: patchData?.location?.state?.id,
-              nombre: patchData?.location?.state?.nombre || "",
-              uso: patchData?.location?.state?.uso || "",
-              desperdicio: patchData?.location?.state?.desperdicio || "",
+              name: patchData?.location?.state?.name || "",
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
               try {
-                const response = await privatePostRequest("maquinas/save", {
+                const response = await privatePostRequest("roles/save", {
                   ...formData,
                 });
                 console.log(response);
@@ -75,8 +61,8 @@ const MaquinasForm = (patchData) => {
                 showAlert({
                   type: "success",
                   title: patchData?.location?.state?.id
-                    ? "Editado correctamente"
-                    : "Creado correctamente",
+                    ? "Rol editado correctamente"
+                    : "Rol creado correctamente",
                 });
               } catch (err) {
                 console.log("Error catch:", err);
@@ -87,63 +73,22 @@ const MaquinasForm = (patchData) => {
           >
             {({ values, handleSubmit, handleChange, handleBlur }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
-                <label htmlFor="titulo">Nombre de la máquina</label>
+                <label htmlFor="titulo">Nombre del rol</label>
                 <TextField
                   data-testid="titulo"
                   required
                   fullWidth
                   margin="normal"
-                  name="nombre"
+                  name="name"
                   id="titulo"
-                  label="Nombre"
+                  label="Nombre del Tipo de Medida"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.nombre}
+                  value={values.name}
                 />
                 <ErrorMessage
-                  name="nombre"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">Descripción de su uso</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="uso"
-                  id="titulo"
-                  label="Descripción"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.uso}
-                />
-                <ErrorMessage
-                  name="uso"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">
-                  Desperdicio que genera la máquina
-                </label>
-                <TextField
-                  type="number"
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="desperdicio"
-                  id="titulo"
-                  label="Desperdicio"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.desperdicio}
-                />
-                <ErrorMessage
-                  name="desperdicio"
+                  name="name"
                   component="p"
                   className="input-error"
                 />
@@ -163,4 +108,4 @@ const MaquinasForm = (patchData) => {
   );
 };
 
-export default MaquinasForm;
+export default RolesForm;

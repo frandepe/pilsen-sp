@@ -24,27 +24,24 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
-const MaquinasForm = (patchData) => {
+const UsuariosForm = (patchData) => {
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
   const formSchema = yup.object().shape({
-    nombre: yup
+    userName: yup
       .string()
       .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
-    uso: yup
+    email: yup
       .string()
       .required("El campo es requerido")
-      .max(100, "No puede ingresar más de 100 caracteres"),
-    desperdicio: yup
-      .number()
-      .required("El campo es requerido")
-      .test(
-        "maxDigitsAfterDecimal",
-        "El número no puede contener más de dos decimales",
-        (number) => Number.isInteger(number * 10 ** 2)
-      ),
+      .matches(
+        /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+        "Escriba un correo válido"
+      )
+      .max(50, "El email es demasiado largo"),
+    rolName: yup.string().required("El campo es requerido"),
   });
   console.log("PatchData:", patchData);
 
@@ -58,15 +55,15 @@ const MaquinasForm = (patchData) => {
           <Formik
             initialValues={{
               id: patchData?.location?.state?.id,
-              nombre: patchData?.location?.state?.nombre || "",
-              uso: patchData?.location?.state?.uso || "",
-              desperdicio: patchData?.location?.state?.desperdicio || "",
+              userName: patchData?.location?.state?.userName || "",
+              email: patchData?.location?.state?.email || "",
+              rolName: patchData?.location?.state?.rolName || "",
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
               try {
-                const response = await privatePostRequest("maquinas/save", {
+                const response = await privatePostRequest("users/save", {
                   ...formData,
                 });
                 console.log(response);
@@ -75,8 +72,8 @@ const MaquinasForm = (patchData) => {
                 showAlert({
                   type: "success",
                   title: patchData?.location?.state?.id
-                    ? "Editado correctamente"
-                    : "Creado correctamente",
+                    ? "Usuario editado correctamente"
+                    : "Usuario creado correctamente",
                 });
               } catch (err) {
                 console.log("Error catch:", err);
@@ -87,63 +84,61 @@ const MaquinasForm = (patchData) => {
           >
             {({ values, handleSubmit, handleChange, handleBlur }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
-                <label htmlFor="titulo">Nombre de la máquina</label>
+                <label htmlFor="titulo">Nombre de usuario</label>
                 <TextField
                   data-testid="titulo"
                   required
                   fullWidth
                   margin="normal"
-                  name="nombre"
+                  name="userName"
                   id="titulo"
                   label="Nombre"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.nombre}
+                  value={values.userName}
                 />
                 <ErrorMessage
-                  name="nombre"
+                  name="userName"
                   component="p"
                   className="input-error"
                 />
-                <label htmlFor="titulo">Descripción de su uso</label>
+                <label htmlFor="titulo">Email de usuario</label>
+                <TextField
+                  type="email"
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="email"
+                  id="titulo"
+                  label="Email"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="p"
+                  className="input-error"
+                />
+                <label htmlFor="titulo">Rol de usuario</label>
                 <TextField
                   data-testid="titulo"
                   required
                   fullWidth
                   margin="normal"
-                  name="uso"
+                  name="rolName"
                   id="titulo"
-                  label="Descripción"
+                  label="Rol"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.uso}
+                  value={values.rolName}
                 />
                 <ErrorMessage
-                  name="uso"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">
-                  Desperdicio que genera la máquina
-                </label>
-                <TextField
-                  type="number"
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="desperdicio"
-                  id="titulo"
-                  label="Desperdicio"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.desperdicio}
-                />
-                <ErrorMessage
-                  name="desperdicio"
+                  name="rolName"
                   component="p"
                   className="input-error"
                 />
@@ -163,4 +158,4 @@ const MaquinasForm = (patchData) => {
   );
 };
 
-export default MaquinasForm;
+export default UsuariosForm;

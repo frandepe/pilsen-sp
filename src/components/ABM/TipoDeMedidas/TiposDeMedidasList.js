@@ -41,40 +41,46 @@ const TiposDeMedidasList = () => {
   return (
     <div>
       <Header>
-        <h2>Lista de los Tipos de medidas</h2>
-        {tiposDeMedidasInfo?.result?.map((element) => {
-          return (
-            <tr key={element.id}>
-              <td className="title">{element.nombre}</td>
-
-              <td className="options">
-                <Link
-                  className="options__edit"
-                  to={{
-                    pathname: "/tipos-de-medidas-form",
-                    state: element,
-                  }}
-                >
-                  <MdModeEdit />
-                </Link>
-                <button
-                  onClick={() => handleRemove(element.id, element.nombre)}
-                >
-                  <IoMdTrash />
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-        <button>
+        <header className="list_header">
+          <h1>Tipos de medidas</h1>
           <Link
-            to={{
-              pathname: "/tipos-de-medidas-form",
-            }}
+            to="/tipo-de-medidas-form"
+            className="list_primary-button"
+            role="button"
           >
-            Agregar tipo de articulo
+            Agregar tipo de medida
           </Link>
-        </button>
+        </header>
+        <table className="list_container-table list_grid_two">
+          <tr>
+            <th>Nombre:</th>
+          </tr>
+
+          {tiposDeMedidasInfo?.result?.map((element) => {
+            return (
+              <tr key={element.id}>
+                <td className="list_title">{element.nombre}</td>
+
+                <td className="list_options">
+                  <Link
+                    className="list_options-edit"
+                    to={{
+                      pathname: "/tipos-de-medidas-form",
+                      state: element,
+                    }}
+                  >
+                    <MdModeEdit />
+                  </Link>
+                  <button
+                    onClick={() => handleRemove(element.id, element.nombre)}
+                  >
+                    <IoMdTrash />
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </table>
       </Header>
     </div>
   );

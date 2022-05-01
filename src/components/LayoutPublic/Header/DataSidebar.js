@@ -2,7 +2,8 @@ import React from "react";
 import { FiUserPlus, FiUserCheck } from "react-icons/fi";
 import { AiFillHome } from "react-icons/ai";
 import { DiTrello } from "react-icons/di";
-import { MdAddTask } from "react-icons/md";
+import { VscServerProcess } from "react-icons/vsc";
+import { MdAddTask, MdSecurity } from "react-icons/md";
 
 export const DataSidebar = [
   {
@@ -27,7 +28,7 @@ export const DataSidebar = [
   },
 ];
 
-export const DataSubMenu = [
+export const DataConfiguracion = [
   {
     icon: <MdAddTask />,
     title: "Tipos de Articulos",
@@ -61,11 +62,32 @@ export const DataSubMenu = [
   {
     icon: <MdAddTask />,
     title: "Depositos",
-    link: "/",
+    link: "/depositos",
   },
   {
     icon: <MdAddTask />,
     title: "Etapas Productivas",
+    link: "/",
+  },
+];
+
+export const DataSeguridad = [
+  {
+    icon: <MdSecurity />,
+    title: "Roles",
+    link: "/roles",
+  },
+  {
+    icon: <MdSecurity />,
+    title: "Usuarios",
+    link: "/usuarios",
+  },
+];
+
+export const DataProcesos = [
+  {
+    icon: <VscServerProcess />,
+    title: "Consulta de órdenes",
     link: "/",
   },
 ];
