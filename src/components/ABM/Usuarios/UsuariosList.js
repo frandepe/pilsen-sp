@@ -7,11 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { usuariosAction } from "../../../redux/actionsABM/reducerUsuarios";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
+import Spiner from "../../../shared/spiner";
+import Addabm from "../../../shared/addABM/addabm";
 
 const UsuariosList = () => {
   const dispatch = useDispatch();
   const [deleted, setDeleted] = useState(false);
-  const { usuariosInfo } = useSelector((store) => store.users);
+  const { usuariosInfo, loading } = useSelector((store) => store.users);
   console.log(usuariosInfo);
 
   async function handleRemove(id, userName, email, rolName) {
@@ -45,13 +47,7 @@ const UsuariosList = () => {
       <Header>
         <header className="list_header">
           <h1>Usuarios</h1>
-          <Link
-            to="/PallasFront/usuarios-form"
-            className="list_primary-button"
-            role="button"
-          >
-            Agregar usuario
-          </Link>
+          <Addabm to="/PallasFront/usuarios-form" />
         </header>
         <table className="list_container-table list_grid_four">
           <tr>
@@ -60,39 +56,44 @@ const UsuariosList = () => {
             <th>Rol:</th>
           </tr>
 
-          {usuariosInfo?.result?.map((element) => {
-            return (
-              <tr key={element.id}>
-                <td className="list_title">{element.userName}</td>
-                <td className="list_title">{element.email}</td>
-                <td className="list_title">{element.rolName}</td>
+          {!loading ? (
+            <Spiner />
+          ) : (
+            usuariosInfo?.result?.map((element) => {
+              return (
+                <tr key={element.id}>
+                  <td className="list_title">{element.userName}</td>
+                  <td className="list_title">{element.email}</td>
+                  <td className="list_title">{element.rolName}</td>
 
-                <td className="list_options">
-                  <Link
-                    className="list_options-edit"
-                    to={{
-                      pathname: "/PallasFront/usuarios-form",
-                      state: element,
-                    }}
-                  >
-                    <MdModeEdit />
-                  </Link>
-                  <button
-                    onClick={() =>
-                      handleRemove(
-                        element.id,
-                        element.userName,
-                        element.email,
-                        element.rolName
-                      )
-                    }
-                  >
-                    <IoMdTrash />
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="list_options">
+                    <Link
+                      className="list_options-edit"
+                      to={{
+                        pathname: "/PallasFront/usuarios-form",
+                        state: element,
+                      }}
+                    >
+                      <MdModeEdit />
+                    </Link>
+                    <button
+                      className="list_options-delete"
+                      onClick={() =>
+                        handleRemove(
+                          element.id,
+                          element.userName,
+                          element.email,
+                          element.rolName
+                        )
+                      }
+                    >
+                      <IoMdTrash />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </table>
       </Header>
     </div>

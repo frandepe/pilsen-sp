@@ -1,5 +1,3 @@
-import { makeStyles } from "@material-ui/core";
-// import backgraund_image from "./image/Monterey.jpg";
 import mockData from "./utils/mockdata";
 import { useState } from "react";
 import ContextAPI from "./utils/contextAPI";
@@ -24,7 +22,6 @@ import DepositosList from "./components/ABM/Depositos/DepositosList";
 import DepositosForm from "./components/ABM/Depositos/DepositosForm";
 
 function App() {
-  const classes = useStyle();
   const [data, setData] = useState(mockData);
 
   const updateListTitle = (newTitle, listId) => {
@@ -99,7 +96,7 @@ function App() {
       value={{ updateListTitle, addCard, addList, updateTitleCard }}
     >
       <Router>
-        <div className={classes.root}>
+        <div>
           <Switch>
             {/* <Route exact path="/" component={Dashboard} />
             <Route exact path="/tablero" component={Tablero} />

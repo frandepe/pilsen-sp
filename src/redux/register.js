@@ -3,10 +3,12 @@ import showAlert from "../shared/showAlert";
 
 const defaultValue = {
   registerInfo: {},
+  loading: false,
   error: false,
 };
 
 const REGISTER = "LOGIN";
+const LOADING = "LOADING";
 const ERROR = "ERROR";
 
 export default function RegisterReducer(
@@ -16,6 +18,8 @@ export default function RegisterReducer(
   switch (type) {
     case REGISTER:
       return { ...state, infoRegister: payload, error: false };
+    case LOADING:
+      return { ...state, loading: true };
     case ERROR:
       return { ...state, error: true };
     default:
@@ -49,6 +53,10 @@ export const registerAction =
       });
       dispatch({
         type: ERROR,
+      });
+    } finally {
+      dispatch({
+        type: LOADING,
       });
     }
   };

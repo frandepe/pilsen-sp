@@ -54,7 +54,7 @@ const DepositosForm = (patchData) => {
               id: patchData?.location?.state?.id,
               nombre: patchData?.location?.state?.nombre || "",
               direccion: patchData?.location?.state?.direccion || "",
-              oculto: patchData?.location?.state?.oculto === true,
+              oculto: patchData?.location?.state?.oculto === false,
               activo: patchData?.location?.state?.activo === true,
             }}
             validationSchema={formSchema}

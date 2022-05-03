@@ -2,9 +2,11 @@ import { getDataMethodPrivate } from "../../services/privateApiServices";
 
 const defaultValue = {
   tipoDeArticulosInfo: [],
+  loading: false,
 };
 
 const TIPO_DE_ARTICULOS = "TIPO_DE_ARTICULOS";
+const LOADING = "LOADING";
 
 export default function TipoDeArticulosReducer(
   state = defaultValue,
@@ -17,6 +19,8 @@ export default function TipoDeArticulosReducer(
         tipoDeArticulosInfo: payload.tipoDeArticulosInfo,
         error: false,
       };
+    case LOADING:
+      return { ...state, loading: true };
     default:
       return defaultValue;
   }
@@ -33,5 +37,9 @@ export const tipoDeArticulosAction = () => async (dispatch) => {
     });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({
+      type: LOADING,
+    });
   }
 };

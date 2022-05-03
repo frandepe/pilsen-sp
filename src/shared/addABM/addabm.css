@@ -1,0 +1,13 @@
+.Addabm_link {
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+  color: var(--primary);
+  font-size: 3em;
+  position: absolute;
+  bottom: 16px;
+  right: 30px;
+}
+
+.Addabm_link:hover {
+  color: var(--hoverPrimary);
+}

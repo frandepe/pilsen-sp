@@ -7,11 +7,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { rolesAction } from "../../../redux/actionsABM/reducerRoles";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
+import Spiner from "../../../shared/spiner";
+import Addabm from "../../../shared/addABM/addabm";
 
 const RolesList = () => {
   const dispatch = useDispatch();
   const [deleted, setDeleted] = useState(false);
-  const { rolesInfo } = useSelector((store) => store.roles);
+  const { rolesInfo, loading } = useSelector((store) => store.roles);
   console.log(rolesInfo);
 
   async function handleRemove(id, name) {
@@ -43,43 +45,42 @@ const RolesList = () => {
       <Header>
         <header className="list_header">
           <h1>Roles</h1>
-          <Link
-            to="/PallasFront/roles-form"
-            className="list_primary-button"
-            role="button"
-          >
-            Agregar Rol
-          </Link>
+          <Addabm to="/PallasFront/roles-form" />
         </header>
         <table className="list_container-table list_grid_two">
           <tr>
             <th>Nombre:</th>
           </tr>
 
-          {rolesInfo?.result?.map((element) => {
-            return (
-              <tr key={element.id}>
-                <td className="list_title">{element.name}</td>
+          {!loading ? (
+            <Spiner />
+          ) : (
+            rolesInfo?.result?.map((element) => {
+              return (
+                <tr key={element.id}>
+                  <td className="list_title">{element.name}</td>
 
-                <td className="list_options">
-                  <Link
-                    className="list_options-edit"
-                    to={{
-                      pathname: "/PallasFront/roles-form",
-                      state: element,
-                    }}
-                  >
-                    <MdModeEdit />
-                  </Link>
-                  <button
-                    onClick={() => handleRemove(element.id, element.name)}
-                  >
-                    <IoMdTrash />
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="list_options">
+                    <Link
+                      className="list_options-edit"
+                      to={{
+                        pathname: "/PallasFront/roles-form",
+                        state: element,
+                      }}
+                    >
+                      <MdModeEdit />
+                    </Link>
+                    <button
+                      className="list_options-delete"
+                      onClick={() => handleRemove(element.id, element.name)}
+                    >
+                      <IoMdTrash />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </table>
       </Header>
     </div>
