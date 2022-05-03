@@ -9,7 +9,7 @@ const config = {
 
 /**
  * Function to generate a POST request
- * @param {string} route  Endpoint's route. Example: "/maquinas"
+ * @param {string} route  Endpoint's route. Example: "maquinas"
  * @param {Object} postData Object with the post data
  * @returns {Promise}
  */
@@ -24,24 +24,8 @@ export const privatePostRequest = async (route, postData) => {
 };
 
 /**
- * Function to generate a PUT request
- * @param {string} url  Endpoint's url. Example: "/maquinas"
- * @param {Object} putData Object with the post data
- * @returns {Promise}
- */
-
-export const privatePutRequest = async ({ route, putData }) => {
-  try {
-    const res = await axios.put(`${BASE_URL}/${route}`, putData, config);
-    return res;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/**
  * Function to generate a DELETE request
- * @param {string} url  Endpoint's url. Example: "/maquinas"
+ * @param {string} url  Endpoint's url. Example: "maquinas"
  * @param {Object} deleteData Object with the post data
  * @returns {Promise}
  */
@@ -61,7 +45,7 @@ export const privateDeleteRequest = async (route, deleteData) => {
 
 /**
  * Function to generate a GET request
- * @param {string} sector  Endpoint's sector. Example: "/maquinas". Si el valor de "sector" es auth va a realizar una peticion distinta relacionada a la utentificacion
+ * @param {string} sector  Endpoint's sector. Example: "maquinas". Si el valor de "sector" es auth va a realizar una peticion distinta relacionada a la utentificacion
  * @param {number} id  El id seria un dato en especifico que se quiera devolver. Puede ir null
  * @returns {Promise}
  */

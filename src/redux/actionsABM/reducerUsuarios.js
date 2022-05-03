@@ -2,9 +2,11 @@ import { getDataMethodPrivate } from "../../services/privateApiServices";
 
 const defaultValue = {
   usuariosInfo: [],
+  loading: false,
 };
 
 const USUARIOS = "USUARIOS";
+const LOADING = "LOADING";
 
 export default function UsuariosReducer(
   state = defaultValue,
@@ -17,6 +19,8 @@ export default function UsuariosReducer(
         usuariosInfo: payload.usuariosInfo,
         error: false,
       };
+    case LOADING:
+      return { ...state, loading: true };
     default:
       return defaultValue;
   }
@@ -33,5 +37,9 @@ export const usuariosAction = () => async (dispatch) => {
     });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({
+      type: LOADING,
+    });
   }
 };

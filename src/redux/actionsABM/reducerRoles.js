@@ -2,9 +2,11 @@ import { getDataMethodPrivate } from "../../services/privateApiServices";
 
 const defaultValue = {
   rolesInfo: [],
+  loading: false,
 };
 
 const ROLES = "ROLES";
+const LOADING = "LOADING";
 
 export default function RolesReducer(state = defaultValue, { type, payload }) {
   switch (type) {
@@ -14,6 +16,8 @@ export default function RolesReducer(state = defaultValue, { type, payload }) {
         rolesInfo: payload.rolesInfo,
         error: false,
       };
+    case LOADING:
+      return { ...state, loading: true };
     default:
       return defaultValue;
   }
@@ -30,5 +34,9 @@ export const rolesAction = () => async (dispatch) => {
     });
   } catch (error) {
     console.log(error);
+  } finally {
+    dispatch({
+      type: LOADING,
+    });
   }
 };

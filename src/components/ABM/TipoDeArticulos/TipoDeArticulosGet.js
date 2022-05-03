@@ -7,12 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { tipoDeArticulosAction } from "../../../redux/actionsABM/reducerTipoDeArticulos";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
+import Spiner from "../../../shared/spiner";
+import Addabm from "../../../shared/addABM/addabm";
 // falta estilos
 
 const TipoDeArticulosGet = () => {
   const dispatch = useDispatch();
   const [deletedNew, setDeletedNew] = useState(false);
-  const { tipoDeArticulosInfo } = useSelector((store) => store.tipoDeArticulos);
+  const { tipoDeArticulosInfo, loading } = useSelector(
+    (store) => store.tipoDeArticulos
+  );
   console.log(tipoDeArticulosInfo);
 
   async function handleRemove(id, nombre) {
@@ -44,43 +48,42 @@ const TipoDeArticulosGet = () => {
       <Header>
         <header className="list_header">
           <h1>Tipos de articulos</h1>
-          <Link
-            to="/PallasFront/tipo-de-articulos-form"
-            className="list_primary-button"
-            role="button"
-          >
-            Agregar tipo de artículo
-          </Link>
+          <Addabm to="/PallasFront/tipo-de-articulos-form" />
         </header>
         <table className="list_container-table list_grid_two">
           <tr>
             <th>Nombre:</th>
           </tr>
 
-          {tipoDeArticulosInfo?.result?.map((element) => {
-            return (
-              <tr key={element.id}>
-                <td className="list_title">{element.nombre}</td>
+          {!loading ? (
+            <Spiner />
+          ) : (
+            tipoDeArticulosInfo?.result?.map((element) => {
+              return (
+                <tr key={element.id}>
+                  <td className="list_title">{element.nombre}</td>
 
-                <td className="list_options">
-                  <Link
-                    className="list_options-edit"
-                    to={{
-                      pathname: "/PallasFront/tipo-de-articulos-form",
-                      state: element,
-                    }}
-                  >
-                    <MdModeEdit />
-                  </Link>
-                  <button
-                    onClick={() => handleRemove(element.id, element.nombre)}
-                  >
-                    <IoMdTrash />
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="list_options">
+                    <Link
+                      className="list_options-edit"
+                      to={{
+                        pathname: "/PallasFront/tipo-de-articulos-form",
+                        state: element,
+                      }}
+                    >
+                      <MdModeEdit />
+                    </Link>
+                    <button
+                      className="list_options-delete"
+                      onClick={() => handleRemove(element.id, element.nombre)}
+                    >
+                      <IoMdTrash />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </table>
       </Header>
     </div>
