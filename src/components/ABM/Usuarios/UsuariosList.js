@@ -46,7 +46,7 @@ const UsuariosList = () => {
         <header className="list_header">
           <h1>Usuarios</h1>
           <Link
-            to="/usuarios-form"
+            to="/PallasFront/usuarios-form"
             className="list_primary-button"
             role="button"
           >
@@ -71,7 +71,7 @@ const UsuariosList = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/usuarios-form",
+                      pathname: "/PallasFront/usuarios-form",
                       state: element,
                     }}
                   >

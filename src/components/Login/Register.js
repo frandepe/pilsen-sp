@@ -207,7 +207,7 @@ export default function SignIn() {
                       <Grid container>
                         <Grid item>
                           <Link
-                            href="/login"
+                            href="/PallasFront/login"
                             className={classes.registerSubBtn}
                           >
                             {"Ya tienes cuenta? Inicia sesion"}

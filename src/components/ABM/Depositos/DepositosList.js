@@ -47,7 +47,7 @@ const DepositosList = () => {
         <header className="list_header">
           <h1>Depósitos</h1>
           <Link
-            to="/depositos-form"
+            to="/PallasFront/depositos-form"
             className="list_primary-button"
             role="button"
           >
@@ -69,7 +69,7 @@ const DepositosList = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/depositos-form",
+                      pathname: "/PallasFront/depositos-form",
                       state: element,
                     }}
                   >

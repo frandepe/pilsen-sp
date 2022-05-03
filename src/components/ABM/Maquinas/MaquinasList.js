@@ -46,14 +46,14 @@ const MaquinasList = () => {
         <header className="list_header">
           <h1>Máquinas</h1>
           <Link
-            to="/máquinas-form"
+            to="/PallasFront/maquinas-form"
             className="list_primary-button"
             role="button"
           >
             Agregar máquina
           </Link>
         </header>
-        <table className="list_container-table">
+        <table className="list_container-table list_grid_four">
           <tr>
             <th>Nombre:</th>
             <th>Uso:</th>
@@ -71,7 +71,7 @@ const MaquinasList = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/maquinas-form",
+                      pathname: "/PallasFront/maquinas-form",
                       state: element,
                     }}
                   >
@@ -93,7 +93,6 @@ const MaquinasList = () => {
               </tr>
             );
           })}
-         
         </table>
       </Header>
     </div>

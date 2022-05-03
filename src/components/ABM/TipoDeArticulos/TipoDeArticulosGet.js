@@ -45,7 +45,7 @@ const TipoDeArticulosGet = () => {
         <header className="list_header">
           <h1>Tipos de articulos</h1>
           <Link
-            to="/tipo-de-articulos-form"
+            to="/PallasFront/tipo-de-articulos-form"
             className="list_primary-button"
             role="button"
           >
@@ -66,7 +66,7 @@ const TipoDeArticulosGet = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/tipo-de-articulos-form",
+                      pathname: "/PallasFront/tipo-de-articulos-form",
                       state: element,
                     }}
                   >

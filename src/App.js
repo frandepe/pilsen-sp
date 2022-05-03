@@ -101,7 +101,7 @@ function App() {
       <Router>
         <div className={classes.root}>
           <Switch>
-            <Route exact path="/" component={Dashboard} />
+            {/* <Route exact path="/" component={Dashboard} />
             <Route exact path="/tablero" component={Tablero} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
@@ -132,49 +132,69 @@ function App() {
             <Route exact path="/roles" component={RolesList} />
             <Route exact path="/roles-form" component={RolesForm} />
             <Route exact path="/depositos" component={DepositosList} />
-            <Route exact path="/depositos-form" component={DepositosForm} />
-            {/* <Route exact path={rutaPallas + "/"} component={Dashboard} />
-            <Route exact path={rutaPallas + "/tablero"} component={Tablero} />
+            <Route exact path="/depositos-form" component={DepositosForm} /> */}
+
+            <Route exact path="/PallasFront" component={Dashboard} />
+            <Route exact path="/PallasFront/tablero" component={Tablero} />
+            <Route exact path="/PallasFront/login" component={Login} />
+            <Route exact path="/PallasFront/register" component={Register} />
             <Route
               exact
-              path={rutaPallas + "/PallasFront/login"}
-              component={Login}
-            />
-            <Route exact path={rutaPallas + "/register"} component={Register} />
-            <Route
-              exact
-              path={rutaPallas + "/tipo-de-articulos"}
+              path="/PallasFront/tipo-de-articulos"
               component={TipoDeArticulosGet}
             />
             <Route
               exact
-              path={rutaPallas + "/tipo-de-articulos-form"}
+              path="/PallasFront/tipo-de-articulos-form"
               component={TipoDeArticulos}
-            /> */}
+            />
+            <Route
+              exact
+              path="/PallasFront/tipos-de-medidas"
+              component={TiposDeMedidasList}
+            />
+            <Route
+              exact
+              path="/PallasFront/tipos-de-medidas-form"
+              component={TiposDeMedidasForm}
+            />
+            <Route
+              exact
+              path="/PallasFront/maquinas"
+              component={MaquinasList}
+            />
+            <Route
+              exact
+              path="/PallasFront/maquinas-form"
+              component={MaquinasForm}
+            />
+            <Route
+              exact
+              path="/PallasFront/usuarios"
+              component={UsuariosList}
+            />
+            <Route
+              exact
+              path="/PallasFront/usuarios-form"
+              component={UsuariosForm}
+            />
+            <Route exact path="/PallasFront/roles" component={RolesList} />
+            <Route exact path="/PallasFront/roles-form" component={RolesForm} />
+            <Route
+              exact
+              path="/PallasFront/depositos"
+              component={DepositosList}
+            />
+            <Route
+              exact
+              path="/PallasFront/depositos-form"
+              component={DepositosForm}
+            />
           </Switch>
         </div>
       </Router>
     </ContextAPI.Provider>
   );
 }
-
-const useStyle = makeStyles((theme) => ({
-  // root: {
-  //   display: "flex",
-  //   minHeight: "100vh",
-  //   overflowX: "auto",
-  //   background: "#4c9aff",
-  //   backgroundImage: `url(${backgraund_image})`,
-  //   backgroundPosition: "center",
-  //   backgroundSize: "cover",
-  //   backgroundRepeat: "no-repeat",
-  // },
-  // container: {
-  //   display: "flex",
-  //   justifiContent: "center",
-  //   alingItem: "center",
-  //   margin: "auto",
-  // },
-}));
 
 export default App;

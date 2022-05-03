@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
+import { useHistory } from "react-router-dom";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const DepositosForm = (patchData) => {
+  const history = useHistory();
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -70,7 +72,7 @@ const DepositosForm = (patchData) => {
                   title: patchData?.location?.state?.id
                     ? "Depósito editado correctamente"
                     : "Depósito creado correctamente",
-                });
+                }) && history.push("/PallasFront/depositos");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {

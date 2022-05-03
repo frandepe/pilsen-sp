@@ -43,7 +43,11 @@ const RolesList = () => {
       <Header>
         <header className="list_header">
           <h1>Roles</h1>
-          <Link to="/roles-form" className="list_primary-button" role="button">
+          <Link
+            to="/PallasFront/roles-form"
+            className="list_primary-button"
+            role="button"
+          >
             Agregar Rol
           </Link>
         </header>
@@ -61,7 +65,7 @@ const RolesList = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/roles-form",
+                      pathname: "/PallasFront/roles-form",
                       state: element,
                     }}
                   >

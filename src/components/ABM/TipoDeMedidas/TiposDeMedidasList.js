@@ -44,7 +44,7 @@ const TiposDeMedidasList = () => {
         <header className="list_header">
           <h1>Tipos de medidas</h1>
           <Link
-            to="/tipo-de-medidas-form"
+            to="/PallasFront/tipos-de-medidas-form"
             className="list_primary-button"
             role="button"
           >
@@ -65,7 +65,7 @@ const TiposDeMedidasList = () => {
                   <Link
                     className="list_options-edit"
                     to={{
-                      pathname: "/tipos-de-medidas-form",
+                      pathname: "/PallasFront/tipos-de-medidas-form",
                       state: element,
                     }}
                   >

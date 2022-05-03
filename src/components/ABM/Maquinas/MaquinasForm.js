@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
+import { useHistory } from "react-router-dom";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const MaquinasForm = (patchData) => {
+  const history = useHistory();
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -77,7 +79,7 @@ const MaquinasForm = (patchData) => {
                   title: patchData?.location?.state?.id
                     ? "Editado correctamente"
                     : "Creado correctamente",
-                });
+                }) && history.push("/PallasFront/maquinas");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {

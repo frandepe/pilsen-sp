@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
+import { useHistory } from "react-router-dom";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const TipoDeArticulos = (patchData) => {
+  const history = useHistory();
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -36,7 +38,6 @@ const TipoDeArticulos = (patchData) => {
   });
   console.log("PatchData:", patchData);
 
-  // Si paso el id en el onSubmit rompe 400
   return (
     <div>
       <Header>
@@ -67,7 +68,7 @@ const TipoDeArticulos = (patchData) => {
                   title: patchData?.location?.state?.id
                     ? "Editado correctamente"
                     : "Creado correctamente",
-                });
+                }) && history.push("/PallasFront/tipo-de-articulos");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {

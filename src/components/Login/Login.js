@@ -163,7 +163,7 @@ export default function SignIn() {
                           <Link href="#">¿Olvidaste tu contraseña?</Link>
                         </Grid>
                         <Grid item>
-                          <Link href="/register">
+                          <Link href="/PallasFront/register">
                             {"No tienes cuenta? Registrate"}
                           </Link>
                         </Grid>

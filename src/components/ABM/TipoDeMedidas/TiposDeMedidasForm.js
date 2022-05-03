@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
+import { useHistory } from "react-router-dom";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const TiposDeMedidasForm = (patchData) => {
+  const history = useHistory();
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -36,7 +38,6 @@ const TiposDeMedidasForm = (patchData) => {
   });
   console.log("PatchData:", patchData);
 
-  // Si paso el id en el onSubmit rompe 400
   return (
     <div>
       <Header>
@@ -64,7 +65,7 @@ const TiposDeMedidasForm = (patchData) => {
                   title: patchData?.location?.state?.id
                     ? "Editado correctamente"
                     : "Creado correctamente",
-                });
+                }) && history.push("/PallasFront/tipos-de-medidas");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {

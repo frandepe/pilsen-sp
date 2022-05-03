@@ -9,22 +9,22 @@ export const DataSidebar = [
   {
     icon: <AiFillHome />,
     title: "Home",
-    link: "/",
+    link: "/PallasFront",
   },
   {
     icon: <DiTrello />,
     title: "Tablero",
-    link: "/tablero",
+    link: "/PallasFront/tablero",
   },
   {
     icon: <FiUserCheck />,
     title: "Login",
-    link: "/login",
+    link: "/PallasFront/login",
   },
   {
     icon: <FiUserPlus />,
     title: "Register",
-    link: "/register",
+    link: "/PallasFront/register",
   },
 ];
 
@@ -32,17 +32,17 @@ export const DataConfiguracion = [
   {
     icon: <MdAddTask />,
     title: "Tipos de Articulos",
-    link: "/tipo-de-articulos",
+    link: "/PallasFront/tipo-de-articulos",
   },
   {
     icon: <MdAddTask />,
     title: "Tipos de Medidas",
-    link: "/tipos-de-medidas",
+    link: "/PallasFront/tipos-de-medidas",
   },
   {
     icon: <MdAddTask />,
     title: "Maquinas",
-    link: "/maquinas",
+    link: "/PallasFront/maquinas",
   },
   {
     icon: <MdAddTask />,
@@ -62,7 +62,7 @@ export const DataConfiguracion = [
   {
     icon: <MdAddTask />,
     title: "Depositos",
-    link: "/depositos",
+    link: "/PallasFront/depositos",
   },
   {
     icon: <MdAddTask />,
@@ -75,12 +75,12 @@ export const DataSeguridad = [
   {
     icon: <MdSecurity />,
     title: "Roles",
-    link: "/roles",
+    link: "/PallasFront/roles",
   },
   {
     icon: <MdSecurity />,
     title: "Usuarios",
-    link: "/usuarios",
+    link: "/PallasFront/usuarios",
   },
 ];
 

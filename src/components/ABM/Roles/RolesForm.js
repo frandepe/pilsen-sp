@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
+import { useHistory } from "react-router-dom";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const RolesForm = (patchData) => {
+  const history = useHistory();
   const classes = useStyles();
   const [statusForm, setStatusForm] = useState(false);
 
@@ -63,7 +65,7 @@ const RolesForm = (patchData) => {
                   title: patchData?.location?.state?.id
                     ? "Rol editado correctamente"
                     : "Rol creado correctamente",
-                });
+                }) && history.push("/PallasFront/roles");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {
