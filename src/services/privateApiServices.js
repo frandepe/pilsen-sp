@@ -4,7 +4,11 @@ const BASE_URL = "http://26.204.148.246:9090/api";
 
 const tokenn = window.localStorage.getItem("token");
 const config = {
-  headers: { Authorization: `Bearer ${tokenn}` },
+  headers: {
+    Authorization: `Bearer ${tokenn}`,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  },
 };
 
 /**
