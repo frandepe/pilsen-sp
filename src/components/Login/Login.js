@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -59,11 +59,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const { infoUser, error } = useSelector((store) => store.user);
   console.log("infoUser!:", infoUser);
   console.log("Token!:", infoUser?.token);
   console.log("Error!:", error);
+
+  useEffect(() => {
+    window.localStorage.getItem("token") && history.push("/PallasFront");
+  }, [window.localStorage.getItem("token")]);
+
   const classes = useStyles();
 
   const formSchema = yup.object().shape({
@@ -80,7 +86,9 @@ export default function SignIn() {
       .required("Por favor, ingrese su contraseña")
       .max(50, "La contraseña es demasiado larga"),
   });
-
+  // useEffect(() => {
+  //   window.localStorage.getItem("token") && navigate("/home");
+  // }, [window.localStorage.getItem("token")]);
   return (
     <div>
       <Header>

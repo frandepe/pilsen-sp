@@ -2,7 +2,7 @@ import { privatePostRequest } from "../services/privateApiServices";
 import showAlert from "../shared/showAlert";
 
 const defaultValue = {
-  userInfo: {},
+  infoUser: {},
   token: null,
   loading: false,
   error: false,

@@ -6,8 +6,12 @@ const tokenn = window.localStorage.getItem("token");
 const config = {
   headers: {
     Authorization: `Bearer ${tokenn}`,
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Expose-Headers": "Access-Control-*",
+    "Access-Control-Allow-Headers":
+      "Access-Control-*, Origin, X-Requested-With, Content-Type, Accept",
     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
   },
 };
 

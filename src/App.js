@@ -2,7 +2,12 @@ import mockData from "./utils/mockdata";
 import { useState } from "react";
 import ContextAPI from "./utils/contextAPI";
 import uuid from "react-uuid";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  // Redirect,
+} from "react-router-dom";
 import Tablero from "./components/Tablero/Tablero";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
@@ -20,6 +25,7 @@ import RolesList from "./components/ABM/Roles/RolesList";
 import RolesForm from "./components/ABM/Roles/RolesForm";
 import DepositosList from "./components/ABM/Depositos/DepositosList";
 import DepositosForm from "./components/ABM/Depositos/DepositosForm";
+import PrivateRoutes from "./Routes/private.routes";
 
 function App() {
   const [data, setData] = useState(mockData);
@@ -84,7 +90,8 @@ function App() {
       },
     });
   };
-  // En package.json -> "homepage": "http://26.204.148.246/PallasFront/",
+  // En package.json DEV -> "homepage": "http://localhost:3000/PallasFront/",
+  // En package.json PROD -> "homepage": "http://26.204.148.246/PallasFront/",
   // const rutaPallas = "/PallasFront";
   // basename="/PallasFront"
   // http://26.204.148.246/PallasFront/
@@ -131,62 +138,82 @@ function App() {
             <Route exact path="/depositos" component={DepositosList} />
             <Route exact path="/depositos-form" component={DepositosForm} /> */}
 
-            <Route exact path="/PallasFront" component={Dashboard} />
-            <Route exact path="/PallasFront/tablero" component={Tablero} />
+            <PrivateRoutes exact path="/PallasFront" component={Dashboard} />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/tablero"
+              component={Tablero}
+            />
             <Route exact path="/PallasFront/login" component={Login} />
-            <Route exact path="/PallasFront/register" component={Register} />
-            <Route
+            <PrivateRoutes
+              exact
+              path="/PallasFront/register"
+              component={Register}
+            />
+            <PrivateRoutes
               exact
               path="/PallasFront/tipo-de-articulos"
               component={TipoDeArticulosGet}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/tipo-de-articulos-form"
               component={TipoDeArticulos}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/tipos-de-medidas"
               component={TiposDeMedidasList}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/tipos-de-medidas-form"
               component={TiposDeMedidasForm}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/maquinas"
               component={MaquinasList}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/maquinas-form"
               component={MaquinasForm}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/usuarios"
               component={UsuariosList}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/usuarios-form"
               component={UsuariosForm}
             />
-            <Route exact path="/PallasFront/roles" component={RolesList} />
-            <Route exact path="/PallasFront/roles-form" component={RolesForm} />
-            <Route
+            <PrivateRoutes
+              exact
+              path="/PallasFront/roles"
+              component={RolesList}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/roles-form"
+              component={RolesForm}
+            />
+            <PrivateRoutes
               exact
               path="/PallasFront/depositos"
               component={DepositosList}
             />
-            <Route
+            <PrivateRoutes
               exact
               path="/PallasFront/depositos-form"
               component={DepositosForm}
             />
+
+            {/* <Route exact path="*">
+              <Redirect to="/PallasFront/login" />
+            </Route> */}
           </Switch>
         </div>
       </Router>
