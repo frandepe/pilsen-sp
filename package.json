@@ -1,7 +1,6 @@
 {
   "name": "appsantiagopallas",
   "version": "0.1.0",
-  "homepage": "http://localhost:3000/PallasFront/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.2",
