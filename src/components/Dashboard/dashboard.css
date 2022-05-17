@@ -10,12 +10,19 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.6);
+  width: 260px;
 }
 
 .dashboard-tituloPrincipal {
   margin-left: 2%;
+  margin-top: 5%;
   display: flex;
   align-items: center;
+}
+
+.dashboard-tituloPrincipal svg {
+  margin-right: 7px;
+  margin-bottom: 4px;
 }
 
 .dashboard_title {

@@ -1,44 +1,27 @@
-import { MdDashboardCustomize } from "react-icons/md";
+import { MdPendingActions } from "react-icons/md";
+import { GiSecurityGate } from "react-icons/gi";
+import { FaTasks } from "react-icons/fa";
+import { DiTrello } from "react-icons/di";
 
 export const DataDashboard = [
   {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
+    icon: <DiTrello />,
+    title: "Tablero",
+    link: "/PallasFront/tablero",
   },
   {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
+    icon: <FaTasks />,
+    title: "Configuración",
+    link: "/PallasFront/Configuracion",
   },
   {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
+    icon: <GiSecurityGate />,
+    title: "Seguridad",
+    link: "/PallasFront/Seguridad",
   },
   {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
-  },
-  {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
-  },
-  {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
-  },
-  {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
-  },
-  {
-    icon: <MdDashboardCustomize />,
-    title: "Page",
-    link: "/",
+    icon: <MdPendingActions />,
+    title: "Procesos",
+    link: "/PallasFront/Procesos",
   },
 ];

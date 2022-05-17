@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   DataSidebar,
   DataConfiguracion,
@@ -11,15 +11,16 @@ import { GiHamburgerMenu, GiSecurityGate } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaTasks } from "react-icons/fa";
 import { MdExpandLess, MdExpandMore, MdPendingActions } from "react-icons/md";
-import Profile from "./Profile";
 
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
+import showAlert from "../../../shared/showAlert";
 
 const Sidebar = () => {
+  const history = useHistory();
   const [sidebar, setSidebar] = useState(false);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -36,6 +37,15 @@ const Sidebar = () => {
 
   const showSidebar = () => setSidebar(!sidebar);
 
+  const handleSessionClose = () => {
+    localStorage.removeItem("token");
+    showAlert({
+      type: "success",
+      title: "Sesión cerrada",
+      message: "Sesión cerrada correctamente",
+    }) && history.push("/PallasFront/login");
+  };
+
   return (
     <div>
       <div className="sidebar_sidebar">
@@ -43,7 +53,12 @@ const Sidebar = () => {
           <GiHamburgerMenu onClick={showSidebar} />
         </div>
         <div className="sidebar-profile">
-          <Profile />
+          <button
+            className="sidebar_session-close"
+            onClick={handleSessionClose}
+          >
+            Cerrar Session
+          </button>
         </div>
       </div>
       <nav className={sidebar ? "sidebar_nav-menu active" : "sidebar_nav-menu"}>
@@ -53,7 +68,7 @@ const Sidebar = () => {
               <AiOutlineClose onClick={showSidebar} />
             </div>
           </li>
-          <li className="sidebar_sidebar--title">Nombre empresa</li>
+          <li className="sidebar_sidebar--title">Pallas</li>
           {DataSidebar.map((e, i) => {
             return (
               <li key={i} className="sidebar_data--items">

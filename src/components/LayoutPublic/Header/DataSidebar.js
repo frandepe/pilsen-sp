@@ -1,14 +1,14 @@
 import React from "react";
-import { FiUserPlus, FiUserCheck } from "react-icons/fi";
-import { AiFillHome } from "react-icons/ai";
+import { FiUserCheck } from "react-icons/fi";
+import { AiFillDashboard } from "react-icons/ai";
 import { DiTrello } from "react-icons/di";
 import { VscServerProcess } from "react-icons/vsc";
 import { MdAddTask, MdSecurity } from "react-icons/md";
 
 export const DataSidebar = [
   {
-    icon: <AiFillHome />,
-    title: "Home",
+    icon: <AiFillDashboard />,
+    title: "Dashboard",
     link: "/PallasFront",
   },
   {
@@ -20,11 +20,6 @@ export const DataSidebar = [
     icon: <FiUserCheck />,
     title: "Login",
     link: "/PallasFront/login",
-  },
-  {
-    icon: <FiUserPlus />,
-    title: "Register",
-    link: "/PallasFront/register",
   },
 ];
 

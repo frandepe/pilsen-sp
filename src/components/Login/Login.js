@@ -6,13 +6,11 @@ import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Header from "../LayoutPublic/Header/Header";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,110 +84,106 @@ export default function SignIn() {
       .required("Por favor, ingrese su contraseña")
       .max(50, "La contraseña es demasiado larga"),
   });
-  // useEffect(() => {
-  //   window.localStorage.getItem("token") && navigate("/home");
-  // }, [window.localStorage.getItem("token")]);
+
   return (
     <div>
-      <Header>
-        <div className="login_container">
-          <div className="login_container-formulario">
-            <Formik
-              initialValues={{
-                email: "",
-                password: "",
-              }}
-              validationSchema={formSchema}
-              onSubmit={async ({ email, password }, { resetForm }) => {
-                resetForm();
-                try {
-                  dispatch(loginAction({ email, password }));
-                } catch (err) {
-                  console.log("Error catch:", err);
-                }
-              }}
-            >
-              {({ values, handleSubmit, handleChange, handleBlur }) => (
-                <Container
-                  component="main"
-                  maxWidth="xs"
-                  className={classes.root}
-                >
-                  <CssBaseline />
-                  <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                      Iniciar sesión
-                    </Typography>
-                    <p className={classes.subtitle}>Administrá tu cuenta</p>
-                    <form onSubmit={handleSubmit} className={classes.form}>
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email"
-                        name="email"
-                        autoComplete="email"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.email}
-                      />
-                      <ErrorMessage
-                        name="email"
-                        component="p"
-                        className="input-error"
-                      />
-                      <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Contraseña"
-                        type="password"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        id="password"
-                        autoComplete="current-password"
-                        value={values.password}
-                      />
-                      <ErrorMessage
-                        name="password"
-                        component="p"
-                        className="input-error"
-                      />
-                      <FormControlLabel
-                        control={<Checkbox value="true" color="primary" />}
-                        label="Recuerdame"
-                      />
-                      <Button fullWidth type="submit" className={classes.btn}>
-                        Ingresar
-                      </Button>
-                      <Grid container className="login_sub-btn">
-                        <Grid item xs>
-                          <Link href="#">¿Olvidaste tu contraseña?</Link>
-                        </Grid>
-                        <Grid item>
-                          <Link href="/PallasFront/register">
-                            {"No tienes cuenta? Registrate"}
-                          </Link>
-                        </Grid>
+      <div className="login_container">
+        <div className="login_container-formulario">
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={formSchema}
+            onSubmit={async ({ email, password }, { resetForm }) => {
+              resetForm();
+              try {
+                dispatch(loginAction({ email, password }));
+              } catch (err) {
+                console.log("Error catch:", err);
+              }
+            }}
+          >
+            {({ values, handleSubmit, handleChange, handleBlur }) => (
+              <Container
+                component="main"
+                maxWidth="xs"
+                className={classes.root}
+              >
+                <CssBaseline />
+                <div className={classes.paper}>
+                  <Typography component="h1" variant="h5">
+                    Iniciar sesión
+                  </Typography>
+                  <p className={classes.subtitle}>Administrá tu cuenta</p>
+                  <form onSubmit={handleSubmit} className={classes.form}>
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email"
+                      name="email"
+                      autoComplete="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="p"
+                      className="input-error"
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Contraseña"
+                      type="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      id="password"
+                      autoComplete="current-password"
+                      value={values.password}
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="p"
+                      className="input-error"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox value="true" color="primary" />}
+                      label="Recuerdame"
+                    />
+                    <Button fullWidth type="submit" className={classes.btn}>
+                      Ingresar
+                    </Button>
+                    {/* <Grid container className="login_sub-btn">
+                      <Grid item xs>
+                        <Link href="#">¿Olvidaste tu contraseña?</Link>
                       </Grid>
-                    </form>
-                  </div>
-                  <Box mt={8} mb={8}>
-                    <Copyright />
-                  </Box>
-                </Container>
-              )}
-            </Formik>
-          </div>
-          <div className="login_container-img">
-            <img src={imgLogin} alt="Imagen no encontrada" />
-          </div>
+                      <Grid item>
+                        <Link href="/PallasFront/register">
+                          {"No tienes cuenta? Registrate"}
+                        </Link>
+                      </Grid>
+                    </Grid> */}
+                  </form>
+                </div>
+                <Box mt={8} mb={8}>
+                  <Copyright />
+                </Box>
+              </Container>
+            )}
+          </Formik>
         </div>
-      </Header>
+        <div className="login_container-img">
+          <img src={imgLogin} alt="Imagen no encontrada" />
+        </div>
+      </div>
     </div>
   );
 }

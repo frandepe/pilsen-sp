@@ -26,6 +26,9 @@ import RolesForm from "./components/ABM/Roles/RolesForm";
 import DepositosList from "./components/ABM/Depositos/DepositosList";
 import DepositosForm from "./components/ABM/Depositos/DepositosForm";
 import PrivateRoutes from "./Routes/private.routes";
+import DashboardConfiguracion from "./components/Dashboard/DashboardConfiguracion";
+import DashboardSeguridad from "./components/Dashboard/DashboardSeguridad";
+import DashboardProcesos from "./components/Dashboard/DashboardProcesos";
 
 function App() {
   const [data, setData] = useState(mockData);
@@ -105,40 +108,23 @@ function App() {
       <Router>
         <div>
           <Switch>
-            {/* <Route exact path="/" component={Dashboard} />
-            <Route exact path="/tablero" component={Tablero} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route
-              exact
-              path="/tipo-de-articulos"
-              component={TipoDeArticulosGet}
-            />
-            <Route
-              exact
-              path="/tipo-de-articulos-form"
-              component={TipoDeArticulos}
-            />
-            <Route
-              exact
-              path="/tipos-de-medidas"
-              component={TiposDeMedidasList}
-            />
-            <Route
-              exact
-              path="/tipos-de-medidas-form"
-              component={TiposDeMedidasForm}
-            />
-            <Route exact path="/maquinas" component={MaquinasList} />
-            <Route exact path="/maquinas-form" component={MaquinasForm} />
-            <Route exact path="/usuarios" component={UsuariosList} />
-            <Route exact path="/usuarios-form" component={UsuariosForm} />
-            <Route exact path="/roles" component={RolesList} />
-            <Route exact path="/roles-form" component={RolesForm} />
-            <Route exact path="/depositos" component={DepositosList} />
-            <Route exact path="/depositos-form" component={DepositosForm} /> */}
-
             <PrivateRoutes exact path="/PallasFront" component={Dashboard} />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/Configuracion"
+              component={DashboardConfiguracion}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/Seguridad"
+              component={DashboardSeguridad}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/Procesos"
+              component={DashboardProcesos}
+            />
+
             <PrivateRoutes
               exact
               path="/PallasFront/tablero"
@@ -210,10 +196,6 @@ function App() {
               path="/PallasFront/depositos-form"
               component={DepositosForm}
             />
-
-            {/* <Route exact path="*">
-              <Redirect to="/PallasFront/login" />
-            </Route> */}
           </Switch>
         </div>
       </Router>
