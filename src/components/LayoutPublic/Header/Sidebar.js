@@ -20,8 +20,18 @@ import Collapse from "@mui/material/Collapse";
 import showAlert from "../../../shared/showAlert";
 
 const Sidebar = () => {
+  const sidebarResponsive = matchMedia("(max-width: 768px)");
+  console.log(sidebarResponsive);
+  // const cambiarMQ = (mediaQ) => {
+  //   if (mediaQ.matches === false) {
+  //     return true;
+  //   }
+  // };
+  // cambiarMQ(sidebarResponsive)
   const history = useHistory();
-  const [sidebar, setSidebar] = useState(false);
+  const [sidebar, setSidebar] = useState(
+    sidebarResponsive.matches ? false : true
+  );
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
@@ -34,8 +44,12 @@ const Sidebar = () => {
   const handleClick3 = () => {
     setOpen3(!open3);
   };
-
   const showSidebar = () => setSidebar(!sidebar);
+
+  // useEffect(() => {
+  //   const resp = sidebarResponsive?.matches && setSidebar(sidebar);
+  //   console.log(resp);
+  // }, [sidebarResponsive]);
 
   const handleSessionClose = () => {
     localStorage.removeItem("token");

@@ -3,6 +3,12 @@
 }
 
 /*** ABM FORMS ***/
+.list_data td,
+.list_data th,
+.list_titulos td {
+  color: var(--tertiary);
+  font-size: 1em;
+}
 
 .abm_container {
   display: flex;
@@ -16,6 +22,16 @@
 }
 
 /*** ABM LIST ***/
+
+.list_titulos td {
+  font-weight: bold;
+}
+
+.list_container-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 5px;
+}
 
 .list_header {
   display: flex;
@@ -93,7 +109,8 @@
   align-items: center;
   gap: 10px;
 }
-.list_options .list_options-delete {
+.list_options,
+.list_options-delete {
   background-color: rgb(209, 0, 0);
   display: grid;
   place-items: center;
@@ -111,6 +128,7 @@
 }
 
 .list_options-edit {
+  margin-right: 10px;
   display: grid;
   place-items: center;
   width: 30px;
@@ -122,6 +140,11 @@
   text-decoration: none;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+}
+
+.list_pagination {
+  display: flex;
+  justify-content: center;
 }
 
 .list_options-edit:hover {

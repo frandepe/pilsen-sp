@@ -3,6 +3,8 @@ import Header from "../LayoutPublic/Header/Header";
 import { FaTasks } from "react-icons/fa";
 import { DataConfiguracion } from "../LayoutPublic/Header/DataSidebar";
 import { useHistory } from "react-router-dom";
+import ButtonsNavigation from "../ButtonsNavigation/ButtonsNavigation";
+import { AiFillDashboard } from "react-icons/ai";
 
 const DashboardConfiguracion = () => {
   const history = useHistory();
@@ -13,18 +15,23 @@ const DashboardConfiguracion = () => {
           <FaTasks />
           Configuración
         </h1>
+        <ButtonsNavigation
+          label1="Dashboard"
+          label2="Configuración"
+          icon1={<AiFillDashboard />}
+          icon2={<FaTasks />}
+          link1="/PallasFront"
+        />
         <div className="dashboard_container">
           {DataConfiguracion.map((e, i) => {
             return (
-              <div className="dashboard_container-card" key={i}>
+              <div
+                className="dashboard_container-card"
+                key={i}
+                onClick={() => history.push(e.link)}
+              >
                 <h3 className="dashboard_title">{e.title}</h3>
                 <span className="dashboard_icon">{e.icon}</span>
-                <button
-                  onClick={() => history.push(e.link)}
-                  className="dashboard_btn"
-                >
-                  Ir
-                </button>
               </div>
             );
           })}

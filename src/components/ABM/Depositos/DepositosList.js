@@ -9,6 +9,18 @@ import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
 import Addabm from "../../../shared/addABM/addabm";
 import Spiner from "../../../shared/spiner";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableContainer from "@material-ui/core/TableContainer";
+import TablePagination from "@material-ui/core/TablePagination";
+import Paper from "@material-ui/core/Paper";
+import ButtonsNavigation from "../../ButtonsNavigation/ButtonsNavigation";
+import { MdAddTask } from "react-icons/md";
+import { AiFillDashboard } from "react-icons/ai";
+import { FaTasks } from "react-icons/fa";
 
 const DepositosList = () => {
   const dispatch = useDispatch();
@@ -36,6 +48,20 @@ const DepositosList = () => {
     }
   }
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, depositosInfo?.result?.length - page * rowsPerPage);
+
   useEffect(() => {
     dispatch(depositosAction(depositosInfo));
     if (deleted) {
@@ -51,50 +77,94 @@ const DepositosList = () => {
           <h1>Depósitos</h1>
           <Addabm to="/PallasFront/depositos-form" />
         </header>
-        <table className="list_container-table">
-          <tr>
-            <th>Nombre:</th>
-            <th>Dirección:</th>
-          </tr>
-          {!loading ? (
-            <Spiner />
-          ) : (
-            depositosInfo?.result?.map((element) => {
-              return (
-                <tr key={element.id}>
-                  <td className="list_title">{element.nombre}</td>
-                  <td className="list_title">{element.direccion}</td>
+        <ButtonsNavigation
+          label1="Dashboard"
+          label2="Configuración"
+          label3="Depósitos"
+          icon1={<AiFillDashboard />}
+          icon2={<FaTasks />}
+          icon3={<MdAddTask />}
+          link2="/PallasFront/Configuracion"
+          link1="/PallasFront"
+        />
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 750 }} aria-label="simple table">
+            <TableHead>
+              <TableRow className="list_titulos">
+                <TableCell>Nombre</TableCell>
+                <TableCell>Uso</TableCell>
+                <TableCell>Desperdicio</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!loading ? (
+                <Spiner />
+              ) : (
+                depositosInfo?.result
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((element) => {
+                    return (
+                      <TableRow
+                        key={element.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                        className="list_data"
+                      >
+                        <TableCell component="th" scope="row">
+                          {element.nombre}
+                        </TableCell>
+                        <TableCell>{element.direccion}</TableCell>
 
-                  <td className="list_options">
-                    <Link
-                      className="list_options-edit"
-                      to={{
-                        pathname: "/PallasFront/depositos-form",
-                        state: element,
-                      }}
-                    >
-                      <MdModeEdit />
-                    </Link>
-                    <button
-                      className="list_options-delete"
-                      onClick={() =>
-                        handleRemove(
-                          element.id,
-                          element.nombre,
-                          element.direccion,
-                          element.oculto,
-                          element.activo
-                        )
-                      }
-                    >
-                      <IoMdTrash />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </table>
+                        <TableCell>
+                          <div className="list_container-buttons">
+                            <Link
+                              className="list_options-edit"
+                              to={{
+                                pathname: "/PallasFront/depositos-form",
+                                state: element,
+                              }}
+                            >
+                              <MdModeEdit />
+                            </Link>
+                            <button
+                              className="list_options-delete"
+                              onClick={() =>
+                                handleRemove(
+                                  element.id,
+                                  element.nombre,
+                                  element.direccion,
+                                  element.oculto,
+                                  element.activo
+                                )
+                              }
+                            >
+                              <IoMdTrash />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+              )}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            className="list_pagination"
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={depositosInfo?.result?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </TableContainer>
       </Header>
     </div>
   );

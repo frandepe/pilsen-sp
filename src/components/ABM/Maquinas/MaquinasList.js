@@ -9,6 +9,18 @@ import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
 import Spiner from "../../../shared/spiner";
 import Addabm from "../../../shared/addABM/addabm";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableContainer from "@material-ui/core/TableContainer";
+import TablePagination from "@material-ui/core/TablePagination";
+import Paper from "@material-ui/core/Paper";
+import ButtonsNavigation from "../../ButtonsNavigation/ButtonsNavigation";
+import { MdAddTask } from "react-icons/md";
+import { AiFillDashboard } from "react-icons/ai";
+import { FaTasks } from "react-icons/fa";
 
 const MaquinasList = () => {
   const dispatch = useDispatch();
@@ -34,6 +46,21 @@ const MaquinasList = () => {
     }
   }
 
+  //Pages
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, maquinasInfo?.result?.length - page * rowsPerPage);
+
   useEffect(() => {
     dispatch(maquinasAction(maquinasInfo));
     if (deleted) {
@@ -49,52 +76,92 @@ const MaquinasList = () => {
           <h1>Máquinas</h1>
           <Addabm to="/PallasFront/maquinas-form" />
         </header>
-        <table className="list_container-table list_grid_four">
-          <tr>
-            <th>Nombre:</th>
-            <th>Uso:</th>
-            <th>Desperdicio:</th>
-          </tr>
-
-          {!loading ? (
-            <Spiner />
-          ) : (
-            maquinasInfo?.result?.map((element) => {
-              return (
-                <tr key={element.id}>
-                  <td className="list_title">{element.nombre}</td>
-                  <td className="list_title">{element.uso}</td>
-                  <td className="list_title">{element.desperdicio}</td>
-
-                  <td className="list_options">
-                    <Link
-                      className="list_options-edit"
-                      to={{
-                        pathname: "/PallasFront/maquinas-form",
-                        state: element,
-                      }}
-                    >
-                      <MdModeEdit />
-                    </Link>
-                    <button
-                      className="list_options-delete"
-                      onClick={() =>
-                        handleRemove(
-                          element.id,
-                          element.nombre,
-                          element.uso,
-                          element.desperdicio
-                        )
-                      }
-                    >
-                      <IoMdTrash />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </table>
+        <ButtonsNavigation
+          label1="Dashboard"
+          label2="Configuración"
+          label3="Máquinas"
+          icon1={<AiFillDashboard />}
+          icon2={<FaTasks />}
+          icon3={<MdAddTask />}
+          link2="/PallasFront/Configuracion"
+          link1="/PallasFront"
+        />
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 750 }} aria-label="simple table">
+            <TableHead>
+              <TableRow className="list_titulos">
+                <TableCell>Nombre</TableCell>
+                <TableCell>Uso</TableCell>
+                <TableCell>Desperdicio</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!loading ? (
+                <Spiner />
+              ) : (
+                maquinasInfo?.result
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((element) => {
+                    return (
+                      <TableRow
+                        key={element.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {element.nombre}
+                        </TableCell>
+                        <TableCell>{element.uso}</TableCell>
+                        <TableCell>{element.desperdicio}</TableCell>
+                        <TableCell>
+                          <div className="list_container-buttons">
+                            <Link
+                              className="list_options-edit"
+                              to={{
+                                pathname: "/PallasFront/maquinas-form",
+                                state: element,
+                              }}
+                            >
+                              <MdModeEdit />
+                            </Link>
+                            <button
+                              className="list_options-delete"
+                              onClick={() =>
+                                handleRemove(
+                                  element.id,
+                                  element.nombre,
+                                  element.uso,
+                                  element.desperdicio
+                                )
+                              }
+                            >
+                              <IoMdTrash />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+              )}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            className="list_pagination"
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={maquinasInfo?.result?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </TableContainer>
       </Header>
     </div>
   );
