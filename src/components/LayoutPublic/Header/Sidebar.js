@@ -98,8 +98,8 @@ const Sidebar = () => {
             component="nav"
             className="sidebar_submenu"
           >
-            <ListItemButton onClick={handleClick}>
-              <ListItemIcon>
+            <ListItemButton onClick={handleClick} className="sidebar_collapses">
+              <ListItemIcon className="sidebar_container-icon">
                 <FaTasks style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Configuración" />
@@ -114,6 +114,7 @@ const Sidebar = () => {
                   "& ul": { padding: 0 },
                 }}
                 subheader={<li />}
+                className="sidebar_ulConfig"
               >
                 {DataConfiguracion.map((e, i) => {
                   return (
@@ -142,8 +143,11 @@ const Sidebar = () => {
             subheader={<li />}
             className="sidebar_submenu"
           >
-            <ListItemButton onClick={handleClick2}>
-              <ListItemIcon>
+            <ListItemButton
+              onClick={handleClick2}
+              className="sidebar_collapses"
+            >
+              <ListItemIcon className="sidebar_container-icon">
                 <GiSecurityGate style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Seguridad" />
@@ -169,42 +173,32 @@ const Sidebar = () => {
             </Collapse>
           </List>
 
-          <List
-            sx={{
-              position: "relative",
-              overflow: "auto",
-              maxHeight: 300,
-              "& ul": { padding: 0 },
-            }}
-            subheader={<li />}
-            className="sidebar_submenu"
-          >
-            <ListItemButton onClick={handleClick3}>
-              <ListItemIcon>
+          <div className="sidebar_submenu">
+            <ListItemButton
+              onClick={handleClick3}
+              className="sidebar_collapses"
+            >
+              <ListItemIcon className="sidebar_container-icon">
                 <MdPendingActions style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Procesos" />
               {open3 ? <MdExpandLess /> : <MdExpandMore />}
             </ListItemButton>
             <Collapse in={open3} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
+              <div>
                 {DataProcesos.map((e, i) => {
                   return (
-                    <ListItemButton
-                      sx={{ pl: 4 }}
-                      key={i}
-                      className="sidebar_data--items"
-                    >
+                    <div sx={{ pl: 4 }} key={i} className="sidebar_data--items">
                       <Link to={e.link}>
                         <span>{e.icon}</span>
                         <span>{e.title}</span>
                       </Link>
-                    </ListItemButton>
+                    </div>
                   );
                 })}
-              </List>
+              </div>
             </Collapse>
-          </List>
+          </div>
         </ul>
       </nav>
     </div>
