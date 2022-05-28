@@ -42,7 +42,7 @@ export const DataConfiguracion = [
   {
     icon: <MdAddTask />,
     title: "Insumos/Productos",
-    link: "/",
+    link: "/PallasFront/articulos",
   },
   {
     icon: <MdAddTask />,

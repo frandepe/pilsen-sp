@@ -21,6 +21,14 @@
   width: 50%;
 }
 
+.select-field {
+  padding: 18.5px 14px;
+  border: 1px solid #c1c1c1;
+  border-radius: 5px;
+  width: 100%;
+  height: 56px;
+}
+
 /*** ABM LIST ***/
 
 .list_titulos td {

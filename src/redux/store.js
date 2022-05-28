@@ -6,6 +6,7 @@ import MaquinasReducer from "./actionsABM/reducerMaquinas";
 import UsuariosReducer from "./actionsABM/reducerUsuarios";
 import RolesReducer from "./actionsABM/reducerRoles";
 import DepositosReducer from "./actionsABM/reducerDepositos";
+import ArticulosReducer from "./actionsABM/reducerArticulos";
 import LoginReducer from "./login";
 import RegisterReducer from "./register";
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   users: UsuariosReducer,
   roles: RolesReducer,
   depositos: DepositosReducer,
+  articulos: ArticulosReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

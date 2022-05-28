@@ -21,7 +21,6 @@ import showAlert from "../../../shared/showAlert";
 
 const Sidebar = () => {
   const sidebarResponsive = matchMedia("(max-width: 768px)");
-  console.log(sidebarResponsive);
   // const cambiarMQ = (mediaQ) => {
   //   if (mediaQ.matches === false) {
   //     return true;

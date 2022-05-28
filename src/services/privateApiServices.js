@@ -52,6 +52,21 @@ export const privateDeleteRequest = async (route, deleteData) => {
 };
 
 /**
+ * Function to generate a DELETE request by id
+ * @param {string} url - url del abm + el id correspondiente
+ * Example: articulos/delete?id=${id}
+ */
+
+export const privateDeleteRequestByQuery = async ({ url }) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/${url}`, {}, config);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
  * Function to generate a GET request
  * @param {string} sector  Endpoint's sector. Example: "maquinas". Si el valor de "sector" es auth va a realizar una peticion distinta relacionada a la utentificacion
  * @param {number} id  El id seria un dato en especifico que se quiera devolver. Puede ir null

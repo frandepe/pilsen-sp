@@ -29,6 +29,8 @@ import PrivateRoutes from "./Routes/private.routes";
 import DashboardConfiguracion from "./components/Dashboard/DashboardConfiguracion";
 import DashboardSeguridad from "./components/Dashboard/DashboardSeguridad";
 import DashboardProcesos from "./components/Dashboard/DashboardProcesos";
+import ArticulosList from "./components/ABM/Articulos/ArticulosList";
+import ArticulosForm from "./components/ABM/Articulos/ArticulosForm";
 
 function App() {
   const [data, setData] = useState(mockData);
@@ -195,6 +197,16 @@ function App() {
               exact
               path="/PallasFront/depositos-form"
               component={DepositosForm}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/articulos"
+              component={ArticulosList}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/articulos-form"
+              component={ArticulosForm}
             />
           </Switch>
         </div>
