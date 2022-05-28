@@ -84,7 +84,7 @@ const RolesList = () => {
           link2="/PallasFront/Seguridad"
           link1="/PallasFront"
         />
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className="container-abm">
           <Table sx={{ minWidth: 750 }} aria-label="simple table">
             <TableHead>
               <TableRow className="list_titulos">

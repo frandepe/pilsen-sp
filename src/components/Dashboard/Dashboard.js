@@ -19,18 +19,21 @@ const Dashboard = () => {
           </h1>
           <ButtonsNavigation label1="Dashboard" icon1={<AiFillDashboard />} />
           <div className="dashboard_container">
-            {DataDashboard.map((e, i) => {
-              return (
-                <div
-                  className="dashboard_container-card"
-                  key={i}
-                  onClick={() => history.push(e.link)}
-                >
-                  <h3 className="dashboard_title">{e.title}</h3>
-                  <span className="dashboard_icon">{e.icon}</span>
-                </div>
-              );
-            })}
+            <h5>Menú de navegación</h5>
+            <div className="dashboard_grid">
+              {DataDashboard.map((e, i) => {
+                return (
+                  <div
+                    className="dashboard_container-card"
+                    key={i}
+                    onClick={() => history.push(e.link)}
+                  >
+                    <h3 className="dashboard_title">{e.title}</h3>
+                    <span className="dashboard_icon">{e.icon}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </Header>

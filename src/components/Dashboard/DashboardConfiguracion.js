@@ -23,18 +23,21 @@ const DashboardConfiguracion = () => {
           link1="/PallasFront"
         />
         <div className="dashboard_container">
-          {DataConfiguracion.map((e, i) => {
-            return (
-              <div
-                className="dashboard_container-card"
-                key={i}
-                onClick={() => history.push(e.link)}
-              >
-                <h3 className="dashboard_title">{e.title}</h3>
-                <span className="dashboard_icon">{e.icon}</span>
-              </div>
-            );
-          })}
+          <h5>Menú de navegación</h5>
+          <div className="dashboard_grid">
+            {DataConfiguracion.map((e, i) => {
+              return (
+                <div
+                  className="dashboard_container-card"
+                  key={i}
+                  onClick={() => history.push(e.link)}
+                >
+                  <h3 className="dashboard_title">{e.title}</h3>
+                  <span className="dashboard_icon">{e.icon}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </Header>
     </div>

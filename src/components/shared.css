@@ -31,8 +31,19 @@
 
 /*** ABM LIST ***/
 
+.container-abm {
+  width: auto !important;
+  margin-left: 1.7%;
+  margin-right: 1.7%;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 3px solid var(--secondary);
+  margin-top: 1.7%;
+}
+
 .list_titulos td {
-  font-weight: bold;
+  font-weight: 900;
 }
 
 .list_container-buttons {
@@ -45,9 +56,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
-  padding: 3%;
-  background-color: rgb(228, 228, 228);
+  margin: 80px 0 20px 20px;
+  border-bottom: var(--borderBottom);
 }
 .list_container-table {
   display: flex;

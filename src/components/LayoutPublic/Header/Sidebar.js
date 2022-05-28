@@ -102,7 +102,11 @@ const Sidebar = () => {
                 <FaTasks style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Configuración" />
-              {open ? <MdExpandLess /> : <MdExpandMore />}
+              {open ? (
+                <MdExpandLess style={{ marginRight: "10px" }} />
+              ) : (
+                <MdExpandMore style={{ marginRight: "10px" }} />
+              )}
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List
@@ -150,7 +154,11 @@ const Sidebar = () => {
                 <GiSecurityGate style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Seguridad" />
-              {open2 ? <MdExpandLess /> : <MdExpandMore />}
+              {open2 ? (
+                <MdExpandLess style={{ marginRight: "10px" }} />
+              ) : (
+                <MdExpandMore style={{ marginRight: "10px" }} />
+              )}
             </ListItemButton>
             <Collapse in={open2} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
@@ -181,7 +189,11 @@ const Sidebar = () => {
                 <MdPendingActions style={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Procesos" />
-              {open3 ? <MdExpandLess /> : <MdExpandMore />}
+              {open3 ? (
+                <MdExpandLess style={{ marginRight: "10px" }} />
+              ) : (
+                <MdExpandMore style={{ marginRight: "10px" }} />
+              )}
             </ListItemButton>
             <Collapse in={open3} timeout="auto" unmountOnExit>
               <div>

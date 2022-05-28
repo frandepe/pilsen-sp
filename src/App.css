@@ -7,4 +7,5 @@
   --hoverTertiary: #333333;
   --letterOpacity: #8f8f8f;
   --colorError: rgb(201, 18, 18);
+  --borderBottom: 1px solid rgba(148, 148, 148, 0.274);
 }

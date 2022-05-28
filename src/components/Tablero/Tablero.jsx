@@ -9,8 +9,7 @@ import Header from "../LayoutPublic/Header/Header";
 const useStyle = makeStyles(() => ({
   tablero: {
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
     height: "100vh",
   },
 }));

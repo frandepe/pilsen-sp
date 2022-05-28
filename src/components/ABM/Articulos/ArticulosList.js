@@ -21,6 +21,7 @@ import ButtonsNavigation from "../../ButtonsNavigation/ButtonsNavigation";
 import { MdAddTask } from "react-icons/md";
 import { AiFillDashboard } from "react-icons/ai";
 import { FaTasks } from "react-icons/fa";
+import "../../shared.css";
 
 const ArticulosList = () => {
   const dispatch = useDispatch();
@@ -81,7 +82,7 @@ const ArticulosList = () => {
           link2="/PallasFront/Configuracion"
           link1="/PallasFront"
         />
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className="container-abm">
           <Table sx={{ minWidth: 750 }} aria-label="simple table">
             <TableHead>
               <TableRow className="list_titulos">

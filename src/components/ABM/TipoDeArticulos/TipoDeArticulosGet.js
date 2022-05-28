@@ -89,8 +89,8 @@ const TipoDeArticulosGet = () => {
           link2="/PallasFront/Configuracion"
           link1="/PallasFront"
         />
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 750 }} aria-label="simple table">
+        <TableContainer component={Paper} className="container-abm">
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow className="list_titulos">
                 <TableCell>Nombre</TableCell>
