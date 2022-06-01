@@ -109,7 +109,7 @@ const DepositosForm = (patchData) => {
                   margin="normal"
                   name="direccion"
                   id="titulo"
-                  label="Descripción"
+                  label="Dirección"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}

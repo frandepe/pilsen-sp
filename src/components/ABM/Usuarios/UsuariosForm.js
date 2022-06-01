@@ -51,7 +51,7 @@ const UsuariosForm = (patchData) => {
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
-          Tipos de Medidas
+          Usuario
         </Typography>
         <div className="abm_container">
           <Formik

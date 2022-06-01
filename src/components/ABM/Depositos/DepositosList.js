@@ -92,8 +92,7 @@ const DepositosList = () => {
             <TableHead>
               <TableRow className="list_titulos">
                 <TableCell>Nombre</TableCell>
-                <TableCell>Uso</TableCell>
-                <TableCell>Desperdicio</TableCell>
+                <TableCell>Dirección</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -155,6 +154,7 @@ const DepositosList = () => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={"Filas por páginas"}
             className="list_pagination"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"

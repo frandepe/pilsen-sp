@@ -12,3 +12,11 @@
 .Addabm_link:hover {
   color: var(--hoverPrimary);
 }
+
+@media (max-width: 600px) {
+  .Addabm_link {
+    right: initial;
+    left: 30px;
+    font-size: 5em;
+  }
+}

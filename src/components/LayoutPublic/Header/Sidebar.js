@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import {
   DataSidebar,
@@ -45,10 +45,16 @@ const Sidebar = () => {
   };
   const showSidebar = () => setSidebar(!sidebar);
 
-  // useEffect(() => {
-  //   const resp = sidebarResponsive?.matches && setSidebar(sidebar);
-  //   console.log(resp);
-  // }, [sidebarResponsive]);
+  // Funciona, buscar manera de optimizar
+  useEffect(() => {
+    if (sidebar === true) {
+      window.document.querySelector(".sidebar_header").style.paddingLeft =
+        "300px";
+    } else {
+      window.document.querySelector(".sidebar_header").style.paddingLeft =
+        "0px";
+    }
+  }, [sidebar]);
 
   const handleSessionClose = () => {
     localStorage.removeItem("token");
@@ -74,6 +80,7 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
+      {/* <nav className="sidebar_nav-menu" style={{width: sidebar ? "200px" : "0px"}}></nav> */}
       <nav className={sidebar ? "sidebar_nav-menu active" : "sidebar_nav-menu"}>
         <ul className="sidebar_nav-menu--items">
           <li className="sidebar_sidebar-toggle">

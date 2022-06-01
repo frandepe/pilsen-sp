@@ -45,7 +45,7 @@ const MaquinasForm = (patchData) => {
       .test(
         "maxDigitsAfterDecimal",
         "El número no puede contener más de dos decimales",
-        (number) => Number.isInteger(number * 10 ** 2)
+        (number) => /^\d+(\.\d{1,2})?$/.test(number)
       ),
   });
   console.log("PatchData:", patchData);
@@ -54,7 +54,7 @@ const MaquinasForm = (patchData) => {
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
-          Tipos de Medidas
+          Máquinas
         </Typography>
         <div className="abm_container">
           <Formik

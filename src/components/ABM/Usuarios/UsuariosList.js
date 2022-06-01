@@ -90,8 +90,8 @@ const UsuariosList = () => {
             <TableHead>
               <TableRow className="list_titulos">
                 <TableCell>Nombre</TableCell>
-                <TableCell>Uso</TableCell>
-                <TableCell>Desperdicio</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Rol</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -152,6 +152,7 @@ const UsuariosList = () => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={"Filas por páginas"}
             className="list_pagination"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"

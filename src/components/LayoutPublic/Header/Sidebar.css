@@ -107,7 +107,8 @@
   height: 80px;
   width: 100vw;
   /* Quitar en en mediaQ */
-  padding-left: 300px;
+  /* lo que achica la pantalla con el menu desplegable */
+  /* padding-left: 300px; */
 }
 
 /*** Submenu ABM ***/

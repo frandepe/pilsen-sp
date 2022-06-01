@@ -39,7 +39,8 @@ export const loginAction =
       });
 
       if (response.login) {
-        showAlert({ type: "success", title: "Login exitoso" });
+        window.location.reload() &&
+          showAlert({ type: "success", title: "Login exitoso" });
       }
 
       dispatch({

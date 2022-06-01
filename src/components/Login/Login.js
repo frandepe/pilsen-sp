@@ -66,6 +66,7 @@ export default function SignIn() {
 
   useEffect(() => {
     window.localStorage.getItem("token") && history.push("/PallasFront");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem("token")]);
 
   const classes = useStyles();

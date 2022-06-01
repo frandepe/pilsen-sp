@@ -152,6 +152,7 @@ const MaquinasList = () => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage={"Filas por páginas"}
             className="list_pagination"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
