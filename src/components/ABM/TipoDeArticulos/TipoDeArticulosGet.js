@@ -4,7 +4,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Link } from "react-router-dom";
 import Header from "../../LayoutPublic/Header/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { tipoDeArticulosAction } from "../../../redux/actionsABM/reducerTipoDeArticulos";
+import { tipoDeArticulosAction } from "../../../redux/actionsABM/reducerArticulos";
 import showAlert from "../../../shared/showAlert";
 import { privateDeleteRequest } from "../../../services/privateApiServices";
 import Spiner from "../../../shared/spiner";
@@ -26,7 +26,7 @@ const TipoDeArticulosGet = () => {
   const dispatch = useDispatch();
   const [deletedNew, setDeletedNew] = useState(false);
   const { tipoDeArticulosInfo, loading } = useSelector(
-    (store) => store.tipoDeArticulos
+    (store) => store.articulos
   );
   console.log(tipoDeArticulosInfo);
 

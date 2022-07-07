@@ -31,6 +31,7 @@ import DashboardSeguridad from "./components/Dashboard/DashboardSeguridad";
 import DashboardProcesos from "./components/Dashboard/DashboardProcesos";
 import ArticulosList from "./components/ABM/Articulos/ArticulosList";
 import ArticulosForm from "./components/ABM/Articulos/ArticulosForm";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
 function App() {
   const [data, setData] = useState(mockData);
@@ -207,6 +208,11 @@ function App() {
               exact
               path="/PallasFront/articulos-form"
               component={ArticulosForm}
+            />
+            <PrivateRoutes
+              exact
+              path="/PallasFront/page-not-found"
+              component={PageNotFound}
             />
           </Switch>
         </div>

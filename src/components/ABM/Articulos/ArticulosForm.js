@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
@@ -15,8 +15,13 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableHead from "@mui/material/TableHead";
 import Spiner from "../../../shared/spiner";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "../../shared.css";
+import {
+  articulosAction,
+  tipoDeArticulosAction,
+} from "../../../redux/actionsABM/reducerArticulos";
+// import { IoMdRedo } from "react-icons/io";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -35,8 +40,38 @@ const useStyles = makeStyles((theme) => ({
 const ArticulosForm = (patchData) => {
   const history = useHistory();
   const classes = useStyles();
-  const { articulosInfo, loading } = useSelector((store) => store.articulos);
+  const dispatch = useDispatch();
+  const idRef = useRef();
+  const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
+    (store) => store.articulos
+  );
   const [statusForm, setStatusForm] = useState(false);
+  const digitsOnly = (value) => /^\d+$/.test(value);
+
+  console.log("info de los articulos", articulosInfo);
+  console.log("useRef del id:", idRef);
+
+  // const filterPorId = articulosInfo?.result?.filter((e) => {
+  //   if (idRef.checked) {
+  //     return e === idRef.checked;
+  //   } else {
+  //     return e;
+  //   }
+  // });
+
+  // const filterId = articulosInfo.result.detalle.filter((e) => {
+  //   return e.id === idRef.current.checked;
+  // });
+  // console.log("filterId", filterId);
+
+  // if (element.id) {
+  //   articulosInfo?.result?.detalle?.push({
+  //     ...element,
+  //   });
+  // }
+
+  // if (articulosInfo.result.detalle[0].id === idRef.current.checked) {
+  // }
 
   const formSchema = yup.object().shape({
     nombre: yup
@@ -44,13 +79,9 @@ const ArticulosForm = (patchData) => {
       .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
     codigo: yup
-      .number()
-      .required("El campo es requerido")
-      .test(
-        "maxDigitsAfterDecimal",
-        "El número no puede contener más de dos decimales",
-        (number) => Number.isInteger(number * 10 ** 2)
-      ),
+      .string()
+      .test("Digits only", "Este campo solo puede contener números", digitsOnly)
+      .required("El campo es requerido"),
     descripcion: yup
       .string()
       .required("El campo es requerido")
@@ -62,6 +93,20 @@ const ArticulosForm = (patchData) => {
   });
   console.log("PatchData:", patchData);
 
+  useEffect(() => {
+    dispatch(articulosAction(articulosInfo));
+    dispatch(tipoDeArticulosAction(tipoDeArticulosInfo));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // logica de meter los insumos podria meter los insumos
+  // luz: patchData?.location?.state?.detalle[0]?.luz || "",
+  // nomenclatura:
+  //   patchData?.location?.state?.detalle[0]?.nomenclatura || "",
+  // paso: patchData?.location?.state?.detalle[0]?.paso || "",
+  // ancho: patchData?.location?.state?.detalle[0]?.ancho || "",
+  // cola: patchData?.location?.state?.detalle[0]?.cola || "",
+  // peso: patchData?.location?.state?.detalle[0]?.peso || "",
   return (
     <div>
       <Header>
@@ -72,9 +117,12 @@ const ArticulosForm = (patchData) => {
           <Formik
             initialValues={{
               id: patchData?.location?.state?.id,
-              nombre: patchData?.location?.state?.codigo || "",
+              activo: true,
+              nombre: patchData?.location?.state?.nombre || "",
+              codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
+              detalle: patchData?.location?.state?.detalle || [],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
@@ -120,15 +168,14 @@ const ArticulosForm = (patchData) => {
                   component="p"
                   className="input-error"
                 />
-                <label htmlFor="codigo">Código</label>
+                <label htmlFor="titulo">Código</label>
                 <TextField
-                  type="number"
-                  data-testid="codigo"
+                  data-testid="titulo"
                   required
                   fullWidth
                   margin="normal"
-                  name="uso"
-                  id="codigo"
+                  name="codigo"
+                  id="titulo"
                   label="Código"
                   variant="outlined"
                   onChange={handleChange}
@@ -161,10 +208,11 @@ const ArticulosForm = (patchData) => {
                 />
 
                 <div className="input__container">
-                  <label htmlFor="tipoArticulo">Tipo Artículo</label>
+                  <label htmlFor="titulo">Tipo Artículo</label>
                   <select
                     className="select-field"
                     name="tipoArticulo"
+                    id="titulo"
                     data-testid="tipoArticulo"
                     value={values.tipoArticulo}
                     onChange={handleChange}
@@ -172,9 +220,18 @@ const ArticulosForm = (patchData) => {
                     <option value="" disabled>
                       Selecciona categoria
                     </option>
-
-                    <option>Articulo</option>
-                    <option>Insumo</option>
+                    <optgroup label="Insumo:">
+                      <option value="insumo">Insumo</option>
+                    </optgroup>
+                    <optgroup label="Tipo de artículo:">
+                      {tipoDeArticulosInfo?.result?.map((e) => {
+                        return (
+                          <option key={e.id} value={e.nombre}>
+                            {e.nombre}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
                   </select>
                   <ErrorMessage
                     name="tipoArticulo"
@@ -203,27 +260,40 @@ const ArticulosForm = (patchData) => {
                     ) : (
                       articulosInfo?.result?.map((element) => {
                         return (
-                          <TableRow
-                            key={element.id}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                            }}
-                          >
-                            <TableCell component="th" scope="row">
-                              <input type="checkbox" />
-                            </TableCell>
-                            <TableCell>{element.nombre}</TableCell>
-                            <TableCell>{element.codigo}</TableCell>
-                            <TableCell>{element.detalle[0]?.luz}</TableCell>
-                            <TableCell>
-                              {element.detalle[0]?.nomenclatura}
-                            </TableCell>
-                            <TableCell>{element.detalle[0]?.paso}</TableCell>
-                            <TableCell>{element.detalle[0]?.ancho}</TableCell>
-                            <TableCell>{element.detalle[0]?.cola}</TableCell>
-                            <TableCell>{element.detalle[0]?.luz}</TableCell>
-                          </TableRow>
+                          element.detalle[0] && (
+                            <TableRow
+                              key={element.id}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell component="th" scope="row">
+                                <input
+                                  type="checkbox"
+                                  value={values.id}
+                                  name="id"
+                                  id="titulo"
+                                  ref={idRef}
+                                />
+                              </TableCell>
+                              <TableCell>{element.nombre}</TableCell>
+                              <TableCell>{element.codigo}</TableCell>
+                              <TableCell>{element.detalle[0]?.luz}</TableCell>
+                              <TableCell name="nomenclatura">
+                                {element.detalle[0]?.nomenclatura}
+                              </TableCell>
+                              <TableCell>{element.detalle[0]?.paso}</TableCell>
+                              <TableCell>{element.detalle[0]?.ancho}</TableCell>
+                              <TableCell>{element.detalle[0]?.cola}</TableCell>
+                              <TableCell>{element.detalle[0]?.peso}</TableCell>
+                            </TableRow>
+                          )
                         );
+                        //  if (element.id) {
+                        //   return articulosInfo?.result?.detalle?.push(element);
+                        // }
                       })
                     )}
                   </TableBody>

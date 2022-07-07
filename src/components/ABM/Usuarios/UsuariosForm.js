@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
@@ -9,6 +9,8 @@ import { Formik, ErrorMessage } from "formik";
 import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { rolesAction } from "../../../redux/actionsABM/reducerRoles";
 import "../../shared.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,9 +28,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const UsuariosForm = (patchData) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
+  const { rolesInfo } = useSelector((store) => store.roles);
   const [statusForm, setStatusForm] = useState(false);
+  console.log(rolesInfo);
 
   const formSchema = yup.object().shape({
     userName: yup
@@ -46,6 +51,11 @@ const UsuariosForm = (patchData) => {
     rolName: yup.string().required("El campo es requerido"),
   });
   console.log("PatchData:", patchData);
+
+  useEffect(() => {
+    dispatch(rolesAction(rolesInfo));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <div>
@@ -105,6 +115,7 @@ const UsuariosForm = (patchData) => {
                   component="p"
                   className="input-error"
                 />
+
                 <label htmlFor="titulo">Email de usuario</label>
                 <TextField
                   type="email"
@@ -125,7 +136,37 @@ const UsuariosForm = (patchData) => {
                   component="p"
                   className="input-error"
                 />
-                <label htmlFor="titulo">Rol de usuario</label>
+
+                <label htmlFor="rolName">Rol</label>
+                <select
+                  className="select-field"
+                  name="rolName"
+                  id="rolName"
+                  data-testid="rolName"
+                  value={values.rolName}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled>
+                    Selecciona un rol
+                  </option>
+                  {rolesInfo?.result?.map((e) => {
+                    return (
+                      <option key={e.id} value={e.name}>
+                        {e.name}
+                      </option>
+                    );
+                  })}
+                </select>
+                <ErrorMessage
+                  name="rolName"
+                  component="p"
+                  className="input-error"
+                />
+                {/* <div className="input__container"> */}
+
+                {/* </div> */}
+
+                {/* <label htmlFor="titulo">Rol de usuario</label>
                 <TextField
                   data-testid="titulo"
                   required
@@ -143,7 +184,7 @@ const UsuariosForm = (patchData) => {
                   name="rolName"
                   component="p"
                   className="input-error"
-                />
+                /> */}
                 <Button
                   type="submit"
                   className={classes.btn}

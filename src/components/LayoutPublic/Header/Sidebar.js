@@ -50,6 +50,8 @@ const Sidebar = () => {
     if (sidebar === true) {
       window.document.querySelector(".sidebar_header").style.paddingLeft =
         "300px";
+      window.document.querySelector(".sidebar_header").style.transition =
+        "350ms";
     } else {
       window.document.querySelector(".sidebar_header").style.paddingLeft =
         "0px";
