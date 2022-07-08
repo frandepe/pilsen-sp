@@ -51,6 +51,10 @@ const ArticulosForm = (patchData) => {
   console.log("info de los articulos", articulosInfo);
   console.log("useRef del id:", idRef);
 
+  // const inputChange = () => {
+  //   console.log(formData);
+  // };
+
   // const filterPorId = articulosInfo?.result?.filter((e) => {
   //   if (idRef.checked) {
   //     return e === idRef.checked;
@@ -91,7 +95,6 @@ const ArticulosForm = (patchData) => {
       .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
   });
-  console.log("PatchData:", patchData);
 
   useEffect(() => {
     dispatch(articulosAction(articulosInfo));
@@ -122,11 +125,40 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle: patchData?.location?.state?.detalle || [],
+              detalle: patchData?.location?.state?.detalle || [
+                {
+                  idArticulo: "",
+                  idArticuloDetalle: "",
+                  luz: "",
+                  diametro: "",
+                  nomenclatura: "",
+                  descripcion: "",
+                  paso: "",
+                  pasoEstampado: "",
+                  cantidadMl: "",
+                  ancho: "",
+                  cola: "",
+                  peso: "",
+                },
+              ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
+              // formData.detalle.add({
+              //   idArticulo: 10,
+              //   idArticuloDetalle: 8,
+              //   luz: 2.0,
+              //   diametro: 0.5,
+              //   nomenclatura: "Alambre 0,5",
+              //   descripcion: "Descripcion del alambre",
+              //   paso: 1.0,
+              //   pasoEstampado: 2.0,
+              //   cantidadMl: 3.0,
+              //   ancho: 4.0,
+              //   cola: 5.0,
+              //   peso: 6.0,
+              // });
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
@@ -270,15 +302,34 @@ const ArticulosForm = (patchData) => {
                               }}
                             >
                               <TableCell component="th" scope="row">
+                                {/* <input
+                                  type="checkbox"
+                                  value={values.detalle[0].idArticulo}
+                                  name="id"
+                                  id="id"
+                                  onChange={handleChange}
+                                  ref={idRef}
+                                /> */}
                                 <input
                                   type="checkbox"
+                                  data-testid="detalle[0].idArticulo"
+                                  margin="normal"
+                                  name="detalle[0].idArticulo"
+                                  id="detalle[0].idArticulo"
+                                  label="detalle[0].idArticulo"
+                                  onChange={handleChange}
                                   value={values.id}
-                                  name="id"
-                                  id="titulo"
-                                  ref={idRef}
                                 />
                               </TableCell>
-                              <TableCell>{element.nombre}</TableCell>
+                              <TableCell>
+                                <TextField
+                                  data-testid="titulo"
+                                  name="detalle[0].nomenclatura"
+                                  id="detalle[0].nomenclatura"
+                                  label="detalle[0].nomenclatura"
+                                  value={element.detalle[0]?.nomenclatura}
+                                />
+                              </TableCell>
                               <TableCell>{element.codigo}</TableCell>
                               <TableCell>{element.detalle[0]?.luz}</TableCell>
                               <TableCell name="nomenclatura">
