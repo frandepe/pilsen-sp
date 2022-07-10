@@ -6,9 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
 import { Formik, ErrorMessage } from "formik";
-import showAlert from "../../../shared/showAlert";
+// import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Table from "@material-ui/core/Table";
@@ -21,7 +21,6 @@ import {
   articulosAction,
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
-// import { IoMdRedo } from "react-icons/io";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const ArticulosForm = (patchData) => {
-  const history = useHistory();
+  // const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const idRef = useRef();
@@ -46,37 +45,15 @@ const ArticulosForm = (patchData) => {
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
+  const [pushDetalles, setPushDetalles] = useState([]);
   const digitsOnly = (value) => /^\d+$/.test(value);
 
-  console.log("info de los articulos", articulosInfo);
   console.log("useRef del id:", idRef);
 
-  // const inputChange = () => {
-  //   console.log(formData);
-  // };
-
-  // const filterPorId = articulosInfo?.result?.filter((e) => {
-  //   if (idRef.checked) {
-  //     return e === idRef.checked;
-  //   } else {
-  //     return e;
-  //   }
-  // });
-
-  // const filterId = articulosInfo.result.detalle.filter((e) => {
-  //   return e.id === idRef.current.checked;
-  // });
-  // console.log("filterId", filterId);
-
-  // if (element.id) {
-  //   articulosInfo?.result?.detalle?.push({
-  //     ...element,
-  //   });
-  // }
-
-  // if (articulosInfo.result.detalle[0].id === idRef.current.checked) {
-  // }
-
+  const handleRowClick = (element) => {
+    return setPushDetalles(element.detalle);
+  };
+  console.log("pushDetalles", pushDetalles);
   const formSchema = yup.object().shape({
     nombre: yup
       .string()
@@ -125,53 +102,46 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle: patchData?.location?.state?.detalle || [
-                {
-                  idArticulo: "",
-                  idArticuloDetalle: "",
-                  luz: "",
-                  diametro: "",
-                  nomenclatura: "",
-                  descripcion: "",
-                  paso: "",
-                  pasoEstampado: "",
-                  cantidadMl: "",
-                  ancho: "",
-                  cola: "",
-                  peso: "",
-                },
-              ],
+              detalle: pushDetalles,
+              // detalle: patchData?.location?.state?.detalle || [
+              //   {
+              //     idArticulo: "",
+              //     idArticuloDetalle: "",
+              //     luz: "",
+              //     diametro: "",
+              //     nomenclatura: "",
+              //     descripcion: "",
+              //     paso: "",
+              //     pasoEstampado: "",
+              //     cantidadMl: "",
+              //     ancho: "",
+              //     cola: "",
+              //     peso: "",
+              //   },
+              // ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
-              // formData.detalle.add({
-              //   idArticulo: 10,
-              //   idArticuloDetalle: 8,
-              //   luz: 2.0,
-              //   diametro: 0.5,
-              //   nomenclatura: "Alambre 0,5",
-              //   descripcion: "Descripcion del alambre",
-              //   paso: 1.0,
-              //   pasoEstampado: 2.0,
-              //   cantidadMl: 3.0,
-              //   ancho: 4.0,
-              //   cola: 5.0,
-              //   peso: 6.0,
-              // });
+
+              const resp = pushDetalles.forEach((e) => {
+                return formData.detalle.push(e);
+              });
+
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
+                  resp,
                 });
                 console.log(response);
                 if (!response?.data?.status === 200)
                   throw new Error("Algo falló");
-                showAlert({
-                  type: "success",
-                  title: patchData?.location?.state?.id
-                    ? "Editado correctamente"
-                    : "Creado correctamente",
-                }) && history.push("/PallasFront/articulos");
+                // showAlert({
+                //   type: "success",
+                //   title: patchData?.location?.state?.id
+                //     ? "Editado correctamente"
+                //     : "Creado correctamente",
+                // }) && history.push("/PallasFront/articulos");
               } catch (err) {
                 console.log("Error catch:", err);
               } finally {
@@ -301,35 +271,34 @@ const ArticulosForm = (patchData) => {
                                 },
                               }}
                             >
-                              <TableCell component="th" scope="row">
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                id={element.id}
+                                // id={element.detalle.idArticulo}
+                                onClick={() => handleRowClick(element)}
+                              >
                                 {/* <input
                                   type="checkbox"
                                   value={values.detalle[0].idArticulo}
                                   name="id"
                                   id="id"
                                   onChange={handleChange}
-                                  ref={idRef}
                                 /> */}
+
                                 <input
                                   type="checkbox"
-                                  data-testid="detalle[0].idArticulo"
-                                  margin="normal"
-                                  name="detalle[0].idArticulo"
-                                  id="detalle[0].idArticulo"
-                                  label="detalle[0].idArticulo"
+                                  data-testid="detalle"
+                                  name="detalle"
                                   onChange={handleChange}
-                                  value={values.id}
+                                  value={values.detalle}
+                                  // margin="normal"
+                                  // ref={idRef}
+                                  // id="detalle[0].idArticulo"
+                                  // label="detalle[0].idArticulo"
                                 />
                               </TableCell>
-                              <TableCell>
-                                <TextField
-                                  data-testid="titulo"
-                                  name="detalle[0].nomenclatura"
-                                  id="detalle[0].nomenclatura"
-                                  label="detalle[0].nomenclatura"
-                                  value={element.detalle[0]?.nomenclatura}
-                                />
-                              </TableCell>
+                              <TableCell>{element.nombre}</TableCell>
                               <TableCell>{element.codigo}</TableCell>
                               <TableCell>{element.detalle[0]?.luz}</TableCell>
                               <TableCell name="nomenclatura">
@@ -339,12 +308,23 @@ const ArticulosForm = (patchData) => {
                               <TableCell>{element.detalle[0]?.ancho}</TableCell>
                               <TableCell>{element.detalle[0]?.cola}</TableCell>
                               <TableCell>{element.detalle[0]?.peso}</TableCell>
+                              {/* {element.detalle.map((elemento) => {
+                                return (
+                                  <div>
+                                    <TableCell>{elemento.luz}</TableCell>
+                                    <TableCell>
+                                      {elemento.nomenclatura}
+                                    </TableCell>
+                                    <TableCell>{elemento.paso}</TableCell>
+                                    <TableCell>{elemento.ancho}</TableCell>
+                                    <TableCell>{elemento.cola}</TableCell>
+                                    <TableCell>{elemento.peso}</TableCell>
+                                  </div>
+                                );
+                              })} */}
                             </TableRow>
                           )
                         );
-                        //  if (element.id) {
-                        //   return articulosInfo?.result?.detalle?.push(element);
-                        // }
                       })
                     )}
                   </TableBody>
