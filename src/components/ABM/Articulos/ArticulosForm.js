@@ -40,36 +40,34 @@ const ArticulosForm = (patchData) => {
   // const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const idRef = useRef();
+  // const idRef = useRef();
   const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
-  const [pushDetalles, setPushDetalles] = useState([]);
-  const digitsOnly = (value) => /^\d+$/.test(value);
+  // const digitsOnly = (value) => /^\d+$/.test(value);
+  // const [pushDetalles, setPushDetalles] = useState([]);
+  const [selectInsumo, setSelectInsumo] = useState(null);
 
-  console.log("useRef del id:", idRef);
+  // const handleRowClick = (element) => {
+  //   console.log(element.detalle);
+  //   return setPushDetalles(element.detalle);
+  // };
+  // console.log("pushDetalles", pushDetalles);
 
-  const handleRowClick = (element) => {
-    return setPushDetalles(element.detalle);
-  };
-  console.log("pushDetalles", pushDetalles);
   const formSchema = yup.object().shape({
-    nombre: yup
-      .string()
-      .required("El campo es requerido")
-      .max(100, "No puede ingresar más de 100 caracteres"),
-    codigo: yup
-      .string()
-      .test("Digits only", "Este campo solo puede contener números", digitsOnly)
-      .required("El campo es requerido"),
+    nombre: yup.string().max(100, "No puede ingresar más de 100 caracteres"),
+    codigo: yup.string(),
+    // .test(
+    //   "Digits only",
+    //   "Este campo solo puede contener números",
+    //   digitsOnly
+    // ),
     descripcion: yup
       .string()
-      .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
     tipoArticulo: yup
       .string()
-      .required("El campo es requerido")
       .max(100, "No puede ingresar más de 100 caracteres"),
   });
 
@@ -79,21 +77,13 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // logica de meter los insumos podria meter los insumos
-  // luz: patchData?.location?.state?.detalle[0]?.luz || "",
-  // nomenclatura:
-  //   patchData?.location?.state?.detalle[0]?.nomenclatura || "",
-  // paso: patchData?.location?.state?.detalle[0]?.paso || "",
-  // ancho: patchData?.location?.state?.detalle[0]?.ancho || "",
-  // cola: patchData?.location?.state?.detalle[0]?.cola || "",
-  // peso: patchData?.location?.state?.detalle[0]?.peso || "",
   return (
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
           Artículos
         </Typography>
-        <div className="abm_container">
+        <div className="abm_containerStart">
           <Formik
             initialValues={{
               id: patchData?.location?.state?.id,
@@ -102,40 +92,44 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle: pushDetalles,
-              // detalle: patchData?.location?.state?.detalle || [
-              //   {
-              //     idArticulo: "",
-              //     idArticuloDetalle: "",
-              //     luz: "",
-              //     diametro: "",
-              //     nomenclatura: "",
-              //     descripcion: "",
-              //     paso: "",
-              //     pasoEstampado: "",
-              //     cantidadMl: "",
-              //     ancho: "",
-              //     cola: "",
-              //     peso: "",
-              //   },
-              // ],
+              // detalle: pushDetalles,
+              detalle:
+                patchData?.location?.state?.detalle ||
+                [
+                  // {
+                  //   idArticulo: patchData?.location?.state?.id,
+                  //   idArticuloDetalle:
+                  //     patchData?.location?.state?.idArticuloDetalle || "",
+                  //   luz: patchData?.location?.state?.luz || "",
+                  //   diametro: patchData?.location?.state?.diametro || "",
+                  //   nomenclatura: patchData?.location?.state?.nomenclatura || "",
+                  //   descripcion: patchData?.location?.state?.descripcion || "",
+                  //   paso: patchData?.location?.state?.paso || "",
+                  //   pasoEstampado:
+                  //     patchData?.location?.state?.pasoEstampado || "",
+                  //   cantidadMl: patchData?.location?.state?.cantidadMl || "",
+                  //   ancho: patchData?.location?.state?.ancho || "",
+                  //   cola: patchData?.location?.state?.cola || "",
+                  //   peso: patchData?.location?.state?.peso || "",
+                  // },
+                ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
+              // const resp = pushDetalles.forEach((e) => {
+              //   return formData.detalle.push(e);
+              // });
 
-              const resp = pushDetalles.forEach((e) => {
-                return formData.detalle.push(e);
-              });
-
+              // const resp = formData.detalle.push(pushDetalles)
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
-                  resp,
                 });
                 console.log(response);
                 if (!response?.data?.status === 200)
                   throw new Error("Algo falló");
+
                 // showAlert({
                 //   type: "success",
                 //   title: patchData?.location?.state?.id
@@ -151,64 +145,6 @@ const ArticulosForm = (patchData) => {
           >
             {({ values, handleSubmit, handleChange, handleBlur }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
-                <label htmlFor="titulo">Nombre</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="nombre"
-                  id="titulo"
-                  label="Nombre"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.nombre}
-                />
-                <ErrorMessage
-                  name="nombre"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">Código</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="codigo"
-                  id="titulo"
-                  label="Código"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.codigo}
-                />
-                <ErrorMessage
-                  name="codigo"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">Descripción</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="descripcion"
-                  id="titulo"
-                  label="Descripción"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.descripcion}
-                />
-                <ErrorMessage
-                  name="descripcion"
-                  component="p"
-                  className="input-error"
-                />
-
                 <div className="input__container">
                   <label htmlFor="titulo">Tipo Artículo</label>
                   <select
@@ -218,6 +154,7 @@ const ArticulosForm = (patchData) => {
                     data-testid="tipoArticulo"
                     value={values.tipoArticulo}
                     onChange={handleChange}
+                    onClick={(e) => setSelectInsumo(e.target.value)}
                   >
                     <option value="" disabled>
                       Selecciona categoria
@@ -241,10 +178,76 @@ const ArticulosForm = (patchData) => {
                     className="input-error"
                   />
                 </div>
+                {selectInsumo === "insumo" && (
+                  <div>
+                    <label htmlFor="titulo">Nombre</label>
 
+                    <TextField
+                      data-testid="titulo"
+                      fullWidth
+                      margin="normal"
+                      name="nombre"
+                      id="titulo"
+                      label="Nombre"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.nombre}
+                    />
+
+                    <ErrorMessage
+                      name="nombre"
+                      component="p"
+                      className="input-error"
+                    />
+
+                    <label htmlFor="titulo">Código</label>
+
+                    <TextField
+                      data-testid="titulo"
+                      fullWidth
+                      margin="normal"
+                      name="codigo"
+                      id="titulo"
+                      label="Código"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.codigo}
+                    />
+
+                    <ErrorMessage
+                      name="codigo"
+                      component="p"
+                      className="input-error"
+                    />
+
+                    <label htmlFor="titulo">Descripción</label>
+
+                    <TextField
+                      data-testid="titulo"
+                      fullWidth
+                      label="Descripción"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      margin="normal"
+                      name="descripcion"
+                      id="titulo"
+                      onChange={handleChange}
+                      value={values.descripcion}
+                    />
+
+                    <ErrorMessage
+                      name="descripcion"
+                      component="p"
+                      className="input-error"
+                    />
+                  </div>
+                )}
                 <Table sx={{ minWidth: 750 }} aria-label="simple table">
                   <TableHead>
                     <TableRow className="list_titulos">
+                      <TableCell>ID</TableCell>
                       <TableCell>✔</TableCell>
                       <TableCell>Nombre</TableCell>
                       <TableCell>Código</TableCell>
@@ -254,6 +257,9 @@ const ArticulosForm = (patchData) => {
                       <TableCell>Desp. Ancho</TableCell>
                       <TableCell>Desp. Cola</TableCell>
                       <TableCell>Peso x Mt2</TableCell>
+                      <TableCell>Diametro</TableCell>
+                      <TableCell>Paso estampado</TableCell>
+                      <TableCell>Cantidad Ml</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -262,7 +268,7 @@ const ArticulosForm = (patchData) => {
                     ) : (
                       articulosInfo?.result?.map((element) => {
                         return (
-                          element.detalle[0] && (
+                          !element.detalle[0] && (
                             <TableRow
                               key={element.id}
                               sx={{
@@ -271,43 +277,133 @@ const ArticulosForm = (patchData) => {
                                 },
                               }}
                             >
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="id"
+                                  id="id"
+                                  value={element.id}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
                               <TableCell
                                 component="th"
                                 scope="row"
-                                id={element.id}
                                 // id={element.detalle.idArticulo}
-                                onClick={() => handleRowClick(element)}
                               >
-                                {/* <input
-                                  type="checkbox"
-                                  value={values.detalle[0].idArticulo}
-                                  name="id"
-                                  id="id"
-                                  onChange={handleChange}
-                                /> */}
-
                                 <input
+                                  id={element.detalle.idArticulo}
+                                  // onClick={() => handleRowClick(element)}
                                   type="checkbox"
                                   data-testid="detalle"
                                   name="detalle"
                                   onChange={handleChange}
                                   value={values.detalle}
                                   // margin="normal"
-                                  // ref={idRef}
                                   // id="detalle[0].idArticulo"
                                   // label="detalle[0].idArticulo"
                                 />
                               </TableCell>
-                              <TableCell>{element.nombre}</TableCell>
-                              <TableCell>{element.codigo}</TableCell>
-                              <TableCell>{element.detalle[0]?.luz}</TableCell>
-                              <TableCell name="nomenclatura">
-                                {element.detalle[0]?.nomenclatura}
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="nombre"
+                                  id="nombre"
+                                  value={element.nombre}
+                                  onChange={handleChange}
+                                />
                               </TableCell>
-                              <TableCell>{element.detalle[0]?.paso}</TableCell>
-                              <TableCell>{element.detalle[0]?.ancho}</TableCell>
-                              <TableCell>{element.detalle[0]?.cola}</TableCell>
-                              <TableCell>{element.detalle[0]?.peso}</TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="codigo"
+                                  id="codigo"
+                                  value={element.codigo}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].luz"
+                                  id="detalle[0].nomenclatura"
+                                  // value={element.detalle[0]?.luz}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  data-testid="titulo"
+                                  name="detalle[0].nomenclatura"
+                                  id="detalle[0].nomenclatura"
+                                  // value={element.detalle[0]?.nomenclatura}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].paso"
+                                  id="detalle[0].paso"
+                                  // value={element.detalle[0]?.paso}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].ancho"
+                                  id="detalle[0].ancho"
+                                  // value={element.detalle[0]?.ancho}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].cola"
+                                  id="detalle[0].cola"
+                                  // value={element.detalle[0]?.cola}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].peso"
+                                  id="detalle[0].peso"
+                                  // value={element.detalle[0]?.peso}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].diametro"
+                                  id="detalle[0].diametro"
+                                  // value={element.detalle[0]?.peso}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].pasoEstampado"
+                                  id="detalle[0].pasoEstampado"
+                                  // value={element.detalle[0]?.peso}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <TextField
+                                  type="text"
+                                  name="detalle[0].cantidadMl"
+                                  id="detalle[0].cantidadMl"
+                                  // value={element.detalle[0]?.peso}
+                                  onChange={handleChange}
+                                />
+                              </TableCell>
                               {/* {element.detalle.map((elemento) => {
                                 return (
                                   <div>

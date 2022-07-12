@@ -15,12 +15,17 @@
   justify-content: center;
   margin-top: 5%;
 }
+.abm_containerStart {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 5%;
+  margin-left: 20px;
+}
 
 .formabm_container {
   text-align: center;
   width: 50%;
 }
-
 .select-field {
   padding: 18.5px 14px;
   border: 1px solid #c1c1c1;
