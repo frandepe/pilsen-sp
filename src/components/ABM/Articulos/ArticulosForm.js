@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
-import { Formik, ErrorMessage } from "formik";
+import { Formik, ErrorMessage, getIn, FieldArray, Field } from "formik";
 // import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 // import { useHistory } from "react-router-dom";
@@ -36,33 +36,31 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
 }));
+
+const Input = ({ field, form: { errors } }) => {
+  const errorMessage = getIn(errors, field.name);
+
+  return (
+    <>
+      <TextField {...field} />
+      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
+    </>
+  );
+};
+
 const ArticulosForm = (patchData) => {
   // const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const idRef = useRef();
   const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
   // const digitsOnly = (value) => /^\d+$/.test(value);
-  // const [pushDetalles, setPushDetalles] = useState([]);
-  const [selectInsumo, setSelectInsumo] = useState(null);
-
-  // const handleRowClick = (element) => {
-  //   console.log(element.detalle);
-  //   return setPushDetalles(element.detalle);
-  // };
-  // console.log("pushDetalles", pushDetalles);
 
   const formSchema = yup.object().shape({
     nombre: yup.string().max(100, "No puede ingresar más de 100 caracteres"),
     codigo: yup.string(),
-    // .test(
-    //   "Digits only",
-    //   "Este campo solo puede contener números",
-    //   digitsOnly
-    // ),
     descripcion: yup
       .string()
       .max(100, "No puede ingresar más de 100 caracteres"),
@@ -77,13 +75,17 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  //cuando hago click en un add, se me pushean todos
+  //los campos de nombre y codigo de la tabla no se estan enviando
+  // video de referencia https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=664s
+  // github de referencia https://github.com/benawad/formik-field-arry/blob/0_field_array/src/App.tsx
   return (
     <div>
       <Header>
         <Typography className={classes.title} component="h1" variant="h4">
           Artículos
         </Typography>
-        <div className="abm_containerStart">
+        <div className="abm_container">
           <Formik
             initialValues={{
               id: patchData?.location?.state?.id,
@@ -92,36 +94,26 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              // detalle: pushDetalles,
-              detalle:
-                patchData?.location?.state?.detalle ||
-                [
-                  // {
-                  //   idArticulo: patchData?.location?.state?.id,
-                  //   idArticuloDetalle:
-                  //     patchData?.location?.state?.idArticuloDetalle || "",
-                  //   luz: patchData?.location?.state?.luz || "",
-                  //   diametro: patchData?.location?.state?.diametro || "",
-                  //   nomenclatura: patchData?.location?.state?.nomenclatura || "",
-                  //   descripcion: patchData?.location?.state?.descripcion || "",
-                  //   paso: patchData?.location?.state?.paso || "",
-                  //   pasoEstampado:
-                  //     patchData?.location?.state?.pasoEstampado || "",
-                  //   cantidadMl: patchData?.location?.state?.cantidadMl || "",
-                  //   ancho: patchData?.location?.state?.ancho || "",
-                  //   cola: patchData?.location?.state?.cola || "",
-                  //   peso: patchData?.location?.state?.peso || "",
-                  // },
-                ],
+              detalle: patchData?.location?.state?.detalle || [
+                {
+                  idArticulo: "",
+                  idArticuloDetalle: "",
+                  luz: "",
+                  diametro: "",
+                  nomenclatura: "",
+                  descripcion: "",
+                  paso: "",
+                  pasoEstampado: "",
+                  cantidadMl: "",
+                  ancho: "",
+                  cola: "",
+                  peso: "",
+                },
+              ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
-              // const resp = pushDetalles.forEach((e) => {
-              //   return formData.detalle.push(e);
-              // });
-
-              // const resp = formData.detalle.push(pushDetalles)
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
@@ -129,7 +121,6 @@ const ArticulosForm = (patchData) => {
                 console.log(response);
                 if (!response?.data?.status === 200)
                   throw new Error("Algo falló");
-
                 // showAlert({
                 //   type: "success",
                 //   title: patchData?.location?.state?.id
@@ -143,8 +134,66 @@ const ArticulosForm = (patchData) => {
               }
             }}
           >
-            {({ values, handleSubmit, handleChange, handleBlur }) => (
+            {({ values, handleSubmit, handleChange, handleBlur, errors }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
+                <label htmlFor="titulo">Nombre</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="nombre"
+                  id="titulo"
+                  label="Nombre"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.nombre}
+                />
+                <ErrorMessage
+                  name="nombre"
+                  component="p"
+                  className="input-error"
+                />
+                <label htmlFor="titulo">Código</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="codigo"
+                  id="titulo"
+                  label="Código"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.codigo}
+                />
+                <ErrorMessage
+                  name="codigo"
+                  component="p"
+                  className="input-error"
+                />
+                <label htmlFor="titulo">Descripción</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="descripcion"
+                  id="titulo"
+                  label="Descripción"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.descripcion}
+                />
+                <ErrorMessage
+                  name="descripcion"
+                  component="p"
+                  className="input-error"
+                />
+
                 <div className="input__container">
                   <label htmlFor="titulo">Tipo Artículo</label>
                   <select
@@ -154,7 +203,6 @@ const ArticulosForm = (patchData) => {
                     data-testid="tipoArticulo"
                     value={values.tipoArticulo}
                     onChange={handleChange}
-                    onClick={(e) => setSelectInsumo(e.target.value)}
                   >
                     <option value="" disabled>
                       Selecciona categoria
@@ -178,77 +226,11 @@ const ArticulosForm = (patchData) => {
                     className="input-error"
                   />
                 </div>
-                {selectInsumo === "insumo" && (
-                  <div>
-                    <label htmlFor="titulo">Nombre</label>
 
-                    <TextField
-                      data-testid="titulo"
-                      fullWidth
-                      margin="normal"
-                      name="nombre"
-                      id="titulo"
-                      label="Nombre"
-                      variant="outlined"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.nombre}
-                    />
-
-                    <ErrorMessage
-                      name="nombre"
-                      component="p"
-                      className="input-error"
-                    />
-
-                    <label htmlFor="titulo">Código</label>
-
-                    <TextField
-                      data-testid="titulo"
-                      fullWidth
-                      margin="normal"
-                      name="codigo"
-                      id="titulo"
-                      label="Código"
-                      variant="outlined"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.codigo}
-                    />
-
-                    <ErrorMessage
-                      name="codigo"
-                      component="p"
-                      className="input-error"
-                    />
-
-                    <label htmlFor="titulo">Descripción</label>
-
-                    <TextField
-                      data-testid="titulo"
-                      fullWidth
-                      label="Descripción"
-                      variant="outlined"
-                      onBlur={handleBlur}
-                      margin="normal"
-                      name="descripcion"
-                      id="titulo"
-                      onChange={handleChange}
-                      value={values.descripcion}
-                    />
-
-                    <ErrorMessage
-                      name="descripcion"
-                      component="p"
-                      className="input-error"
-                    />
-                  </div>
-                )}
                 <Table sx={{ minWidth: 750 }} aria-label="simple table">
                   <TableHead>
                     <TableRow className="list_titulos">
-                      <TableCell>ID</TableCell>
-                      <TableCell>✔</TableCell>
+                      <TableCell>add</TableCell>
                       <TableCell>Nombre</TableCell>
                       <TableCell>Código</TableCell>
                       <TableCell>Luz</TableCell>
@@ -266,159 +248,148 @@ const ArticulosForm = (patchData) => {
                     {!loading ? (
                       <Spiner />
                     ) : (
-                      articulosInfo?.result?.map((element) => {
+                      articulosInfo?.result?.map((element, index) => {
                         return (
                           !element.detalle[0] && (
-                            <TableRow
-                              key={element.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="id"
-                                  id="id"
-                                  value={element.id}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                // id={element.detalle.idArticulo}
-                              >
-                                <input
-                                  id={element.detalle.idArticulo}
-                                  // onClick={() => handleRowClick(element)}
-                                  type="checkbox"
-                                  data-testid="detalle"
-                                  name="detalle"
-                                  onChange={handleChange}
-                                  value={values.detalle}
-                                  // margin="normal"
-                                  // id="detalle[0].idArticulo"
-                                  // label="detalle[0].idArticulo"
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="nombre"
-                                  id="nombre"
-                                  value={element.nombre}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="codigo"
-                                  id="codigo"
-                                  value={element.codigo}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].luz"
-                                  id="detalle[0].nomenclatura"
-                                  // value={element.detalle[0]?.luz}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  data-testid="titulo"
-                                  name="detalle[0].nomenclatura"
-                                  id="detalle[0].nomenclatura"
-                                  // value={element.detalle[0]?.nomenclatura}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].paso"
-                                  id="detalle[0].paso"
-                                  // value={element.detalle[0]?.paso}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].ancho"
-                                  id="detalle[0].ancho"
-                                  // value={element.detalle[0]?.ancho}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].cola"
-                                  id="detalle[0].cola"
-                                  // value={element.detalle[0]?.cola}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].peso"
-                                  id="detalle[0].peso"
-                                  // value={element.detalle[0]?.peso}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].diametro"
-                                  id="detalle[0].diametro"
-                                  // value={element.detalle[0]?.peso}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].pasoEstampado"
-                                  id="detalle[0].pasoEstampado"
-                                  // value={element.detalle[0]?.peso}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <TextField
-                                  type="text"
-                                  name="detalle[0].cantidadMl"
-                                  id="detalle[0].cantidadMl"
-                                  // value={element.detalle[0]?.peso}
-                                  onChange={handleChange}
-                                />
-                              </TableCell>
-                              {/* {element.detalle.map((elemento) => {
-                                return (
-                                  <div>
-                                    <TableCell>{elemento.luz}</TableCell>
-                                    <TableCell>
-                                      {elemento.nomenclatura}
-                                    </TableCell>
-                                    <TableCell>{elemento.paso}</TableCell>
-                                    <TableCell>{elemento.ancho}</TableCell>
-                                    <TableCell>{elemento.cola}</TableCell>
-                                    <TableCell>{elemento.peso}</TableCell>
-                                  </div>
-                                );
-                              })} */}
-                            </TableRow>
+                            <FieldArray name="detalle">
+                              {({ push, remove }) => (
+                                <TableRow
+                                  key={element.index}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                  }}
+                                >
+                                  <TableCell
+                                    component="th"
+                                    scope="row"
+                                    // id={element.detalle.idArticulo}
+                                  >
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        push({
+                                          idArticulo: "",
+                                          idArticuloDetalle: "",
+                                          luz: "",
+                                          diametro: "",
+                                          nomenclatura: "",
+                                          descripcion: "",
+                                          paso: "",
+                                          pasoEstampado: "",
+                                          cantidadMl: "",
+                                          ancho: "",
+                                          cola: "",
+                                          peso: "",
+                                        })
+                                      }
+                                    >
+                                      add
+                                    </button>
+                                  </TableCell>
+                                  <TableCell>
+                                    <input
+                                      type="text"
+                                      name={`detalle[${index}].descripcion`}
+                                      id="detalle.descripcion"
+                                      value={element.nombre}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <input
+                                      type="text"
+                                      name="codigo"
+                                      id="codigo"
+                                      value={element.codigo}
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      name={`detalle[${index}].luz`}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      data-testid="titulo"
+                                      name={`detalle[${index}].nomenclatura`}
+                                      id="detalle.nomenclatura"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].paso`}
+                                      id="detalle.paso"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].ancho`}
+                                      id="detalle.ancho"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].cola`}
+                                      id="detalle.cola"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].peso`}
+                                      id="detalle.peso"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].diametro`}
+                                      id="detalle.diametro"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].pasoEstampado`}
+                                      id="detalle.pasoEstampado"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Field
+                                      type="text"
+                                      name={`detalle[${index}].cantidadMl`}
+                                      id="detalle.cantidadMl"
+                                      onChange={handleChange}
+                                      component={Input}
+                                    />
+                                  </TableCell>
+                                  );
+                                </TableRow>
+                              )}
+                            </FieldArray>
                           )
                         );
                       })
@@ -433,6 +404,8 @@ const ArticulosForm = (patchData) => {
                 >
                   {patchData?.location?.state?.id ? "Editar" : "Crear"}
                 </Button>
+                <pre>{JSON.stringify(values, null, 2)}</pre>
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
               </form>
             )}
           </Formik>
