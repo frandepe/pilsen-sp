@@ -94,22 +94,24 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle: patchData?.location?.state?.detalle || [
-                {
-                  idArticulo: "",
-                  idArticuloDetalle: "",
-                  luz: "",
-                  diametro: "",
-                  nomenclatura: "",
-                  descripcion: "",
-                  paso: "",
-                  pasoEstampado: "",
-                  cantidadMl: "",
-                  ancho: "",
-                  cola: "",
-                  peso: "",
-                },
-              ],
+              // detalle:
+              //   patchData?.location?.state?.detalle ||
+              //   [
+              //     // {
+              //     //   idArticulo: "",
+              //     //   idArticuloDetalle: "",
+              //     //   luz: "",
+              //     //   diametro: "",
+              //     //   nomenclatura: "",
+              //     //   descripcion: "",
+              //     //   paso: "",
+              //     //   pasoEstampado: "",
+              //     //   cantidadMl: "",
+              //     //   ancho: "",
+              //     //   cola: "",
+              //     //   peso: "",
+              //     // },
+              //   ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
@@ -134,7 +136,14 @@ const ArticulosForm = (patchData) => {
               }
             }}
           >
-            {({ values, handleSubmit, handleChange, handleBlur, errors }) => (
+            {({
+              values,
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              errors,
+              setFieldValue,
+            }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
                 <label htmlFor="titulo">Nombre</label>
                 <TextField
@@ -268,24 +277,40 @@ const ArticulosForm = (patchData) => {
                                   >
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        push({
-                                          idArticulo: "",
-                                          idArticuloDetalle: "",
-                                          luz: "",
-                                          diametro: "",
-                                          nomenclatura: "",
-                                          descripcion: "",
-                                          paso: "",
-                                          pasoEstampado: "",
-                                          cantidadMl: "",
-                                          ancho: "",
-                                          cola: "",
-                                          peso: "",
-                                        })
-                                      }
+                                      onClick={() => {
+                                        // if (element.detalle !== null)
+                                        push();
+                                        //   {
+                                        //   idArticulo: "",
+                                        //   idArticuloDetalle: "",
+                                        //   luz: "",
+                                        //   diametro: "",
+                                        //   nomenclatura: "",
+                                        //   descripcion: "",
+                                        //   paso: "",
+                                        //   pasoEstampado: "",
+                                        //   cantidadMl: "",
+                                        //   ancho: "sarasa",
+                                        //   cola: "",
+                                        //   peso: "",
+                                        // }
+                                        setFieldValue(
+                                          `detalle[${index}].descripcion`,
+                                          `${element.nombre}`
+                                        );
+                                        setFieldValue(
+                                          `detalle[${index}].idArticuloDetalle`,
+                                          `${element.codigo}`
+                                        );
+                                      }}
                                     >
                                       add
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                    >
+                                      del
                                     </button>
                                   </TableCell>
                                   <TableCell>
@@ -294,6 +319,7 @@ const ArticulosForm = (patchData) => {
                                       name={`detalle[${index}].descripcion`}
                                       id="detalle.descripcion"
                                       value={element.nombre}
+                                      onChange={handleChange}
                                       component={Input}
                                     />
                                   </TableCell>
@@ -311,6 +337,7 @@ const ArticulosForm = (patchData) => {
                                     <Field
                                       name={`detalle[${index}].luz`}
                                       component={Input}
+                                      onChange={handleChange}
                                     />
                                   </TableCell>
                                   <TableCell>
@@ -405,7 +432,7 @@ const ArticulosForm = (patchData) => {
                   {patchData?.location?.state?.id ? "Editar" : "Crear"}
                 </Button>
                 <pre>{JSON.stringify(values, null, 2)}</pre>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
               </form>
             )}
           </Formik>
