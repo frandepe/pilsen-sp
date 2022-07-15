@@ -75,7 +75,6 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // dentro de detalle se esta pusheando unos null que no se de donde salen
   // video de referencia https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=664s
   // github de referencia https://github.com/benawad/formik-field-arry/blob/0_field_array/src/App.tsx
   return (
@@ -93,28 +92,30 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              // detalle:
-              //   patchData?.location?.state?.detalle ||
-              //   [
-              //     // {
-              //     //   idArticulo: "",
-              //     //   idArticuloDetalle: "",
-              //     //   luz: "",
-              //     //   diametro: "",
-              //     //   nomenclatura: "",
-              //     //   descripcion: "",
-              //     //   paso: "",
-              //     //   pasoEstampado: "",
-              //     //   cantidadMl: "",
-              //     //   ancho: "",
-              //     //   cola: "",
-              //     //   peso: "",
-              //     // },
-              //   ],
+              // detalle: patchData?.location?.state?.detalle || [
+              //   {
+              //     idArticulo: "",
+              //     idArticuloDetalle: "",
+              //     luz: "",
+              //     diametro: "",
+              //     nomenclatura: "",
+              //     descripcion: "",
+              //     paso: "",
+              //     pasoEstampado: "",
+              //     cantidadMl: "",
+              //     ancho: "",
+              //     cola: "",
+              //     peso: "",
+              //   },
+              // ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
+              // const resp = formData.detalle.filter((obj) =>
+              //   Object.keys(obj).some((key) => obj[key] !== null)
+              // );
+
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
@@ -140,7 +141,6 @@ const ArticulosForm = (patchData) => {
               handleSubmit,
               handleChange,
               handleBlur,
-              errors,
               setFieldValue,
             }) => (
               <form className="formabm_container" onSubmit={handleSubmit}>
@@ -259,10 +259,9 @@ const ArticulosForm = (patchData) => {
                       articulosInfo?.result?.map((element, index) => {
                         return (
                           !element.detalle[0] && (
-                            <FieldArray name="detalle">
+                            <FieldArray name="detalle" key={element.index}>
                               {({ push, remove }) => (
                                 <TableRow
-                                  key={element.index}
                                   sx={{
                                     "&:last-child td, &:last-child th": {
                                       border: 0,
@@ -279,7 +278,7 @@ const ArticulosForm = (patchData) => {
                                       onClick={() => {
                                         // if (element.detalle !== null)
                                         push();
-                                        //   {
+                                        //   push({
                                         //   idArticulo: "",
                                         //   idArticuloDetalle: "",
                                         //   luz: "",
@@ -292,7 +291,8 @@ const ArticulosForm = (patchData) => {
                                         //   ancho: "sarasa",
                                         //   cola: "",
                                         //   peso: "",
-                                        // }
+                                        // })
+
                                         setFieldValue(
                                           `detalle[${index}].descripcion`,
                                           `${element.nombre}`
@@ -309,7 +309,7 @@ const ArticulosForm = (patchData) => {
                                       type="button"
                                       onClick={() => remove(index)}
                                     >
-                                      del
+                                      delete
                                     </button>
                                   </TableCell>
                                   <TableCell>
