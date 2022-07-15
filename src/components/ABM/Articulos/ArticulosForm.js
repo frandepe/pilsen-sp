@@ -75,8 +75,7 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //cuando hago click en un add, se me pushean todos
-  //los campos de nombre y codigo de la tabla no se estan enviando
+  // dentro de detalle se esta pusheando unos null que no se de donde salen
   // video de referencia https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=664s
   // github de referencia https://github.com/benawad/formik-field-arry/blob/0_field_array/src/App.tsx
   return (
