@@ -162,16 +162,6 @@ export default function SignIn() {
                     <Button fullWidth type="submit" className={classes.btn}>
                       Ingresar
                     </Button>
-                    {/* <Grid container className="login_sub-btn">
-                      <Grid item xs>
-                        <Link href="#">¿Olvidaste tu contraseña?</Link>
-                      </Grid>
-                      <Grid item>
-                        <Link href="/PallasFront/register">
-                          {"No tienes cuenta? Registrate"}
-                        </Link>
-                      </Grid>
-                    </Grid> */}
                   </form>
                 </div>
                 <Box mt={8} mb={8}>

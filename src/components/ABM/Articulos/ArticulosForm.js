@@ -5,7 +5,7 @@ import Header from "../../LayoutPublic/Header/Header";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
-import { Formik, ErrorMessage, getIn, FieldArray, Field } from "formik";
+import { Formik, ErrorMessage, getIn, FieldArray, Field, Form } from "formik";
 // import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 // import { useHistory } from "react-router-dom";
@@ -92,30 +92,31 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              // detalle: patchData?.location?.state?.detalle || [
-              //   {
-              //     idArticulo: "",
-              //     idArticuloDetalle: "",
-              //     luz: "",
-              //     diametro: "",
-              //     nomenclatura: "",
-              //     descripcion: "",
-              //     paso: "",
-              //     pasoEstampado: "",
-              //     cantidadMl: "",
-              //     ancho: "",
-              //     cola: "",
-              //     peso: "",
-              //   },
-              // ],
+              detalle: patchData?.location?.state?.detalle || [
+                {
+                  idArticulo: "",
+                  idArticuloDetalle: "",
+                  luz: "",
+                  diametro: "",
+                  nomenclatura: "",
+                  codigoProducto: "",
+                  nombreProducto: "",
+                  paso: "",
+                  pasoEstampado: "",
+                  cantidadMl: "",
+                  ancho: "",
+                  cola: "",
+                  peso: "",
+                },
+              ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
               setStatusForm(true);
-              // const resp = formData.detalle.filter((obj) =>
-              //   Object.keys(obj).some((key) => obj[key] !== null)
-              // );
-
+              // const resp = formData.detalle.filter((e) => e !== null);
+              // const newArray = resp.filter(function (el) {
+              //   return el.descripcion !== "";
+              // });
               try {
                 const response = await privatePostRequest("articulos/save", {
                   ...formData,
@@ -143,7 +144,7 @@ const ArticulosForm = (patchData) => {
               handleBlur,
               setFieldValue,
             }) => (
-              <form className="formabm_container" onSubmit={handleSubmit}>
+              <Form className="formabm_container" onSubmit={handleSubmit}>
                 <label htmlFor="titulo">Nombre</label>
                 <TextField
                   data-testid="titulo"
@@ -218,7 +219,7 @@ const ArticulosForm = (patchData) => {
                     <optgroup label="Insumo:">
                       <option value="insumo">Insumo</option>
                     </optgroup>
-                    <optgroup label="Tipo de artículo:">
+                    <optgroup label="Producto:">
                       {tipoDeArticulosInfo?.result?.map((e) => {
                         return (
                           <option key={e.id} value={e.nombre}>
@@ -234,33 +235,32 @@ const ArticulosForm = (patchData) => {
                     className="input-error"
                   />
                 </div>
-
-                <Table sx={{ minWidth: 750 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow className="list_titulos">
-                      <TableCell>add</TableCell>
-                      <TableCell>Nombre</TableCell>
-                      <TableCell>Código</TableCell>
-                      <TableCell>Luz</TableCell>
-                      <TableCell>Nomenclatura</TableCell>
-                      <TableCell>Paso</TableCell>
-                      <TableCell>Desp. Ancho</TableCell>
-                      <TableCell>Desp. Cola</TableCell>
-                      <TableCell>Peso x Mt2</TableCell>
-                      <TableCell>Diametro</TableCell>
-                      <TableCell>Paso estampado</TableCell>
-                      <TableCell>Cantidad Ml</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {!loading ? (
-                      <Spiner />
-                    ) : (
-                      articulosInfo?.result?.map((element, index) => {
-                        return (
-                          !element.detalle[0] && (
-                            <FieldArray name="detalle" key={element.index}>
-                              {({ push, remove }) => (
+                <FieldArray name="detalle">
+                  {({ remove }) => (
+                    <Table sx={{ minWidth: 750 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow className="list_titulos">
+                          <TableCell>add</TableCell>
+                          <TableCell>Nombre</TableCell>
+                          <TableCell>Código</TableCell>
+                          <TableCell>Luz</TableCell>
+                          <TableCell>Nomenclatura</TableCell>
+                          <TableCell>Paso</TableCell>
+                          <TableCell>Desp. Ancho</TableCell>
+                          <TableCell>Desp. Cola</TableCell>
+                          <TableCell>Peso x Mt2</TableCell>
+                          <TableCell>Diametro</TableCell>
+                          <TableCell>Paso estampado</TableCell>
+                          <TableCell>Cantidad Ml</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {!loading ? (
+                          <Spiner />
+                        ) : (
+                          articulosInfo?.result?.map((element, index) => {
+                            return (
+                              !element.detalle[0] && (
                                 <TableRow
                                   sx={{
                                     "&:last-child td, &:last-child th": {
@@ -276,31 +276,33 @@ const ArticulosForm = (patchData) => {
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        // if (element.detalle !== null)
-                                        push();
                                         //   push({
-                                        //   idArticulo: "",
-                                        //   idArticuloDetalle: "",
-                                        //   luz: "",
-                                        //   diametro: "",
-                                        //   nomenclatura: "",
-                                        //   descripcion: "",
-                                        //   paso: "",
-                                        //   pasoEstampado: "",
-                                        //   cantidadMl: "",
-                                        //   ancho: "sarasa",
-                                        //   cola: "",
-                                        //   peso: "",
-                                        // })
+                                        //     idArticulo: "",
+                                        //     idArticuloDetalle: "",
+                                        //     luz: "",
+                                        //     diametro: "",
+                                        //     nomenclatura: "",
+                                        //     descripcion: "",
+                                        //     paso: "",
+                                        //     pasoEstampado: "",
+                                        //     cantidadMl: "",
+                                        //     ancho: "",
+                                        //     cola: "",
+                                        //     peso: "",
+                                        //   });
 
                                         setFieldValue(
-                                          `detalle[${index}].descripcion`,
+                                          `detalle[${index}].nombreProducto`,
                                           `${element.nombre}`
                                         );
                                         setFieldValue(
-                                          `detalle[${index}].idArticuloDetalle`,
+                                          `detalle[${index}].codigoProducto`,
                                           `${element.codigo}`
                                         );
+                                        // setFieldValue(
+                                        //   `detalle[${index}].luz`,
+                                        //   `${values.detalle.luz}`
+                                        // );
                                       }}
                                     >
                                       add
@@ -314,21 +316,15 @@ const ArticulosForm = (patchData) => {
                                   </TableCell>
                                   <TableCell>
                                     <input
-                                      type="text"
                                       name={`detalle[${index}].descripcion`}
-                                      id="detalle.descripcion"
                                       value={element.nombre}
-                                      onChange={handleChange}
                                       component={Input}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <input
-                                      type="text"
                                       name="codigo"
-                                      id="codigo"
                                       value={element.codigo}
-                                      onChange={handleChange}
                                       component={Input}
                                     />
                                   </TableCell>
@@ -336,93 +332,74 @@ const ArticulosForm = (patchData) => {
                                     <Field
                                       name={`detalle[${index}].luz`}
                                       component={Input}
-                                      onChange={handleChange}
+                                      value={values.detalle.luz}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
-                                      data-testid="titulo"
                                       name={`detalle[${index}].nomenclatura`}
-                                      id="detalle.nomenclatura"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.nomenclatura}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].paso`}
-                                      id="detalle.paso"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.paso}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].ancho`}
-                                      id="detalle.ancho"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.ancho}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].cola`}
-                                      id="detalle.cola"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.cola}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].peso`}
-                                      id="detalle.peso"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.peso}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].diametro`}
-                                      id="detalle.diametro"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.diametro}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].pasoEstampado`}
-                                      id="detalle.pasoEstampado"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.pasoEstampado}
                                     />
                                   </TableCell>
                                   <TableCell>
                                     <Field
-                                      type="text"
                                       name={`detalle[${index}].cantidadMl`}
-                                      id="detalle.cantidadMl"
-                                      onChange={handleChange}
                                       component={Input}
+                                      value={values.detalle.cantidadMl}
                                     />
                                   </TableCell>
-                                  );
                                 </TableRow>
-                              )}
-                            </FieldArray>
-                          )
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-
+                              )
+                            );
+                          })
+                        )}
+                      </TableBody>
+                    </Table>
+                  )}
+                </FieldArray>
                 <Button
                   type="submit"
                   className={classes.btn}
@@ -431,8 +408,9 @@ const ArticulosForm = (patchData) => {
                   {patchData?.location?.state?.id ? "Editar" : "Crear"}
                 </Button>
                 <pre>{JSON.stringify(values, null, 2)}</pre>
+
                 {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
-              </form>
+              </Form>
             )}
           </Formik>
         </div>
