@@ -5,7 +5,7 @@ import Header from "../../LayoutPublic/Header/Header";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
-import { Formik, ErrorMessage, getIn, FieldArray, Field, Form } from "formik";
+import { Formik, ErrorMessage, Field, Form } from "formik";
 // import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 // import { useHistory } from "react-router-dom";
@@ -37,26 +37,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Input = ({ field, form: { errors } }) => {
-  const errorMessage = getIn(errors, field.name);
-
-  return (
-    <>
-      <TextField {...field} />
-      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
-    </>
-  );
-};
+// const Input = ({ field, form: { errors } }) => {
+//   const errorMessage = getIn(errors, field.name);
+//   return (
+//     <>
+//       <TextField {...field} />
+//       {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
+//     </>
+//   );
+// };
 
 const ArticulosForm = (patchData) => {
   // const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [selectInsumo, setSelectInsumo] = useState(null);
   const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
   // const digitsOnly = (value) => /^\d+$/.test(value);
+
+  const [detalleProducto, setDetalleProducto] = useState([]);
 
   const formSchema = yup.object().shape({
     nombre: yup.string().max(100, "No puede ingresar más de 100 caracteres"),
@@ -92,23 +94,24 @@ const ArticulosForm = (patchData) => {
               codigo: patchData?.location?.state?.codigo || "",
               descripcion: patchData?.location?.state?.descripcion || "",
               tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle: patchData?.location?.state?.detalle || [
-                {
-                  idArticulo: "",
-                  idArticuloDetalle: "",
-                  luz: "",
-                  diametro: "",
-                  nomenclatura: "",
-                  codigoProducto: "",
-                  nombreProducto: "",
-                  paso: "",
-                  pasoEstampado: "",
-                  cantidadMl: "",
-                  ancho: "",
-                  cola: "",
-                  peso: "",
-                },
-              ],
+              detalle:
+                patchData?.location?.state?.detalle ||
+                [
+                  // {
+                  //   idArticulo: "",
+                  //   idArticuloDetalle: "",
+                  //   luz: "",
+                  //   diametro: "",
+                  //   nomenclatura: "",
+                  //   descripcion: "",
+                  //   paso: "",
+                  //   pasoEstampado: "",
+                  //   cantidadMl: "",
+                  //   ancho: "",
+                  //   cola: "",
+                  //   peso: "",
+                  // },
+                ],
             }}
             validationSchema={formSchema}
             onSubmit={async ({ ...formData }) => {
@@ -212,6 +215,7 @@ const ArticulosForm = (patchData) => {
                     data-testid="tipoArticulo"
                     value={values.tipoArticulo}
                     onChange={handleChange}
+                    onClick={(e) => setSelectInsumo(e.target.value)}
                   >
                     <option value="" disabled>
                       Selecciona categoria
@@ -235,171 +239,170 @@ const ArticulosForm = (patchData) => {
                     className="input-error"
                   />
                 </div>
-                <FieldArray name="detalle">
-                  {({ remove }) => (
-                    <Table sx={{ minWidth: 750 }} aria-label="simple table">
-                      <TableHead>
-                        <TableRow className="list_titulos">
-                          <TableCell>add</TableCell>
-                          <TableCell>Nombre</TableCell>
-                          <TableCell>Código</TableCell>
-                          <TableCell>Luz</TableCell>
-                          <TableCell>Nomenclatura</TableCell>
-                          <TableCell>Paso</TableCell>
-                          <TableCell>Desp. Ancho</TableCell>
-                          <TableCell>Desp. Cola</TableCell>
-                          <TableCell>Peso x Mt2</TableCell>
-                          <TableCell>Diametro</TableCell>
-                          <TableCell>Paso estampado</TableCell>
-                          <TableCell>Cantidad Ml</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {!loading ? (
-                          <Spiner />
-                        ) : (
-                          articulosInfo?.result?.map((element, index) => {
-                            return (
-                              !element.detalle[0] && (
-                                <TableRow
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                  }}
-                                >
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    // id={element.detalle.idArticulo}
-                                  >
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        //   push({
-                                        //     idArticulo: "",
-                                        //     idArticuloDetalle: "",
-                                        //     luz: "",
-                                        //     diametro: "",
-                                        //     nomenclatura: "",
-                                        //     descripcion: "",
-                                        //     paso: "",
-                                        //     pasoEstampado: "",
-                                        //     cantidadMl: "",
-                                        //     ancho: "",
-                                        //     cola: "",
-                                        //     peso: "",
-                                        //   });
+                {selectInsumo !== "insumo" && (
+                  // <FieldArray name="detalle">
+                  //   {({ remove }) => (
+                  <Table sx={{ minWidth: 750 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow className="list_titulos">
+                        <TableCell>✓</TableCell>
+                        <TableCell>Nomenclatura</TableCell>
+                        <TableCell>CódigoId</TableCell>
+                        <TableCell>Luz</TableCell>
+                        <TableCell>Descripcion</TableCell>
+                        <TableCell>Paso</TableCell>
+                        <TableCell>Desp. Ancho</TableCell>
+                        <TableCell>Desp. Cola</TableCell>
+                        <TableCell>Peso x Mt2</TableCell>
+                        <TableCell>Diametro</TableCell>
+                        <TableCell>Paso estampado</TableCell>
+                        <TableCell>Cantidad Ml</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {!loading ? (
+                        <Spiner />
+                      ) : (
+                        articulosInfo?.result?.map((element, index) => {
+                          return (
+                            !element.detalle[0] && (
+                              <TableRow
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                }}
+                              >
+                                <TableCell component="th" scope="row">
+                                  <input
+                                    type="checkbox"
+                                    onChange={() => {
+                                      //   push({
+                                      //     idArticulo: "",
+                                      //     idArticuloDetalle: "",
+                                      //     luz: "",
+                                      //     diametro: "",
+                                      //     nomenclatura: "",
+                                      //     descripcion: "",
+                                      //     paso: "",
+                                      //     pasoEstampado: "",
+                                      //     cantidadMl: "",
+                                      //     ancho: "",
+                                      //     cola: "",
+                                      //     peso: "",
+                                      //   });
+                                      const existe = detalleProducto.some(
+                                        (el) => (el.id = element.id)
+                                      );
+                                      if (existe) {
+                                        setDetalleProducto(
+                                          detalleProducto.filter(
+                                            (el) => el.id !== element.id
+                                          )
+                                        );
+                                      } else {
+                                        setDetalleProducto([
+                                          ...detalleProducto,
+                                          element,
+                                        ]);
+                                      }
 
-                                        setFieldValue(
-                                          `detalle[${index}].nombreProducto`,
-                                          `${element.nombre}`
-                                        );
-                                        setFieldValue(
-                                          `detalle[${index}].codigoProducto`,
-                                          `${element.codigo}`
-                                        );
-                                        // setFieldValue(
-                                        //   `detalle[${index}].luz`,
-                                        //   `${values.detalle.luz}`
-                                        // );
-                                      }}
-                                    >
-                                      add
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => remove(index)}
-                                    >
-                                      delete
-                                    </button>
-                                  </TableCell>
-                                  <TableCell>
-                                    <input
-                                      name={`detalle[${index}].descripcion`}
-                                      value={element.nombre}
-                                      component={Input}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <input
-                                      name="codigo"
-                                      value={element.codigo}
-                                      component={Input}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].luz`}
-                                      component={Input}
-                                      value={values.detalle.luz}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].nomenclatura`}
-                                      component={Input}
-                                      value={values.detalle.nomenclatura}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].paso`}
-                                      component={Input}
-                                      value={values.detalle.paso}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].ancho`}
-                                      component={Input}
-                                      value={values.detalle.ancho}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].cola`}
-                                      component={Input}
-                                      value={values.detalle.cola}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].peso`}
-                                      component={Input}
-                                      value={values.detalle.peso}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].diametro`}
-                                      component={Input}
-                                      value={values.detalle.diametro}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].pasoEstampado`}
-                                      component={Input}
-                                      value={values.detalle.pasoEstampado}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Field
-                                      name={`detalle[${index}].cantidadMl`}
-                                      component={Input}
-                                      value={values.detalle.cantidadMl}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                              )
-                            );
-                          })
-                        )}
-                      </TableBody>
-                    </Table>
-                  )}
-                </FieldArray>
+                                      // setFieldValue(
+                                      //   `detalle[${index}].nomenclatura`,
+                                      //   `${element.nombre}`
+                                      // );
+                                      // setFieldValue(
+                                      //   `detalle[${index}].idArticuloDetalle`,
+                                      //   `${element.codigo}`
+                                      // );
+                                    }}
+                                    // checked={false && remove(index)}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <input
+                                    name={`detalle[${index}].nomenclatura`}
+                                    value={element.nombre}
+                                    // component={Input}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <input
+                                    name={`detalle[${index}].idArticuloDetalle`}
+                                    value={element.id}
+                                    // component={Input}
+                                  />
+                                  {/* { tengo que enviar tambien el idArticuloDetalle que va a ser element.id} */}
+                                </TableCell>
+                                <TableCell>
+                                  <Field name={`detalle[${index}].luz`} />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].descripcion`}
+                                    // component={Input}
+                                    value={element.descripcion}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].paso`}
+                                    // component={Input}
+                                    value={values?.detalle?.paso}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].ancho`}
+                                    // component={Input}
+                                    value={values?.detalle?.ancho}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].cola`}
+                                    // component={Input}
+                                    value={values?.detalle?.cola}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].peso`}
+                                    // component={Input}
+                                    value={values?.detalle?.peso}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].diametro`}
+                                    // component={Input}
+                                    value={values?.detalle?.diametro}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].pasoEstampado`}
+                                    // component={Input}
+                                    value={values?.detalle?.pasoEstampado}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].cantidadMl`}
+                                    // component={Input}
+                                    value={values?.detalle?.cantidadMl}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )
+                          );
+                        })
+                      )}
+                    </TableBody>
+                  </Table>
+                  //   )}
+                  // </FieldArray>
+                )}
                 <Button
                   type="submit"
                   className={classes.btn}
@@ -408,7 +411,6 @@ const ArticulosForm = (patchData) => {
                   {patchData?.location?.state?.id ? "Editar" : "Crear"}
                 </Button>
                 <pre>{JSON.stringify(values, null, 2)}</pre>
-
                 {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
               </Form>
             )}
