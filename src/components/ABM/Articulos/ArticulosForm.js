@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import * as yup from "yup";
-import { Formik, ErrorMessage, Field, Form } from "formik";
 // import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 // import { useHistory } from "react-router-dom";
@@ -37,16 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const Input = ({ field, form: { errors } }) => {
-//   const errorMessage = getIn(errors, field.name);
-//   return (
-//     <>
-//       <TextField {...field} />
-//       {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
-//     </>
-//   );
-// };
-
 const ArticulosForm = (patchData) => {
   // const history = useHistory();
   const classes = useStyles();
@@ -56,20 +43,28 @@ const ArticulosForm = (patchData) => {
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
-  // const digitsOnly = (value) => /^\d+$/.test(value);
-
-  const [detalleProducto, setDetalleProducto] = useState([]);
-
-  const formSchema = yup.object().shape({
-    nombre: yup.string().max(100, "No puede ingresar más de 100 caracteres"),
-    codigo: yup.string(),
-    descripcion: yup
-      .string()
-      .max(100, "No puede ingresar más de 100 caracteres"),
-    tipoArticulo: yup
-      .string()
-      .max(100, "No puede ingresar más de 100 caracteres"),
-  });
+  // Estado
+  const [nombre, setNombre] = useState("");
+  const [codigo, setCodigo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [tipoArticulo, setTipoArticulo] = useState("");
+  // const [luz, setLuz] = useState("");
+  const [detalle, setDetalle] = useState([
+    // {
+    //   idArticulo: "",
+    //   idArticuloDetalle: "",
+    //   luz: "",
+    //   diametro: "",
+    //   nomenclatura: "",
+    //   descripcion: "",
+    //   paso: "",
+    //   pasoEstampado: "",
+    //   cantidadMl: "",
+    //   ancho: "",
+    //   cola: "",
+    //   peso: "",
+    // },
+  ]);
 
   useEffect(() => {
     dispatch(articulosAction(articulosInfo));
@@ -77,8 +72,37 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // video de referencia https://www.youtube.com/watch?v=Dm0TXbGvgvo&t=664s
-  // github de referencia https://github.com/benawad/formik-field-arry/blob/0_field_array/src/App.tsx
+  const sendABM = async (e) => {
+    e.preventDefault();
+    setStatusForm(true);
+    // formData.detalle.push(detalleProducto);
+    // const resp = formData.detalle.filter((e) => e !== null);
+    // const newArray = resp.filter(function (el) {
+    //   return el.descripcion !== "";
+    // });
+    try {
+      const response = await privatePostRequest("articulos/save", {
+        nombre,
+        codigo,
+        descripcion,
+        tipoArticulo,
+        detalle,
+      });
+      console.log(response);
+      if (!response?.data?.status === 200) throw new Error("Algo falló");
+      // showAlert({
+      //   type: "success",
+      //   title: patchData?.location?.state?.id
+      //     ? "Editado correctamente"
+      //     : "Creado correctamente",
+      // }) && history.push("/PallasFront/articulos");
+    } catch (err) {
+      console.log("Error catch:", err);
+    } finally {
+      setStatusForm(false);
+    }
+  };
+
   return (
     <div>
       <Header>
@@ -86,335 +110,213 @@ const ArticulosForm = (patchData) => {
           Artículos
         </Typography>
         <div className="abm_container">
-          <Formik
-            initialValues={{
-              id: patchData?.location?.state?.id,
-              activo: true,
-              nombre: patchData?.location?.state?.nombre || "",
-              codigo: patchData?.location?.state?.codigo || "",
-              descripcion: patchData?.location?.state?.descripcion || "",
-              tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
-              detalle:
-                patchData?.location?.state?.detalle ||
-                [
-                  // {
-                  //   idArticulo: "",
-                  //   idArticuloDetalle: "",
-                  //   luz: "",
-                  //   diametro: "",
-                  //   nomenclatura: "",
-                  //   descripcion: "",
-                  //   paso: "",
-                  //   pasoEstampado: "",
-                  //   cantidadMl: "",
-                  //   ancho: "",
-                  //   cola: "",
-                  //   peso: "",
-                  // },
-                ],
-            }}
-            validationSchema={formSchema}
-            onSubmit={async ({ ...formData }) => {
-              setStatusForm(true);
-              // const resp = formData.detalle.filter((e) => e !== null);
-              // const newArray = resp.filter(function (el) {
-              //   return el.descripcion !== "";
-              // });
-              try {
-                const response = await privatePostRequest("articulos/save", {
-                  ...formData,
-                });
-                console.log(response);
-                if (!response?.data?.status === 200)
-                  throw new Error("Algo falló");
-                // showAlert({
-                //   type: "success",
-                //   title: patchData?.location?.state?.id
-                //     ? "Editado correctamente"
-                //     : "Creado correctamente",
-                // }) && history.push("/PallasFront/articulos");
-              } catch (err) {
-                console.log("Error catch:", err);
-              } finally {
-                setStatusForm(false);
-              }
-            }}
-          >
-            {({
-              values,
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-            }) => (
-              <Form className="formabm_container" onSubmit={handleSubmit}>
-                <label htmlFor="titulo">Nombre</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="nombre"
-                  id="titulo"
-                  label="Nombre"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.nombre}
-                />
-                <ErrorMessage
-                  name="nombre"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">Código</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="codigo"
-                  id="titulo"
-                  label="Código"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.codigo}
-                />
-                <ErrorMessage
-                  name="codigo"
-                  component="p"
-                  className="input-error"
-                />
-                <label htmlFor="titulo">Descripción</label>
-                <TextField
-                  data-testid="titulo"
-                  required
-                  fullWidth
-                  margin="normal"
-                  name="descripcion"
-                  id="titulo"
-                  label="Descripción"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.descripcion}
-                />
-                <ErrorMessage
-                  name="descripcion"
-                  component="p"
-                  className="input-error"
-                />
+          <form className="formabm_container" onSubmit={sendABM}>
+            <label htmlFor="titulo">Nombre</label>
+            <input label="Nombre" onChange={(e) => setNombre(e.target.value)} />
 
-                <div className="input__container">
-                  <label htmlFor="titulo">Tipo Artículo</label>
-                  <select
-                    className="select-field"
-                    name="tipoArticulo"
-                    id="titulo"
-                    data-testid="tipoArticulo"
-                    value={values.tipoArticulo}
-                    onChange={handleChange}
-                    onClick={(e) => setSelectInsumo(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Selecciona categoria
-                    </option>
-                    <optgroup label="Insumo:">
-                      <option value="insumo">Insumo</option>
-                    </optgroup>
-                    <optgroup label="Producto:">
-                      {tipoDeArticulosInfo?.result?.map((e) => {
-                        return (
-                          <option key={e.id} value={e.nombre}>
-                            {e.nombre}
-                          </option>
-                        );
-                      })}
-                    </optgroup>
-                  </select>
-                  <ErrorMessage
-                    name="tipoArticulo"
-                    component="p"
-                    className="input-error"
-                  />
-                </div>
-                {selectInsumo !== "insumo" && (
-                  // <FieldArray name="detalle">
-                  //   {({ remove }) => (
-                  <Table sx={{ minWidth: 750 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow className="list_titulos">
-                        <TableCell>✓</TableCell>
-                        <TableCell>Nomenclatura</TableCell>
-                        <TableCell>CódigoId</TableCell>
-                        <TableCell>Luz</TableCell>
-                        <TableCell>Descripcion</TableCell>
-                        <TableCell>Paso</TableCell>
-                        <TableCell>Desp. Ancho</TableCell>
-                        <TableCell>Desp. Cola</TableCell>
-                        <TableCell>Peso x Mt2</TableCell>
-                        <TableCell>Diametro</TableCell>
-                        <TableCell>Paso estampado</TableCell>
-                        <TableCell>Cantidad Ml</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {!loading ? (
-                        <Spiner />
-                      ) : (
-                        articulosInfo?.result?.map((element, index) => {
-                          return (
-                            !element.detalle[0] && (
-                              <TableRow
-                                sx={{
-                                  "&:last-child td, &:last-child th": {
-                                    border: 0,
-                                  },
+            <label htmlFor="titulo">Código</label>
+            <input label="Codigo" onChange={(e) => setCodigo(e.target.value)} />
+
+            <label htmlFor="titulo">Descripción</label>
+            <input
+              label="Descripcion"
+              onChange={(e) => setDescripcion(e.target.value)}
+            />
+            <div className="input__container">
+              <label htmlFor="titulo">Tipo Artículo</label>
+              <select
+                className="select-field"
+                onClick={(e) => setSelectInsumo(e.target.value)}
+                onChange={(e) => setTipoArticulo(e.target.value)}
+              >
+                <option value="" disabled>
+                  Selecciona categoria
+                </option>
+                <optgroup label="Insumo:">
+                  <option value="insumo">Insumo</option>
+                </optgroup>
+                <optgroup label="Producto:">
+                  {tipoDeArticulosInfo?.result?.map((e) => {
+                    return (
+                      <option key={e.id} value={e.nombre}>
+                        {e.nombre}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              </select>
+            </div>
+            {selectInsumo !== "insumo" && (
+              <Table sx={{ minWidth: 750 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow className="list_titulos">
+                    <TableCell>✓</TableCell>
+                    <TableCell>Nomenclatura</TableCell>
+                    <TableCell>CódigoId</TableCell>
+                    <TableCell>Descripcion</TableCell>
+                    <TableCell>Luz</TableCell>
+                    <TableCell>Paso</TableCell>
+                    <TableCell>Desp. Ancho</TableCell>
+                    <TableCell>Desp. Cola</TableCell>
+                    <TableCell>Peso x Mt2</TableCell>
+                    <TableCell>Diametro</TableCell>
+                    <TableCell>Paso estampado</TableCell>
+                    <TableCell>Cantidad Ml</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {!loading ? (
+                    <Spiner />
+                  ) : (
+                    articulosInfo?.result?.map((element, index) => {
+                      return (
+                        !element.detalle[0] && (
+                          <TableRow
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: 0,
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              <input
+                                type="checkbox"
+                                onChange={() => {
+                                  setDetalle([
+                                    ...detalle,
+                                    {
+                                      idArticulo: "",
+                                      idArticuloDetalle: element.id,
+                                      luz: element.luz,
+                                      // luz: detalle?.luz,
+                                      diametro: "",
+                                      nomenclatura: element.nombre,
+                                      descripcion: element.descripcion,
+                                      paso: "",
+                                      pasoEstampado: "",
+                                      cantidadMl: "",
+                                      ancho: "",
+                                      cola: "",
+                                      peso: "",
+                                    },
+                                  ]);
+
+                                  // const existe = detalle.some(
+                                  //   (el) => (el.idArticuloDetalle = element.id)
+                                  // );
+
+                                  // console.log(existe);
+                                  // if (existe) {
+                                  //   setDetalle(
+                                  //     detalle.filter(
+                                  //       (el) => el.id !== element.id
+                                  //     )
+                                  //   );
+                                  // } else {
+                                  //   setDetalle([
+                                  //     ...detalle,
+                                  //     {
+                                  //       idArticulo: "",
+                                  //       idArticuloDetalle: element.id,
+                                  //       luz: setLuz(luz),
+                                  //       // luz: detalle?.luz,
+                                  //       diametro: "",
+                                  //       nomenclatura: element.nombre,
+                                  //       descripcion: element.descripcion,
+                                  //       paso: "",
+                                  //       pasoEstampado: "",
+                                  //       cantidadMl: "",
+                                  //       ancho: "",
+                                  //       cola: "",
+                                  //       peso: "",
+                                  //     },
+                                  //   ]);
+                                  // }
                                 }}
-                              >
-                                <TableCell component="th" scope="row">
-                                  <input
-                                    type="checkbox"
-                                    onChange={() => {
-                                      //   push({
-                                      //     idArticulo: "",
-                                      //     idArticuloDetalle: "",
-                                      //     luz: "",
-                                      //     diametro: "",
-                                      //     nomenclatura: "",
-                                      //     descripcion: "",
-                                      //     paso: "",
-                                      //     pasoEstampado: "",
-                                      //     cantidadMl: "",
-                                      //     ancho: "",
-                                      //     cola: "",
-                                      //     peso: "",
-                                      //   });
-                                      const existe = detalleProducto.some(
-                                        (el) => (el.id = element.id)
-                                      );
-                                      if (existe) {
-                                        setDetalleProducto(
-                                          detalleProducto.filter(
-                                            (el) => el.id !== element.id
-                                          )
-                                        );
-                                      } else {
-                                        setDetalleProducto([
-                                          ...detalleProducto,
-                                          element,
-                                        ]);
-                                      }
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].nomenclatura`}
+                                value={element.nombre}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].idArticuloDetalle`}
+                                value={element.id}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].descripcion`}
+                                value={element.descripcion}
+                              />
+                            </TableCell>
 
-                                      // setFieldValue(
-                                      //   `detalle[${index}].nomenclatura`,
-                                      //   `${element.nombre}`
-                                      // );
-                                      // setFieldValue(
-                                      //   `detalle[${index}].idArticuloDetalle`,
-                                      //   `${element.codigo}`
-                                      // );
-                                    }}
-                                    // checked={false && remove(index)}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <input
-                                    name={`detalle[${index}].nomenclatura`}
-                                    value={element.nombre}
-                                    // component={Input}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <input
-                                    name={`detalle[${index}].idArticuloDetalle`}
-                                    value={element.id}
-                                    // component={Input}
-                                  />
-                                  {/* { tengo que enviar tambien el idArticuloDetalle que va a ser element.id} */}
-                                </TableCell>
-                                <TableCell>
-                                  <Field name={`detalle[${index}].luz`} />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].descripcion`}
-                                    // component={Input}
-                                    value={element.descripcion}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].paso`}
-                                    // component={Input}
-                                    value={values?.detalle?.paso}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].ancho`}
-                                    // component={Input}
-                                    value={values?.detalle?.ancho}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].cola`}
-                                    // component={Input}
-                                    value={values?.detalle?.cola}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].peso`}
-                                    // component={Input}
-                                    value={values?.detalle?.peso}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].diametro`}
-                                    // component={Input}
-                                    value={values?.detalle?.diametro}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].pasoEstampado`}
-                                    // component={Input}
-                                    value={values?.detalle?.pasoEstampado}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Field
-                                    name={`detalle[${index}].cantidadMl`}
-                                    // component={Input}
-                                    value={values?.detalle?.cantidadMl}
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            )
-                          );
-                        })
-                      )}
-                    </TableBody>
-                  </Table>
-                  //   )}
-                  // </FieldArray>
-                )}
-                <Button
-                  type="submit"
-                  className={classes.btn}
-                  disabled={statusForm}
-                >
-                  {patchData?.location?.state?.id ? "Editar" : "Crear"}
-                </Button>
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-                {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
-              </Form>
+                            <TableCell>
+                              <input
+                                // name={detalle[index]?.luz}
+                                // onChange={(e) => setDetalle({luz: e.target.value})}
+                                value={detalle.luz}
+                              />
+                            </TableCell>
+
+                            <TableCell>
+                              <input
+                                name={`${detalle[index]}.paso`}
+                                value={detalle?.paso}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].ancho`}
+                                value={detalle?.ancho}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                name={detalle[index]?.cola}
+                                value={detalle?.cola}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].peso`}
+                                value={detalle?.peso}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].diametro`}
+                                value={detalle?.diametro}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].pasoEstampado`}
+                                value={detalle?.pasoEstampado}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <input
+                                // name={`detalle[${index}].cantidadMl`}
+                                value={detalle?.cantidadMl}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
             )}
-          </Formik>
+            <Button type="submit" className={classes.btn} disabled={statusForm}>
+              {patchData?.location?.state?.id ? "Editar" : "Crear"}
+            </Button>
+            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+          </form>
         </div>
       </Header>
     </div>
