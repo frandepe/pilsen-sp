@@ -18,6 +18,7 @@ import {
   articulosAction,
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
+//import {produce} from "immer"
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -48,23 +49,16 @@ const ArticulosForm = (patchData) => {
   const [codigo, setCodigo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipoArticulo, setTipoArticulo] = useState("");
-  // const [luz, setLuz] = useState("");
-  const [detalle, setDetalle] = useState([
-    // {
-    //   idArticulo: "",
-    //   idArticuloDetalle: "",
-    //   luz: "",
-    //   diametro: "",
-    //   nomenclatura: "",
-    //   descripcion: "",
-    //   paso: "",
-    //   pasoEstampado: "",
-    //   cantidadMl: "",
-    //   ancho: "",
-    //   cola: "",
-    //   peso: "",
-    // },
-  ]);
+  const [detalle, setDetalle] = useState([]);
+
+  const [luz, setLuz] = useState("");
+  const [diametro, setDiametro] = useState("");
+  const [paso, setPaso] = useState("");
+  const [pasoEstampado, setPasoEstampado] = useState("");
+  const [cantidadMl, setCantidadMl] = useState("");
+  const [ancho, setAncho] = useState("");
+  const [cola, setCola] = useState("");
+  const [peso, setPeso] = useState("");
 
   useEffect(() => {
     dispatch(articulosAction(articulosInfo));
@@ -72,14 +66,14 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    setLuz(luz);
+  }, [luz]);
+
   const sendABM = async (e) => {
     e.preventDefault();
     setStatusForm(true);
-    // formData.detalle.push(detalleProducto);
-    // const resp = formData.detalle.filter((e) => e !== null);
-    // const newArray = resp.filter(function (el) {
-    //   return el.descripcion !== "";
-    // });
+
     try {
       const response = await privatePostRequest("articulos/save", {
         nombre,
@@ -182,56 +176,36 @@ const ArticulosForm = (patchData) => {
                               <input
                                 type="checkbox"
                                 onChange={() => {
-                                  setDetalle([
-                                    ...detalle,
-                                    {
-                                      idArticulo: "",
-                                      idArticuloDetalle: element.id,
-                                      luz: element.luz,
-                                      // luz: detalle?.luz,
-                                      diametro: "",
-                                      nomenclatura: element.nombre,
-                                      descripcion: element.descripcion,
-                                      paso: "",
-                                      pasoEstampado: "",
-                                      cantidadMl: "",
-                                      ancho: "",
-                                      cola: "",
-                                      peso: "",
-                                    },
-                                  ]);
+                                  const existe = detalle.some(
+                                    (el) => el.idArticuloDetalle === element.id
+                                  );
 
-                                  // const existe = detalle.some(
-                                  //   (el) => (el.idArticuloDetalle = element.id)
-                                  // );
-
-                                  // console.log(existe);
-                                  // if (existe) {
-                                  //   setDetalle(
-                                  //     detalle.filter(
-                                  //       (el) => el.id !== element.id
-                                  //     )
-                                  //   );
-                                  // } else {
-                                  //   setDetalle([
-                                  //     ...detalle,
-                                  //     {
-                                  //       idArticulo: "",
-                                  //       idArticuloDetalle: element.id,
-                                  //       luz: setLuz(luz),
-                                  //       // luz: detalle?.luz,
-                                  //       diametro: "",
-                                  //       nomenclatura: element.nombre,
-                                  //       descripcion: element.descripcion,
-                                  //       paso: "",
-                                  //       pasoEstampado: "",
-                                  //       cantidadMl: "",
-                                  //       ancho: "",
-                                  //       cola: "",
-                                  //       peso: "",
-                                  //     },
-                                  //   ]);
-                                  // }
+                                  console.log(existe);
+                                  if (existe) {
+                                    setDetalle(
+                                      detalle.filter(
+                                        (el) =>
+                                          el.idArticuloDetalle !== element.id
+                                      )
+                                    );
+                                  } else {
+                                    setDetalle([
+                                      ...detalle,
+                                      {
+                                        idArticuloDetalle: element.id,
+                                        nomenclatura: element.nombre,
+                                        descripcion: element.descripcion,
+                                        luz: luz,
+                                        diametro: diametro,
+                                        paso: paso,
+                                        pasoEstampado: pasoEstampado,
+                                        cantidadMl: cantidadMl,
+                                        ancho: ancho,
+                                        cola: cola,
+                                        peso: peso,
+                                      },
+                                    ]);
+                                  }
                                 }}
                               />
                             </TableCell>
@@ -253,55 +227,74 @@ const ArticulosForm = (patchData) => {
                                 value={element.descripcion}
                               />
                             </TableCell>
-
                             <TableCell>
                               <input
+                                type="text"
                                 // name={detalle[index]?.luz}
-                                // onChange={(e) => setDetalle({luz: e.target.value})}
-                                value={detalle.luz}
+                                // onChange={(e) => setDetalle({ ...detalle, luz: e.target.value })}
+                                // onChange={(e) => {
+                                //   const luz = e.target.value;
+                                //   setDetalle((currentDetalle) =>
+                                //     currentDetalle.map((x) =>
+                                //       x.id === element.idArticuloDetalle
+                                //         ? { ...detalle, luz }
+                                //         : x
+                                //     )
+                                //   );
+                                // }}
+                                onChange={(e) => {
+                                  setLuz(e.target.value);
+                                }}
                               />
                             </TableCell>
 
                             <TableCell>
                               <input
-                                name={`${detalle[index]}.paso`}
-                                value={detalle?.paso}
+                                onChange={(e) => {
+                                  setPaso(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                // name={`detalle[${index}].ancho`}
-                                value={detalle?.ancho}
+                                onChange={(e) => {
+                                  setAncho(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                name={detalle[index]?.cola}
-                                value={detalle?.cola}
+                                onChange={(e) => {
+                                  setCola(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                // name={`detalle[${index}].peso`}
-                                value={detalle?.peso}
+                                onChange={(e) => {
+                                  setPeso(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                // name={`detalle[${index}].diametro`}
-                                value={detalle?.diametro}
+                                onChange={(e) => {
+                                  setDiametro(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                // name={`detalle[${index}].pasoEstampado`}
-                                value={detalle?.pasoEstampado}
+                                onChange={(e) => {
+                                  setPasoEstampado(e.target.value);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
                               <input
-                                // name={`detalle[${index}].cantidadMl`}
-                                value={detalle?.cantidadMl}
+                                onChange={(e) => {
+                                  setCantidadMl(e.target.value);
+                                }}
                               />
                             </TableCell>
                           </TableRow>
@@ -315,7 +308,7 @@ const ArticulosForm = (patchData) => {
             <Button type="submit" className={classes.btn} disabled={statusForm}>
               {patchData?.location?.state?.id ? "Editar" : "Crear"}
             </Button>
-            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+            <pre>{JSON.stringify(detalle, null, 2)}</pre>
           </form>
         </div>
       </Header>
