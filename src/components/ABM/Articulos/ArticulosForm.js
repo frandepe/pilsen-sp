@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 // import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 // import { useHistory } from "react-router-dom";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
+import {
+  TableCell,
+  TableRow,
+  Table,
+  TableBody,
+  Typography,
+  Button,
+  TextField,
+} from "@material-ui/core";
 import TableHead from "@mui/material/TableHead";
 import Spiner from "../../../shared/spiner";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +21,7 @@ import {
   articulosAction,
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
+// import RowInputs from "./RowInputs";
 //import {produce} from "immer"
 
 const useStyles = makeStyles((theme) => ({
@@ -66,10 +70,29 @@ const ArticulosForm = (patchData) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    setLuz(luz);
-  }, [luz]);
-
+  const handleCheck = (element) => {
+    const existe = detalle.some((el) => el.idArticuloDetalle === element.id);
+    if (existe) {
+      setDetalle(detalle.filter((el) => el.idArticuloDetalle !== element.id));
+    } else {
+      setDetalle([
+        ...detalle,
+        {
+          idArticuloDetalle: element.id,
+          nomenclatura: element.nombre,
+          descripcion: element.descripcion,
+          luz: luz,
+          diametro: diametro,
+          paso: paso,
+          pasoEstampado: pasoEstampado,
+          cantidadMl: cantidadMl,
+          ancho: ancho,
+          cola: cola,
+          peso: peso,
+        },
+      ]);
+    }
+  };
   const sendABM = async (e) => {
     e.preventDefault();
     setStatusForm(true);
@@ -106,13 +129,28 @@ const ArticulosForm = (patchData) => {
         <div className="abm_container">
           <form className="formabm_container" onSubmit={sendABM}>
             <label htmlFor="titulo">Nombre</label>
-            <input label="Nombre" onChange={(e) => setNombre(e.target.value)} />
+            <TextField
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              label="Nombre"
+              onChange={(e) => setNombre(e.target.value)}
+            />
 
             <label htmlFor="titulo">Código</label>
-            <input label="Codigo" onChange={(e) => setCodigo(e.target.value)} />
+            <TextField
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              label="Codigo"
+              onChange={(e) => setCodigo(e.target.value)}
+            />
 
             <label htmlFor="titulo">Descripción</label>
-            <input
+            <TextField
+              fullWidth
+              margin="normal"
+              variant="outlined"
               label="Descripcion"
               onChange={(e) => setDescripcion(e.target.value)}
             />
@@ -175,73 +213,21 @@ const ArticulosForm = (patchData) => {
                             <TableCell component="th" scope="row">
                               <input
                                 type="checkbox"
-                                onChange={() => {
-                                  const existe = detalle.some(
-                                    (el) => el.idArticuloDetalle === element.id
-                                  );
-
-                                  console.log(existe);
-                                  if (existe) {
-                                    setDetalle(
-                                      detalle.filter(
-                                        (el) =>
-                                          el.idArticuloDetalle !== element.id
-                                      )
-                                    );
-                                  } else {
-                                    setDetalle([
-                                      ...detalle,
-                                      {
-                                        idArticuloDetalle: element.id,
-                                        nomenclatura: element.nombre,
-                                        descripcion: element.descripcion,
-                                        luz: luz,
-                                        diametro: diametro,
-                                        paso: paso,
-                                        pasoEstampado: pasoEstampado,
-                                        cantidadMl: cantidadMl,
-                                        ancho: ancho,
-                                        cola: cola,
-                                        peso: peso,
-                                      },
-                                    ]);
-                                  }
-                                }}
+                                onChange={() => handleCheck(element)}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
-                                // name={`detalle[${index}].nomenclatura`}
-                                value={element.nombre}
-                              />
+                              <TextField value={element.nombre} />
                             </TableCell>
                             <TableCell>
-                              <input
-                                // name={`detalle[${index}].idArticuloDetalle`}
-                                value={element.id}
-                              />
+                              <TextField value={element.id} />
                             </TableCell>
                             <TableCell>
-                              <input
-                                // name={`detalle[${index}].descripcion`}
-                                value={element.descripcion}
-                              />
+                              <TextField value={element.descripcion} />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 type="text"
-                                // name={detalle[index]?.luz}
-                                // onChange={(e) => setDetalle({ ...detalle, luz: e.target.value })}
-                                // onChange={(e) => {
-                                //   const luz = e.target.value;
-                                //   setDetalle((currentDetalle) =>
-                                //     currentDetalle.map((x) =>
-                                //       x.id === element.idArticuloDetalle
-                                //         ? { ...detalle, luz }
-                                //         : x
-                                //     )
-                                //   );
-                                // }}
                                 onChange={(e) => {
                                   setLuz(e.target.value);
                                 }}
@@ -249,49 +235,49 @@ const ArticulosForm = (patchData) => {
                             </TableCell>
 
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setPaso(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setAncho(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setCola(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setPeso(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setDiametro(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setPasoEstampado(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <input
+                              <TextField
                                 onChange={(e) => {
                                   setCantidadMl(e.target.value);
                                 }}
