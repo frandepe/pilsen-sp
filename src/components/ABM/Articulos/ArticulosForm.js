@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../LayoutPublic/Header/Header";
 import { makeStyles } from "@material-ui/core/styles";
-// import showAlert from "../../../shared/showAlert";
+import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   TableCell,
+  Checkbox,
   TableRow,
   Table,
   TableBody,
@@ -21,6 +22,7 @@ import {
   articulosAction,
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
+import { elementType } from "prop-types";
 // import RowInputs from "./RowInputs";
 //import {produce} from "immer"
 
@@ -40,20 +42,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ArticulosForm = (patchData) => {
-  // const history = useHistory();
+  console.log(patchData)
+  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [selectInsumo, setSelectInsumo] = useState(null);
+  const [selectInsumo, setSelectInsumo] = useState(patchData?.location?.state?.idTipoArticulo || 9);
   const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
   // Estado
-  const [nombre, setNombre] = useState("");
-  const [codigo, setCodigo] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+  const [id, setId] = useState(patchData?.location?.state?.id || 0);
+  const [nombre, setNombre] = useState(patchData?.location?.state?.nombre || "");
+  const [codigo, setCodigo] = useState(patchData?.location?.state?.codigo || "");
+  const [descripcion, setDescripcion] = useState(patchData?.location?.state?.descripcion || "");
+  const [idTipoArticulo, setIdTipoArticulo] = useState(patchData?.location?.state?.idTipoArticulo || 9);
   const [tipoArticulo, setTipoArticulo] = useState("");
-  const [detalle, setDetalle] = useState([]);
+  const [detalle, setDetalle] = useState( patchData?.location?.state?.detalle || [] );
 
   const [luz, setLuz] = useState("");
   const [diametro, setDiametro] = useState("");
@@ -63,63 +68,137 @@ const ArticulosForm = (patchData) => {
   const [ancho, setAncho] = useState("");
   const [cola, setCola] = useState("");
   const [peso, setPeso] = useState("");
+  const [checked, setChecked] = useState("");
+
 
   useEffect(() => {
     dispatch(articulosAction(articulosInfo));
     dispatch(tipoDeArticulosAction(tipoDeArticulosInfo));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleCheck = (element) => {
+  console.log(articulosInfo)
+  const handleCheck = (element, index) => {
     const existe = detalle.some((el) => el.idArticuloDetalle === element.id);
     if (existe) {
+      const inputLuz = document.querySelectorAll("#luz")[index];
+      inputLuz.value="";
+      inputLuz.disabled = true;
+      inputLuz.classList.add("Mui-disabled");
+      inputLuz.parentNode.classList.add("Mui-disabled");
+      const inputPaso = document.querySelectorAll("#paso")[index];
+      inputPaso.value="";
+      inputPaso.disabled = true;
+      inputPaso.classList.add("Mui-disabled");
+      inputPaso.parentNode.classList.add("Mui-disabled");
+      const inputAncho = document.querySelectorAll("#ancho")[index];
+      inputAncho.value="";
+      inputAncho.disabled = true;
+      inputAncho.classList.add("Mui-disabled");
+      inputAncho.parentNode.classList.add("Mui-disabled");
+      const inputPasoEstampado = document.querySelectorAll("#pasoEstampado")[index];
+      inputPasoEstampado.value="";
+      inputPasoEstampado.disabled = true;
+      inputPasoEstampado.classList.add("Mui-disabled");
+      inputPasoEstampado.parentNode.classList.add("Mui-disabled");
+      const inputCola = document.querySelectorAll("#cola")[index];
+      inputCola.value="";
+      inputCola.disabled = true;
+      inputCola.classList.add("Mui-disabled");
+      inputCola.parentNode.classList.add("Mui-disabled");
+      const inputCantidad = document.querySelectorAll("#cantidadml")[index];
+      inputCantidad.value="";
+      inputCantidad.disabled = true;
+      inputCantidad.classList.add("Mui-disabled");
+      inputCantidad.parentNode.classList.add("Mui-disabled");
+      const inputPeso = document.querySelectorAll("#peso")[index];
+      inputPeso.value="";
+      inputPeso.disabled = true;
+      inputPeso.classList.add("Mui-disabled");
+      inputPeso.parentNode.classList.add("Mui-disabled");
+      const inputDiametro = document.querySelectorAll("#diametro")[index];
+      inputDiametro.value="";
+      inputDiametro.disabled = true;
+      inputDiametro.classList.add("Mui-disabled");
+      inputDiametro.parentNode.classList.add("Mui-disabled");
       setDetalle(detalle.filter((el) => el.idArticuloDetalle !== element.id));
     } else {
+      const inputLuz = document.querySelectorAll("#luz")[index];
+      inputLuz.disabled = false;
+      inputLuz.classList.remove("Mui-disabled");
+      inputLuz.parentNode.classList.remove("Mui-disabled");
+      const inputPaso = document.querySelectorAll("#paso")[index];
+      inputPaso.disabled = false;
+      inputPaso.classList.remove("Mui-disabled");
+      inputPaso.parentNode.classList.remove("Mui-disabled");
+      const inputAncho = document.querySelectorAll("#ancho")[index];
+      inputAncho.disabled = false;
+      inputAncho.classList.remove("Mui-disabled");
+      inputAncho.parentNode.classList.remove("Mui-disabled");
+      const inputPasoEstampado = document.querySelectorAll("#pasoEstampado")[index];
+      inputPasoEstampado.disabled = false;
+      inputPasoEstampado.classList.remove("Mui-disabled");
+      inputPasoEstampado.parentNode.classList.remove("Mui-disabled");
+      const inputCola = document.querySelectorAll("#cola")[index];
+      inputCola.disabled = false;
+      inputCola.classList.remove("Mui-disabled");
+      inputCola.parentNode.classList.remove("Mui-disabled");
+      const inputCantidad = document.querySelectorAll("#cantidadml")[index];
+      inputCantidad.disabled = false;
+      inputCantidad.classList.remove("Mui-disabled");
+      inputCantidad.parentNode.classList.remove("Mui-disabled");
+      const inputPeso = document.querySelectorAll("#peso")[index];
+      inputPeso.disabled = false;
+      inputPeso.classList.remove("Mui-disabled");
+      inputPeso.parentNode.classList.remove("Mui-disabled");
+      const inputDiametro = document.querySelectorAll("#diametro")[index];
+      inputDiametro.disabled = false;
+      inputDiametro.classList.remove("Mui-disabled");
+      inputDiametro.parentNode.classList.remove("Mui-disabled");
       setDetalle([
         ...detalle,
         {
           idArticuloDetalle: element.id,
           nomenclatura: element.nombre,
           descripcion: element.descripcion,
-          luz: luz,
-          diametro: diametro,
-          paso: paso,
-          pasoEstampado: pasoEstampado,
-          cantidadMl: cantidadMl,
-          ancho: ancho,
-          cola: cola,
-          peso: peso,
+          luz: luz != "" ? luz : "",
+          diametro: "",
+          paso: "",
+          pasoEstampado: "",
+          cantidadMl: "",
+          ancho: "",
+          cola: "",
+          peso: "",
         },
-      ]);
-    }
+    ]);}
   };
   const sendABM = async (e) => {
     e.preventDefault();
     setStatusForm(true);
-
     try {
       const response = await privatePostRequest("articulos/save", {
+        id,
         nombre,
         codigo,
         descripcion,
+        idTipoArticulo,
         tipoArticulo,
         detalle,
+        activo:true,
       });
       console.log(response);
       if (!response?.data?.status === 200) throw new Error("Algo falló");
-      // showAlert({
-      //   type: "success",
-      //   title: patchData?.location?.state?.id
-      //     ? "Editado correctamente"
-      //     : "Creado correctamente",
-      // }) && history.push("/PallasFront/articulos");
+      showAlert({
+        type: "success",
+        title: patchData?.location?.state?.id
+          ? "Editado correctamente"
+          : "Creado correctamente",
+      }) && history.push("/PallasFront/articulos");
     } catch (err) {
       console.log("Error catch:", err);
     } finally {
       setStatusForm(false);
     }
   };
-
   return (
     <div>
       <Header>
@@ -128,58 +207,82 @@ const ArticulosForm = (patchData) => {
         </Typography>
         <div className="abm_container">
           <form className="formabm_container" onSubmit={sendABM}>
+            <input
+              type="hidden"
+              fullWidth
+              id="id"
+              label="id"
+              value = {patchData?.location?.state?.id}
+            />
             <label htmlFor="titulo">Nombre</label>
             <TextField
               fullWidth
               margin="normal"
               variant="outlined"
-              label="Nombre"
-              onChange={(e) => setNombre(e.target.value)}
+              // label="Nombre"
+              value = {nombre}
+              onChange={(e) =>
+                setNombre(e.target.value)}
             />
-
             <label htmlFor="titulo">Código</label>
             <TextField
               fullWidth
               margin="normal"
               variant="outlined"
-              label="Codigo"
+              value = {codigo}
+              // label="Codigo"
               onChange={(e) => setCodigo(e.target.value)}
             />
-
             <label htmlFor="titulo">Descripción</label>
             <TextField
               fullWidth
               margin="normal"
               variant="outlined"
-              label="Descripcion"
+              // label="Descripcion"
+              value = {descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
             />
-            <div className="input__container">
-              <label htmlFor="titulo">Tipo Artículo</label>
-              <select
-                className="select-field"
-                onClick={(e) => setSelectInsumo(e.target.value)}
-                onChange={(e) => setTipoArticulo(e.target.value)}
-              >
-                <option value="" disabled>
-                  Selecciona categoria
-                </option>
-                <optgroup label="Insumo:">
-                  <option value="insumo">Insumo</option>
-                </optgroup>
-                <optgroup label="Producto:">
-                  {tipoDeArticulosInfo?.result?.map((e) => {
-                    return (
-                      <option key={e.id} value={e.nombre}>
-                        {e.nombre}
-                      </option>
-                    );
-                  })}
-                </optgroup>
-              </select>
-            </div>
-            {selectInsumo !== "insumo" && (
-              <Table sx={{ minWidth: 750 }} aria-label="simple table">
+            <label htmlFor="titulo"
+              style={{textAlign: "start"}}
+            >Tipo Artículo</label>
+            <select
+              fullWidth
+              className="select-field"
+              onChange={(e) => {
+                setIdTipoArticulo(e.target.value);
+                setSelectInsumo(e.target.value);
+              }}
+            >
+              <option value="" disabled>
+                Selecciona categoria
+              </option>
+              <optgroup label="Insumo:">
+                <option 
+                  value ={9}
+                  onChange={(e) => {{
+                    setIdTipoArticulo(e.target.value);
+                    setTipoArticulo(e.target.text);
+                  }}}
+                >Insumo</option>
+              </optgroup>
+              <optgroup label="Producto:">
+                {tipoDeArticulosInfo?.result?.map((e) => {
+                  return (
+                    <option key={e.id}
+                    value={e.id}
+                    selected={ patchData?.location?.state?.idTipoArticulo == e.id ? true : false }
+                    onChange={(e) => {
+                      setIdTipoArticulo(e.target.value);
+                      setTipoArticulo(e.nombre);
+                    }}>
+                      {e.nombre}
+                    </option>
+                  );
+                })}
+              </optgroup>
+            </select>
+            {selectInsumo !== 9 && (
+              <Table sx={{ minWidth: 750 }} className="table" aria-label="simple table">
                 <TableHead>
                   <TableRow className="list_titulos">
                     <TableCell>✓</TableCell>
@@ -202,7 +305,7 @@ const ArticulosForm = (patchData) => {
                   ) : (
                     articulosInfo?.result?.map((element, index) => {
                       return (
-                        !element.detalle[0] && (
+                        element.idTipoArticulo === 9 && (
                           <TableRow
                             sx={{
                               "&:last-child td, &:last-child th": {
@@ -213,7 +316,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell component="th" scope="row">
                               <input
                                 type="checkbox"
-                                onChange={() => handleCheck(element)}
+                                id="checkbox"
+                                defaultChecked={patchData?.location?.state?.detalle[index]?.idArticuloDetalle == element.id ? true : false}
+                                onChange={() => {handleCheck(element, index);
+                                }}
                               />
                             </TableCell>
                             <TableCell>
@@ -227,58 +333,90 @@ const ArticulosForm = (patchData) => {
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="luz"
+                                disabled
                                 type="text"
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.luz}
+                                onClick={(e) =>{e.disabled = true}}
                                 onChange={(e) => {
+                                  detalle[index].luz = e.target.value;
                                   setLuz(e.target.value);
                                 }}
                               />
                             </TableCell>
-
                             <TableCell>
                               <TextField
+                                id="paso"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.paso}
                                 onChange={(e) => {
+                                  detalle[index].paso = e.target.value;
                                   setPaso(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="ancho"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.ancho}
                                 onChange={(e) => {
+                                  detalle[index].ancho = e.target.value;
                                   setAncho(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="cola"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.cola}
                                 onChange={(e) => {
+                                  detalle[index].cola = e.target.value;
                                   setCola(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="peso"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.peso}
                                 onChange={(e) => {
+                                  detalle[index].peso = e.target.value;
                                   setPeso(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="diametro"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.diametro}
                                 onChange={(e) => {
+                                  detalle[index].diametro = e.target.value;
                                   setDiametro(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="pasoEstampado"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.pasoEstampado}
                                 onChange={(e) => {
+                                  detalle[index].pasoEstampado = e.target.value;
                                   setPasoEstampado(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                id="cantidadml"
+                                disabled
+                                defaultValue = {patchData?.location?.state?.detalle[index]?.cantidadMl}
                                 onChange={(e) => {
+                                  detalle[index].cantidadMl = e.target.value;
                                   setCantidadMl(e.target.value);
                                 }}
                               />
@@ -301,5 +439,4 @@ const ArticulosForm = (patchData) => {
     </div>
   );
 };
-
 export default ArticulosForm;

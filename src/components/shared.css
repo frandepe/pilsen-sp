@@ -32,7 +32,9 @@
   border-radius: 5px;
   width: 100%;
   height: 56px;
+  background-color: #eeeeee;
 }
+
 
 /*** ABM LIST ***/
 
@@ -173,6 +175,16 @@
 .list_options-edit:hover {
   background-color: var(--hoverSecondary);
 }
+
+.formabm_container {
+  display: flex;
+  text-align: center;
+  width: 50%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 
 @media (min-width: 500px) {
   .list_container-table tr .list_options {
