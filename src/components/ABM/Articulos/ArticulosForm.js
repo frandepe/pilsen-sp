@@ -194,13 +194,22 @@ const ArticulosForm = (patchData) => {
         activo:true,
       });
       console.log(response);
-      if (!response?.data?.status === 200) throw new Error("Algo falló");
-      showAlert({
-        type: "success",
-        title: patchData?.location?.state?.id
-          ? "Editado correctamente"
-          : "Creado correctamente",
-      }) && history.push("/PallasFront/articulos");
+      if (response !== undefined){
+        showAlert({
+          type: "success",
+          title: patchData?.location?.state?.id
+            ? "Editado correctamente"
+            : "Creado correctamente",
+        }) && history.push("/PallasFront/articulos");
+      }else{
+        showAlert({
+          type: "error",
+          title: patchData?.location?.state?.id
+            ? "Error al editar el insumo/articulo"
+            : "Error al crear el insumo/articulo",
+        }) 
+      }
+      
     } catch (err) {
       console.log("Error catch:", err);
     } finally {
@@ -291,8 +300,7 @@ const ArticulosForm = (patchData) => {
             </select>
             <FormControlLabel
               value="start"
-              control={<Checkbox
-              />}
+              control={<Checkbox />}
               onChange={(e) => handleChangeAsignados(e)}
               label="Solo asignados"
               labelPlacement="start"
