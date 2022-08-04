@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ArticulosForm = (patchData) => {
-  console.log(patchData)
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -79,17 +78,14 @@ const ArticulosForm = (patchData) => {
     const check = document.querySelectorAll("#checkbox");
     if(e.target.checked == true){
       check.forEach( element => element.checked === false ? 
-      element.parentNode.parentNode.parentNode.parentNode.style.visibility = "hidden"
-      : "");
+      element.parentNode.parentNode.parentNode.parentNode.style.display = "none" : "");
     }else{
       check.forEach( element => element.checked === false ? 
-        element.parentNode.parentNode.parentNode.parentNode.style.visibility = "visible" :
-        "");
+        element.parentNode.parentNode.parentNode.parentNode.style.display = "table-row" : "");
     }
 
   };
   const handleCheck = (element, index, e) => {
-    console.log(index)
     const existe = detalle.some((el) => el.idArticuloDetalle === element.id);
     if (existe) {
       const inputLuz = document.querySelectorAll("#luz")[index];
@@ -295,7 +291,8 @@ const ArticulosForm = (patchData) => {
             </select>
             <FormControlLabel
               value="start"
-              control={<Checkbox />}
+              control={<Checkbox
+              />}
               onChange={(e) => handleChangeAsignados(e)}
               label="Solo asignados"
               labelPlacement="start"
@@ -451,7 +448,7 @@ const ArticulosForm = (patchData) => {
             <Button type="submit" className={classes.btn} disabled={statusForm}>
               {patchData?.location?.state?.id ? "Editar" : "Crear"}
             </Button>
-            <pre>{JSON.stringify(detalle, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(detalle, null, 2)}</pre> */}
           </form>
         </div>
       </Header>
