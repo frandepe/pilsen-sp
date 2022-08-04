@@ -5,6 +5,7 @@ import showAlert from "../../../shared/showAlert";
 import { privatePostRequest } from "../../../services/privateApiServices";
 import { useHistory } from "react-router-dom";
 import {
+  FormControlLabel,
   TableCell,
   Checkbox,
   TableRow,
@@ -23,8 +24,6 @@ import {
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
 import { elementType } from "prop-types";
-// import RowInputs from "./RowInputs";
-//import {produce} from "immer"
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -76,8 +75,21 @@ const ArticulosForm = (patchData) => {
     dispatch(tipoDeArticulosAction(tipoDeArticulosInfo));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(articulosInfo)
-  const handleCheck = (element, index) => {
+  const handleChangeAsignados = (e) => {
+    const check = document.querySelectorAll("#checkbox");
+    if(e.target.checked == true){
+      check.forEach( element => element.checked === false ? 
+      element.parentNode.parentNode.parentNode.parentNode.style.visibility = "hidden"
+      : "");
+    }else{
+      check.forEach( element => element.checked === false ? 
+        element.parentNode.parentNode.parentNode.parentNode.style.visibility = "visible" :
+        "");
+    }
+
+  };
+  const handleCheck = (element, index, e) => {
+    console.log(index)
     const existe = detalle.some((el) => el.idArticuloDetalle === element.id);
     if (existe) {
       const inputLuz = document.querySelectorAll("#luz")[index];
@@ -219,7 +231,7 @@ const ArticulosForm = (patchData) => {
               fullWidth
               margin="normal"
               variant="outlined"
-              // label="Nombre"
+              label="Nombre"
               value = {nombre}
               onChange={(e) =>
                 setNombre(e.target.value)}
@@ -230,7 +242,7 @@ const ArticulosForm = (patchData) => {
               margin="normal"
               variant="outlined"
               value = {codigo}
-              // label="Codigo"
+              label="Codigo"
               onChange={(e) => setCodigo(e.target.value)}
             />
             <label htmlFor="titulo">Descripción</label>
@@ -238,7 +250,7 @@ const ArticulosForm = (patchData) => {
               fullWidth
               margin="normal"
               variant="outlined"
-              // label="Descripcion"
+              label="Descripcion"
               value = {descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
             />
@@ -250,7 +262,7 @@ const ArticulosForm = (patchData) => {
               className="select-field"
               onChange={(e) => {
                 setIdTipoArticulo(e.target.value);
-                setSelectInsumo(e.target.value);
+                setSelectInsumo(parseInt(e.target.value));
               }}
             >
               <option value="" disabled>
@@ -281,6 +293,13 @@ const ArticulosForm = (patchData) => {
                 })}
               </optgroup>
             </select>
+            <FormControlLabel
+              value="start"
+              control={<Checkbox />}
+              onChange={(e) => handleChangeAsignados(e)}
+              label="Solo asignados"
+              labelPlacement="start"
+            />
             {selectInsumo !== 9 && (
               <Table sx={{ minWidth: 750 }} className="table" aria-label="simple table">
                 <TableHead>
@@ -303,9 +322,9 @@ const ArticulosForm = (patchData) => {
                   {!loading ? (
                     <Spiner />
                   ) : (
-                    articulosInfo?.result?.map((element, index) => {
+                    articulosInfo?.result?.filter( element => element.idTipoArticulo === 9).map((element, index) => {
                       return (
-                        element.idTipoArticulo === 9 && (
+                        (
                           <TableRow
                             sx={{
                               "&:last-child td, &:last-child th": {
@@ -314,11 +333,11 @@ const ArticulosForm = (patchData) => {
                             }}
                           >
                             <TableCell component="th" scope="row">
-                              <input
+                              <Checkbox
                                 type="checkbox"
                                 id="checkbox"
-                                defaultChecked={patchData?.location?.state?.detalle[index]?.idArticuloDetalle == element.id ? true : false}
-                                onChange={() => {handleCheck(element, index);
+                                defaultChecked ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? true : false}
+                                onChange={(e) => {handleCheck(element, index, e);
                                 }}
                               />
                             </TableCell>
@@ -334,12 +353,12 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="luz"
-                                disabled
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).luz : ""}
                                 type="text"
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.luz}
                                 onClick={(e) =>{e.disabled = true}}
                                 onChange={(e) => {
-                                  detalle[index].luz = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).luz = e.target.value;
                                   setLuz(e.target.value);
                                 }}
                               />
@@ -347,10 +366,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="paso"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.paso}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).paso : ""}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
                                 onChange={(e) => {
-                                  detalle[index].paso = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).paso = e.target.value;
                                   setPaso(e.target.value);
                                 }}
                               />
@@ -358,21 +377,21 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="ancho"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.ancho}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).ancho : ""}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
                                 onChange={(e) => {
-                                  detalle[index].ancho = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).ancho = e.target.value;
                                   setAncho(e.target.value);
                                 }}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
-                                id="cola"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.cola}
+                                id="cola"v
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).cola : ""}
                                 onChange={(e) => {
-                                  detalle[index].cola = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).cola = e.target.value;
                                   setCola(e.target.value);
                                 }}
                               />
@@ -380,10 +399,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="peso"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.peso}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).peso : ""}
                                 onChange={(e) => {
-                                  detalle[index].peso = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).peso = e.target.value;
                                   setPeso(e.target.value);
                                 }}
                               />
@@ -391,10 +410,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="diametro"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.diametro}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).diametro : ""}
                                 onChange={(e) => {
-                                  detalle[index].diametro = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).diametro = e.target.value;
                                   setDiametro(e.target.value);
                                 }}
                               />
@@ -402,10 +421,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="pasoEstampado"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.pasoEstampado}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).pasoEstampado : ""}
                                 onChange={(e) => {
-                                  detalle[index].pasoEstampado = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).pasoEstampado = e.target.value;
                                   setPasoEstampado(e.target.value);
                                 }}
                               />
@@ -413,10 +432,10 @@ const ArticulosForm = (patchData) => {
                             <TableCell>
                               <TextField
                                 id="cantidadml"
-                                disabled
-                                defaultValue = {patchData?.location?.state?.detalle[index]?.cantidadMl}
+                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).cantidadMl : ""}
+                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
                                 onChange={(e) => {
-                                  detalle[index].cantidadMl = e.target.value;
+                                  detalle.find(x => x.idArticuloDetalle === element.id).cantidadMl = e.target.value;
                                   setCantidadMl(e.target.value);
                                 }}
                               />
