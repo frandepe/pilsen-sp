@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ArticulosForm = (patchData) => {
+  console.log(patchData?.location?.state)
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -270,19 +271,18 @@ const ArticulosForm = (patchData) => {
                 setSelectInsumo(parseInt(e.target.value));
               }}
             >
-              <option value="" disabled>
-                Selecciona categoria
-              </option>
-              <optgroup label="Insumo:">
-                <option 
-                  value ={9}
-                  onChange={(e) => {{
-                    setIdTipoArticulo(e.target.value);
-                    setTipoArticulo(e.target.text);
-                  }}}
-                >Insumo</option>
-              </optgroup>
-              <optgroup label="Producto:">
+              
+                <optgroup label="">
+                  <option 
+                    hidden
+                    value ={9}
+                    onChange={(e) => {{
+                      setIdTipoArticulo(e.target.value);
+                      setTipoArticulo(e.target.text);
+                    }}}
+                  >Seleccione un tipo de articulo</option>
+                </optgroup> 
+              <optgroup>
                 {tipoDeArticulosInfo?.result?.map((e) => {
                   return (
                     <option key={e.id}
@@ -311,7 +311,7 @@ const ArticulosForm = (patchData) => {
                   <TableRow className="list_titulos">
                     <TableCell>✓</TableCell>
                     <TableCell>Nomenclatura</TableCell>
-                    <TableCell>CódigoId</TableCell>
+                    <TableCell>Código</TableCell>
                     <TableCell>Descripcion</TableCell>
                     <TableCell>Luz</TableCell>
                     <TableCell>Paso</TableCell>
