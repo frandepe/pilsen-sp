@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import Header from "../../LayoutPublic/Header/Header";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import showAlert from "../../../shared/showAlert";
+import * as yup from "yup";
+import { Formik, ErrorMessage, Field, Form } from "formik";
 import { privatePostRequest } from "../../../services/privateApiServices";
-import { useHistory } from "react-router-dom";
-import {
-  FormControlLabel,
-  TableCell,
-  Checkbox,
-  TableRow,
-  Table,
-  TableBody,
-  Typography,
-  Button,
-  TextField,
-} from "@material-ui/core";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
 import TableHead from "@mui/material/TableHead";
 import Spiner from "../../../shared/spiner";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +19,6 @@ import {
   articulosAction,
   tipoDeArticulosAction,
 } from "../../../redux/actionsABM/reducerArticulos";
-import { elementType } from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -41,182 +36,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ArticulosForm = (patchData) => {
-  console.log(patchData?.location?.state)
-  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [selectInsumo, setSelectInsumo] = useState(patchData?.location?.state?.idTipoArticulo || 9);
+  const [selectInsumo, setSelectInsumo] = useState(null);
   const { articulosInfo, loading, tipoDeArticulosInfo } = useSelector(
     (store) => store.articulos
   );
   const [statusForm, setStatusForm] = useState(false);
-  // Estado
-  const [id, setId] = useState(patchData?.location?.state?.id || 0);
-  const [nombre, setNombre] = useState(patchData?.location?.state?.nombre || "");
-  const [codigo, setCodigo] = useState(patchData?.location?.state?.codigo || "");
-  const [descripcion, setDescripcion] = useState(patchData?.location?.state?.descripcion || "");
-  const [idTipoArticulo, setIdTipoArticulo] = useState(patchData?.location?.state?.idTipoArticulo || 9);
-  const [tipoArticulo, setTipoArticulo] = useState("");
-  const [detalle, setDetalle] = useState( patchData?.location?.state?.detalle || [] );
 
-  const [luz, setLuz] = useState("");
-  const [diametro, setDiametro] = useState("");
-  const [paso, setPaso] = useState("");
-  const [pasoEstampado, setPasoEstampado] = useState("");
-  const [cantidadMl, setCantidadMl] = useState("");
-  const [ancho, setAncho] = useState("");
-  const [cola, setCola] = useState("");
-  const [peso, setPeso] = useState("");
-  const [checked, setChecked] = useState("");
+  const [detalleProducto, setDetalleProducto] = useState([]);
 
+  const handleRowClick = (element) => {
+    console.log(element);
+  };
+
+  const formSchema = yup.object().shape({
+    nombre: yup.string().max(100, "No puede ingresar más de 100 caracteres"),
+    codigo: yup.string(),
+    descripcion: yup
+      .string()
+      .max(100, "No puede ingresar más de 100 caracteres"),
+    tipoArticulo: yup
+      .string()
+      .max(100, "No puede ingresar más de 100 caracteres"),
+  });
 
   useEffect(() => {
     dispatch(articulosAction(articulosInfo));
     dispatch(tipoDeArticulosAction(tipoDeArticulosInfo));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleChangeAsignados = (e) => {
-    const check = document.querySelectorAll("#checkbox");
-    if(e.target.checked == true){
-      check.forEach( element => element.checked === false ? 
-      element.parentNode.parentNode.parentNode.parentNode.style.display = "none" : "");
-    }else{
-      check.forEach( element => element.checked === false ? 
-        element.parentNode.parentNode.parentNode.parentNode.style.display = "table-row" : "");
-    }
 
-  };
-  const handleCheck = (element, index, e) => {
-    const existe = detalle.some((el) => el.idArticuloDetalle === element.id);
-    if (existe) {
-      const inputLuz = document.querySelectorAll("#luz")[index];
-      inputLuz.value="";
-      inputLuz.disabled = true;
-      inputLuz.classList.add("Mui-disabled");
-      inputLuz.parentNode.classList.add("Mui-disabled");
-      const inputPaso = document.querySelectorAll("#paso")[index];
-      inputPaso.value="";
-      inputPaso.disabled = true;
-      inputPaso.classList.add("Mui-disabled");
-      inputPaso.parentNode.classList.add("Mui-disabled");
-      const inputAncho = document.querySelectorAll("#ancho")[index];
-      inputAncho.value="";
-      inputAncho.disabled = true;
-      inputAncho.classList.add("Mui-disabled");
-      inputAncho.parentNode.classList.add("Mui-disabled");
-      const inputPasoEstampado = document.querySelectorAll("#pasoEstampado")[index];
-      inputPasoEstampado.value="";
-      inputPasoEstampado.disabled = true;
-      inputPasoEstampado.classList.add("Mui-disabled");
-      inputPasoEstampado.parentNode.classList.add("Mui-disabled");
-      const inputCola = document.querySelectorAll("#cola")[index];
-      inputCola.value="";
-      inputCola.disabled = true;
-      inputCola.classList.add("Mui-disabled");
-      inputCola.parentNode.classList.add("Mui-disabled");
-      const inputCantidad = document.querySelectorAll("#cantidadml")[index];
-      inputCantidad.value="";
-      inputCantidad.disabled = true;
-      inputCantidad.classList.add("Mui-disabled");
-      inputCantidad.parentNode.classList.add("Mui-disabled");
-      const inputPeso = document.querySelectorAll("#peso")[index];
-      inputPeso.value="";
-      inputPeso.disabled = true;
-      inputPeso.classList.add("Mui-disabled");
-      inputPeso.parentNode.classList.add("Mui-disabled");
-      const inputDiametro = document.querySelectorAll("#diametro")[index];
-      inputDiametro.value="";
-      inputDiametro.disabled = true;
-      inputDiametro.classList.add("Mui-disabled");
-      inputDiametro.parentNode.classList.add("Mui-disabled");
-      setDetalle(detalle.filter((el) => el.idArticuloDetalle !== element.id));
-    } else {
-      const inputLuz = document.querySelectorAll("#luz")[index];
-      inputLuz.disabled = false;
-      inputLuz.classList.remove("Mui-disabled");
-      inputLuz.parentNode.classList.remove("Mui-disabled");
-      const inputPaso = document.querySelectorAll("#paso")[index];
-      inputPaso.disabled = false;
-      inputPaso.classList.remove("Mui-disabled");
-      inputPaso.parentNode.classList.remove("Mui-disabled");
-      const inputAncho = document.querySelectorAll("#ancho")[index];
-      inputAncho.disabled = false;
-      inputAncho.classList.remove("Mui-disabled");
-      inputAncho.parentNode.classList.remove("Mui-disabled");
-      const inputPasoEstampado = document.querySelectorAll("#pasoEstampado")[index];
-      inputPasoEstampado.disabled = false;
-      inputPasoEstampado.classList.remove("Mui-disabled");
-      inputPasoEstampado.parentNode.classList.remove("Mui-disabled");
-      const inputCola = document.querySelectorAll("#cola")[index];
-      inputCola.disabled = false;
-      inputCola.classList.remove("Mui-disabled");
-      inputCola.parentNode.classList.remove("Mui-disabled");
-      const inputCantidad = document.querySelectorAll("#cantidadml")[index];
-      inputCantidad.disabled = false;
-      inputCantidad.classList.remove("Mui-disabled");
-      inputCantidad.parentNode.classList.remove("Mui-disabled");
-      const inputPeso = document.querySelectorAll("#peso")[index];
-      inputPeso.disabled = false;
-      inputPeso.classList.remove("Mui-disabled");
-      inputPeso.parentNode.classList.remove("Mui-disabled");
-      const inputDiametro = document.querySelectorAll("#diametro")[index];
-      inputDiametro.disabled = false;
-      inputDiametro.classList.remove("Mui-disabled");
-      inputDiametro.parentNode.classList.remove("Mui-disabled");
-      setDetalle([
-        ...detalle,
-        {
-          idArticuloDetalle: element.id,
-          nomenclatura: element.nombre,
-          descripcion: element.descripcion,
-          luz: null,
-          diametro: null,
-          paso: null,
-          pasoEstampado: null,
-          cantidadMl: null,
-          ancho: null,
-          cola: null,
-          peso: null,
-        },
-    ]);}
-  };
-  const sendABM = async (e) => {
-    e.preventDefault();
-    setStatusForm(true);
-    try {
-      const response = await privatePostRequest("articulos/save", {
-        id,
-        nombre,
-        codigo,
-        descripcion,
-        idTipoArticulo,
-        tipoArticulo,
-        detalle,
-        activo:true,
-      });
-      console.log(response);
-      if (response !== undefined){
-        showAlert({
-          type: "success",
-          title: patchData?.location?.state?.id
-            ? "Editado correctamente"
-            : "Creado correctamente",
-        }) && history.push("/PallasFront/articulos");
-      }else{
-        showAlert({
-          type: "error",
-          title: patchData?.location?.state?.id
-            ? "Error al editar el insumo/articulo"
-            : "Error al crear el insumo/articulo",
-        }) 
-      }
-      
-    } catch (err) {
-      console.log("Error catch:", err);
-    } finally {
-      setStatusForm(false);
-    }
-  };
   return (
     <div>
       <Header>
@@ -224,243 +74,288 @@ const ArticulosForm = (patchData) => {
           Artículos
         </Typography>
         <div className="abm_container">
-          <form className="formabm_container" onSubmit={sendABM}>
-            <input
-              type="hidden"
-              fullWidth
-              id="id"
-              label="id"
-              value = {patchData?.location?.state?.id}
-            />
-            <label htmlFor="titulo">Nombre</label>
-            <TextField
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              label="Nombre"
-              value = {nombre}
-              onChange={(e) =>
-                setNombre(e.target.value)}
-            />
-            <label htmlFor="titulo">Código</label>
-            <TextField
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value = {codigo}
-              label="Codigo"
-              onChange={(e) => setCodigo(e.target.value)}
-            />
-            <label htmlFor="titulo">Descripción</label>
-            <TextField
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              label="Descripcion"
-              value = {descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
-            <label htmlFor="titulo"
-              style={{textAlign: "start"}}
-            >Tipo Artículo</label>
-            <select
-              fullWidth
-              className="select-field"
-              onChange={(e) => {
-                setIdTipoArticulo(e.target.value);
-                setSelectInsumo(parseInt(e.target.value));
-              }}
-            >
-              
-                <optgroup label="">
-                  <option 
-                    hidden
-                    value ={9}
-                    onChange={(e) => {{
-                      setIdTipoArticulo(e.target.value);
-                      setTipoArticulo(e.target.text);
-                    }}}
-                  >Seleccione un tipo de articulo</option>
-                </optgroup> 
-              <optgroup>
-                {tipoDeArticulosInfo?.result?.map((e) => {
-                  return (
-                    <option key={e.id}
-                    value={e.id}
-                    selected={ patchData?.location?.state?.idTipoArticulo == e.id ? true : false }
-                    onChange={(e) => {
-                      setIdTipoArticulo(e.target.value);
-                      setTipoArticulo(e.nombre);
-                    }}>
-                      {e.nombre}
+          <Formik
+            initialValues={{
+              id: patchData?.location?.state?.id,
+              activo: true,
+              nombre: patchData?.location?.state?.nombre || "",
+              codigo: patchData?.location?.state?.codigo || "",
+              descripcion: patchData?.location?.state?.descripcion || "",
+              tipoArticulo: patchData?.location?.state?.tipoArticulo || "",
+              detalle: detalleProducto,
+            }}
+            validationSchema={formSchema}
+            onSubmit={async ({ ...formData }) => {
+              setStatusForm(true);
+              const resp = detalleProducto.forEach((e) => {
+                return formData.detalle.push(e);
+              });
+              try {
+                const response = await privatePostRequest("articulos/save", {
+                  ...formData,
+                  ...resp,
+                });
+                console.log(response);
+                if (!response?.data?.status === 200)
+                  throw new Error("Algo falló");
+              } catch (err) {
+                console.log("Error catch:", err);
+              } finally {
+                setStatusForm(false);
+              }
+            }}
+          >
+            {({ values, handleSubmit, handleChange, handleBlur }) => (
+              <Form className="formabm_container" onSubmit={handleSubmit}>
+                <label htmlFor="titulo">Nombre</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="nombre"
+                  id="titulo"
+                  label="Nombre"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.nombre}
+                />
+                <ErrorMessage
+                  name="nombre"
+                  component="p"
+                  className="input-error"
+                />
+                <label htmlFor="titulo">Código</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="codigo"
+                  id="titulo"
+                  label="Código"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.codigo}
+                />
+                <ErrorMessage
+                  name="codigo"
+                  component="p"
+                  className="input-error"
+                />
+                <label htmlFor="titulo">Descripción</label>
+                <TextField
+                  data-testid="titulo"
+                  required
+                  fullWidth
+                  margin="normal"
+                  name="descripcion"
+                  id="titulo"
+                  label="Descripción"
+                  variant="outlined"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.descripcion}
+                />
+                <ErrorMessage
+                  name="descripcion"
+                  component="p"
+                  className="input-error"
+                />
+
+                <div className="input__container">
+                  <label htmlFor="titulo">Tipo Artículo</label>
+                  <select
+                    className="select-field"
+                    name="tipoArticulo"
+                    id="titulo"
+                    data-testid="tipoArticulo"
+                    value={values.tipoArticulo}
+                    onChange={handleChange}
+                    onClick={(e) => setSelectInsumo(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Selecciona categoria
                     </option>
-                  );
-                })}
-              </optgroup>
-            </select>
-            <FormControlLabel
-              value="start"
-              control={<Checkbox />}
-              onChange={(e) => handleChangeAsignados(e)}
-              label="Solo asignados"
-              labelPlacement="start"
-            />
-            {selectInsumo !== 9 && (
-              <Table sx={{ minWidth: 750 }} className="table" aria-label="simple table">
-                <TableHead>
-                  <TableRow className="list_titulos">
-                    <TableCell>✓</TableCell>
-                    <TableCell>Nomenclatura</TableCell>
-                    <TableCell>Código</TableCell>
-                    <TableCell>Descripcion</TableCell>
-                    <TableCell>Luz</TableCell>
-                    <TableCell>Paso</TableCell>
-                    <TableCell>Desp. Ancho</TableCell>
-                    <TableCell>Desp. Cola</TableCell>
-                    <TableCell>Peso x Mt2</TableCell>
-                    <TableCell>Diametro</TableCell>
-                    <TableCell>Paso estampado</TableCell>
-                    <TableCell>Cantidad Ml</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {!loading ? (
-                    <Spiner />
-                  ) : (
-                    articulosInfo?.result?.filter( element => element.idTipoArticulo === 9).map((element, index) => {
-                      return (
-                        (
-                          <TableRow
-                            sx={{
-                              "&:last-child td, &:last-child th": {
-                                border: 0,
-                              },
-                            }}
-                          >
-                            <TableCell component="th" scope="row">
-                              <Checkbox
-                                type="checkbox"
-                                id="checkbox"
-                                defaultChecked ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? true : false}
-                                onChange={(e) => {handleCheck(element, index, e);
+                    <optgroup label="Insumo:">
+                      <option value="insumo">Insumo</option>
+                    </optgroup>
+                    <optgroup label="Producto:">
+                      {tipoDeArticulosInfo?.result?.map((e) => {
+                        return (
+                          <option key={e.id} value={e.nombre}>
+                            {e.nombre}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  </select>
+                  <ErrorMessage
+                    name="tipoArticulo"
+                    component="p"
+                    className="input-error"
+                  />
+                </div>
+                {selectInsumo !== "insumo" && (
+                  <Table sx={{ minWidth: 750 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow className="list_titulos">
+                        <TableCell>✓</TableCell>
+                        <TableCell>Nomenclatura</TableCell>
+                        <TableCell>CódigoId</TableCell>
+                        <TableCell>Luz</TableCell>
+                        <TableCell>Descripcion</TableCell>
+                        <TableCell>Paso</TableCell>
+                        <TableCell>Desp. Ancho</TableCell>
+                        <TableCell>Desp. Cola</TableCell>
+                        <TableCell>Peso x Mt2</TableCell>
+                        <TableCell>Diametro</TableCell>
+                        <TableCell>Paso estampado</TableCell>
+                        <TableCell>Cantidad Ml</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {!loading ? (
+                        <Spiner />
+                      ) : (
+                        articulosInfo?.result?.map((element, index) => {
+                          return (
+                            !element.detalle[0] && (
+                              <TableRow
+                                onClick={() => handleRowClick(element)}
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
                                 }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField value={element.nombre} />
-                            </TableCell>
-                            <TableCell>
-                              <TextField value={element.id} />
-                            </TableCell>
-                            <TableCell>
-                              <TextField value={element.descripcion} />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="luz"
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).luz : ""}
-                                type="text"
-                                onClick={(e) =>{e.disabled = true}}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).luz = e.target.value;
-                                  setLuz(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="paso"
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).paso : ""}
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).paso = e.target.value;
-                                  setPaso(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="ancho"
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).ancho : ""}
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).ancho = e.target.value;
-                                  setAncho(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="cola"v
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).cola : ""}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).cola = e.target.value;
-                                  setCola(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="peso"
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).peso : ""}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).peso = e.target.value;
-                                  setPeso(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="diametro"
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).diametro : ""}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).diametro = e.target.value;
-                                  setDiametro(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="pasoEstampado"
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).pasoEstampado : ""}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).pasoEstampado = e.target.value;
-                                  setPasoEstampado(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                id="cantidadml"
-                                defaultValue = {patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id).cantidadMl : ""}
-                                disabled ={patchData?.location?.state?.detalle.find(x => x.idArticuloDetalle === element.id) !== undefined ? false : true}
-                                onChange={(e) => {
-                                  detalle.find(x => x.idArticuloDetalle === element.id).cantidadMl = e.target.value;
-                                  setCantidadMl(e.target.value);
-                                }}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
+                              >
+                                <TableCell component="th" scope="row">
+                                  <input
+                                    type="checkbox"
+                                    onChange={() => {
+                                      const existe = detalleProducto.some(
+                                        (el) =>
+                                          (el.idArticuloDetalle = element.id)
+                                      );
+                                      console.log(existe);
+                                      if (existe) {
+                                        setDetalleProducto(
+                                          detalleProducto.filter(
+                                            (el) => el.id !== element.id
+                                          )
+                                        );
+                                      } else {
+                                        setDetalleProducto([
+                                          ...detalleProducto,
+                                          {
+                                            idArticulo: "",
+                                            idArticuloDetalle: element.id,
+                                            luz: "",
+                                            diametro: "",
+                                            nomenclatura: element.nombre,
+                                            descripcion: element.descripcion,
+                                            paso: values?.detalle?.paso,
+                                            pasoEstampado: "",
+                                            cantidadMl: "",
+                                            ancho: "",
+                                            cola: "",
+                                            peso: "",
+                                          },
+                                        ]);
+                                      }
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <input
+                                    name={`detalle[${index}].nomenclatura`}
+                                    value={element.nombre}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <input
+                                    name={`detalle[${index}].idArticuloDetalle`}
+                                    value={element.id}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field name={`detalle[${index}].luz`} />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].descripcion`}
+                                    value={element.descripcion}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].paso`}
+                                    value={values?.detalle?.paso}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].ancho`}
+                                    value={values?.detalle?.ancho}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].cola`}
+                                    value={values?.detalle?.cola}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].peso`}
+                                    value={values?.detalle?.peso}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].diametro`}
+                                    value={values?.detalle?.diametro}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].pasoEstampado`}
+                                    value={values?.detalle?.pasoEstampado}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Field
+                                    name={`detalle[${index}].cantidadMl`}
+                                    value={values?.detalle?.cantidadMl}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            )
+                          );
+                        })
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
+                <Button
+                  type="submit"
+                  className={classes.btn}
+                  disabled={statusForm}
+                >
+                  {console.log(values)}
+                  {patchData?.location?.state?.id ? "Editar" : "Crear"}
+                </Button>
+                <pre>{JSON.stringify(values, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
+              </Form>
             )}
-            <Button type="submit" className={classes.btn} disabled={statusForm}>
-              {patchData?.location?.state?.id ? "Editar" : "Crear"}
-            </Button>
-            {/* <pre>{JSON.stringify(detalle, null, 2)}</pre> */}
-          </form>
+          </Formik>
         </div>
       </Header>
     </div>
   );
 };
+
 export default ArticulosForm;
